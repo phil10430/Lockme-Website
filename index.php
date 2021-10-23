@@ -24,6 +24,9 @@
     </script>
 
     <div class="main">
+
+        login
+        
         <?php require "login_form.php";?>
 
         <?php  if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {?>
