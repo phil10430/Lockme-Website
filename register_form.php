@@ -9,7 +9,14 @@
                 <label>Username</label>
                 <input type="text" name="username" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $username; ?>">
                 <span class="invalid-feedback"><?php echo $username_err; ?></span>
-            </div>    
+            </div>
+            <div class="form-group">
+                <label>Role</label>
+                <select name="role">
+                     <option value="master">Master</option>
+                    <option value="slave">Slave</option>
+                </select>
+            </div>
             <div class="form-group">
                 <label>Password</label>
                 <input type="password" name="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $password; ?>">
@@ -26,4 +33,3 @@
             </div>
             <p>Already have an account? <a href="index.php">Login here</a>.</p>
         </form>
- 

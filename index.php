@@ -25,19 +25,15 @@
 
     <div class="main">
 
-        login
-        
-        <?php require "login_form.php";?>
-
         <?php  if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {?>
              <!-- HTML here -->
-             <h1 class="my-5">Hi, <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>.</h1>
-    <p>
-        <a href="reset-password.php" class="btn btn-warning">Reset Your Password</a>
-        <a href="logout.php" class="btn btn-danger ml-3">Sign Out of Your Account</a>
-    </p>
+             <h1 class="my-5">Hi, <b><?php echo htmlspecialchars($_SESSION["role"]); ?></b> <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>.</h1>
+            <p>
+                <a href="reset-password.php" class="btn btn-warning">Reset Your Password</a>
+                <a href="logout.php" class="btn btn-danger ml-3">Sign Out of Your Account</a>
+            </p>
 
-        <?php } ?>
+        <?php } else { require "login_form.php";}?>
     </div>
 
     <div id="footer-placeholder" class="footer"></div>
