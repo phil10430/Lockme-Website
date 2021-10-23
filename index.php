@@ -1,0 +1,42 @@
+<?php require "login.php";?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="myStyle.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0;">
+    <title>StimMe</title>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+</head>
+
+<body>
+
+    <div id="nav-placeholder"></div>
+
+    <script>
+        $(function() {
+            $("#nav-placeholder").load("navbar.html");
+            $("#footer-placeholder").load("footer.html");
+        });
+    </script>
+
+    <div class="main">
+        <?php require "login_form.php";?>
+
+        <?php  if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {?>
+             <!-- HTML here -->
+             <h1 class="my-5">Hi, <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>.</h1>
+    <p>
+        <a href="reset-password.php" class="btn btn-warning">Reset Your Password</a>
+        <a href="logout.php" class="btn btn-danger ml-3">Sign Out of Your Account</a>
+    </p>
+
+        <?php } ?>
+    </div>
+
+    <div id="footer-placeholder" class="footer"></div>
+
+</body></html>
