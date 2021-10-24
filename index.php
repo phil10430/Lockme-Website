@@ -1,4 +1,5 @@
 <?php require "login.php";?>
+<?php require "setup_master.php";?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -28,8 +29,13 @@
         <?php  if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {?>
              <!-- HTML here -->
              <h1 class="my-5">Hi, <b><?php echo htmlspecialchars($_SESSION["role"]); ?></b> <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>.</h1>
+           
+             <?php  require "setup_master_form.php";?>
+
             <p>
                 <a href="reset-password.php" class="btn btn-warning">Reset Your Password</a>
+            </p>
+            <p>
                 <a href="logout.php" class="btn btn-danger ml-3">Sign Out of Your Account</a>
             </p>
 
