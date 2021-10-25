@@ -28,7 +28,7 @@
 
         <?php  if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {?>
              <!-- HTML here -->
-             <h1 class="my-5">Hi, <b><?php echo htmlspecialchars($_SESSION["role"]); ?></b> <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>.</h1>
+             <h1 class="my-5">Hello <?php echo htmlspecialchars($_SESSION["role"]); ?> <?php echo htmlspecialchars($_SESSION["username"]); ?></h1>
            
              <?php  require "setup_master_form.php";?>
 
