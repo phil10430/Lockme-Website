@@ -1,8 +1,8 @@
 {
-    "remotePath": "./httpdocs/LockMe-Website/",
-    "host": "server4.rainbow-web.com",
-    "username": "web688s4",
-    "password": "sGlsF?eh[_b,^:y>4>V)d*/b",
+    "remotePath": "./public_html",
+    "host": "files.000webhost.com",
+    "username": "stimmevycetec",
+    "password": "CF8SVfPBSkeVpzNPrf",
     "port": 21,
     "secure": false,
     "protocol": "ftp",

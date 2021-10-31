@@ -36,7 +36,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 if(mysqli_stmt_num_rows($stmt) == 1){
                     $username_err = "This username is already taken.";
                 } else{
-                    $username = trim($_POST["username"]);
+                    $username = mysqli_real_escape_string($link,trim($_POST["username"]));
                     $role = trim($_POST["role"]);
                 }
             } else{
@@ -54,7 +54,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     } elseif(strlen(trim($_POST["password"])) < 6){
         $password_err = "Password must have atleast 6 characters.";
     } else{
-        $password = trim($_POST["password"]);
+        $password = mysqli_real_escape_string($link,trim($_POST["password"]));
     }
     
     // Validate confirm password
@@ -73,18 +73,18 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     } elseif(strlen(trim($_POST["email"])) < 6){
         $email_err = "email must have at least 6 characters.";
     } else{
-        $email = trim($_POST["email"]);
+        $email = mysqli_real_escape_string($link,trim($_POST["email"]));
     }
     
     // Check input errors before inserting in database
     if(empty($username_err) && empty($password_err) && empty($confirm_password_err) &&  empty($email_err) ){
         
         // Prepare an insert statement
-        $sql = "INSERT INTO users (username, password, role, email) VALUES (?,?,?, ?)";
+        $sql = "INSERT INTO users (username, password, role, email) VALUES (?,?,?,?)";
          
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
-            // sss = number of columns
+            // sss = number of columns 
             mysqli_stmt_bind_param($stmt, "ssss", $param_username, $param_password, $param_role, $email);
             
             // Set parameters

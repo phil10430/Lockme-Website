@@ -48,7 +48,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         if(mysqli_stmt_fetch($stmt)){
                             if ($role == "Slave"){
                                 // send request to slave
-                                echo "Send email to $slavename: $email";
+                               
+                                require_once "addslave.php";
+                                
                             }
                             else {
                                 $login_err = "User $slavename is not registered as Slave";

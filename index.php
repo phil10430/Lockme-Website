@@ -30,7 +30,15 @@
              <!-- HTML here -->
              <h1 class="my-5">Hello <?php echo htmlspecialchars($_SESSION["role"]); ?> <?php echo htmlspecialchars($_SESSION["username"]); ?></h1>
            
-             <?php  require "setup_master_form.php";?>
+             <?php  
+             if ($_SESSION["role"] == "Master" ){
+                require "setup_master_form.php";
+             }
+             else {
+                require "setup_slave.php";
+             }
+             
+             ?>
 
             <p>
                 <a href="reset-password.php" class="btn btn-warning">Reset Your Password</a>

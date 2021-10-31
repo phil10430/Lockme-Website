@@ -21,7 +21,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         if(empty(trim($_POST["username"]))){
             $username_err = "Please enter username.";
         } else{
-            $username = trim($_POST["username"]);
+            $username = mysqli_real_escape_string($link,trim($_POST["username"]));
         //   $role = trim($_POST["role"]);
 
         }
@@ -30,7 +30,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         if(empty(trim($_POST["password"]))){
             $password_err = "Please enter your password.";
         } else{
-            $password = trim($_POST["password"]);
+            $password = mysqli_real_escape_string($link, trim($_POST["password"]));
         }
         
         // Validate credentials
