@@ -1,7 +1,4 @@
 <?php
-
-
-
 // Define variables and initialize with empty values
 $slavename  = "";
 $role = "";
