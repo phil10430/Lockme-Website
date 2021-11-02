@@ -13,9 +13,12 @@
      mysqli_stmt_execute($stmt);
      mysqli_stmt_store_result($stmt);
 
+     
 
      if(mysqli_stmt_num_rows($stmt) > 0)
      {
+
+        
         mysqli_stmt_bind_result($stmt, $sender);
         mysqli_stmt_fetch($stmt);
         mysqli_stmt_close($stmt);
@@ -25,24 +28,35 @@
         require_once "setup_slave_form.php";
         // Processing form data when form is submitted
         if($_SERVER["REQUEST_METHOD"] == "POST"){
+
+            
             if (isset($_POST['acceptMasterRequest'])) {
-                echo "accept";
 
-                $sql = "UPDATE users SET mymaster = $sender WHERE username = '$_SESSION["username"]'";
+                $mastername = $sender;
+                $slavename = $_SESSION["username"];
+                echo "accept - m:$mastername - s:$slavename";
 
+                $sql = "UPDATE users SET mymaster='$mastername' WHERE username='$slavename'";
+                
                 if (mysqli_query($link, $sql)) {
                     echo "Status updated successfully";
                   } else {
                     echo "Error updating status";
                   }
+                  
 
             }
             if (isset($_POST['declineMasterRequest'])) {
                 echo "decline";
                
             }
+
+            
         }  
+      
+
     }
+    
  }                    
 
 
