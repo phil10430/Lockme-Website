@@ -1,9 +1,15 @@
 <?php
+
+
 // Define variables and initialize with empty values
 $slavename  = "";
 $role = "";
 $slavename_err  = "";
  
+// welcome Master
+$myslave = $_SESSION["myslave"];
+echo "My Slave: $myslave";
+
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     if (isset($_POST['submitRequestData'])) {
@@ -21,7 +27,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
             // Prepare a select statement
             $sql = "SELECT id, username, role, email FROM users WHERE username = ?";
-            
 
             if($stmt = mysqli_prepare($link, $sql)){
 
@@ -31,7 +36,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 // Set parameters
                 $param_slavename = $slavename;
 
-                
                 // Attempt to execute the prepared statement
                 if(mysqli_stmt_execute($stmt)){
                     // Store result
@@ -45,20 +49,26 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         if(mysqli_stmt_fetch($stmt)){
                             if ($role == "Slave"){
                                 // send request to slave
-                               
-                                require_once "addslave.php";
-                                
+                                $sql_messages = "INSERT INTO messages (sender, receiver, messagetype) VALUES (?,?,?)";
+                                if($stmt = mysqli_prepare($link, $sql_messages)){
+                                    // Bind variables to the prepared statement as parameters
+                                    // sss = number of columns 
+                                    $messagetype = "addslave";
+                                    mysqli_stmt_bind_param($stmt, "sss", $_SESSION["username"], $slavename, $messagetype);
+                                    mysqli_stmt_execute($stmt);
+                                    echo "Request sent to Slave $slavename";    
+                                }          
                             }
-                            else {
+                            else{
                                 $login_err = "User $slavename is not registered as Slave";
                             }
                         }
 
-                    } else{
+                    }else{
                         // Username doesn't exist, display a generic error message
                         $login_err = "Slave $slavename does not exist";
                     }
-                } else{
+                }else{
                     echo "Oops! Something went wrong. Please try again later.";
                 }
             

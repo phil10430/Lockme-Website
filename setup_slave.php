@@ -1,10 +1,18 @@
 <?php
 
+// welcome slave
+$mymaster = $_SESSION["mymaster"];
+echo "My Master: $mymaster";
+
+// next opening
+echo "<br>";
+echo "My next opening: ";
+
 // check for master-requests
  // Prepare a select statement
- $sql_checkmessage = "SELECT sender FROM messages WHERE receiver = ? AND messagetype = ?";
+ $sql = "SELECT sender FROM messages WHERE receiver = ? AND messagetype = ?";
 
- if($stmt = mysqli_prepare($link, $sql_checkmessage)){
+ if($stmt = mysqli_prepare($link, $sql)){
      mysqli_stmt_bind_param($stmt, "ss", $receiver, $messagetype);
 
      $messagetype = "addslave";
@@ -19,7 +27,6 @@
         mysqli_stmt_bind_result($stmt, $sender);
         mysqli_stmt_fetch($stmt);
         mysqli_stmt_close($stmt);
-        
 
         // Processing form data when form is submitted
         if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -32,9 +39,13 @@
 
                 $sql = "UPDATE users SET mymaster='$mastername' WHERE username='$slavename'";
                 
+
                 if (mysqli_query($link, $sql)) {
                     echo "You are now slave of Master $mastername.";
-                    
+                    $sql = "UPDATE users SET myslave='$slavename' WHERE username='$mastername'";
+                    mysqli_query($link, $sql);
+                    $sql = "DELETE FROM messages WHERE receiver='$receiver'";
+                    mysqli_query($link, $sql);
                   } 
 
             }
@@ -55,5 +66,4 @@
  }                    
 
 
-// add next opening
 ?>

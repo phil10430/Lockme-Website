@@ -1,5 +1,5 @@
 <?php require "login.php";?>
-<?php require "setup_master.php";?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -32,6 +32,7 @@
            
              <?php  
              if ($_SESSION["role"] == "Master" ){
+                require "setup_master.php";
                 require "setup_master_form.php";
              }
              else {
