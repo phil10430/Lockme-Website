@@ -3,49 +3,47 @@ require_once "config.php";
 
 $UserName = $_POST["UserName"];
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {    
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    
+        // get posted variables from APP
+        $RequestType = test_input($_POST["RequestType"]);  //0: default,  1: update history, 2: clear wished action
         $ConStatus = test_input($_POST["ConStatus"]);        
         $UserName = test_input($_POST["UserName"]);   
-          
         $BoxName = test_input($_POST["BoxName"]);  
         $LockStatus = test_input($_POST["LockStatus"]);
         $Protection = test_input($_POST["Protection"]);
         $OpenTime = test_input($_POST["OpenTime"]);    
-
-        $sql = "INSERT INTO history (BoxName, LockStatus, Protection, OpenTime)
-        VALUES ('" . $BoxName . "', '" . $LockStatus . "', '" . $Protection . "', '" . $OpenTime . "')";
-
+        
+        // general status update
         $sql = "UPDATE users SET conStatus=$ConStatus,
-         LockStatus='$LockStatus', Protection = '$Protection',
-         OpenTime = '$OpenTime', BoxName = '$BoxName'  WHERE username='$UserName'";
+        LockStatus='$LockStatus', Protection = '$Protection',
+        OpenTime = '$OpenTime', BoxName = '$BoxName'  WHERE username='$UserName'";
+        $link->query($sql);
 
-        //optional post item
-        if( isset( $_POST['WishedAction'] )) {
-            $WishedAction = test_input($_POST["WishedAction"]);     
-            $sql = "UPDATE users SET WishedAction='$WishedAction' WHERE username='$UserName'";
+        // if lockstatus has changed update history table
+        if ($RequestType == 1){
+            $sql = "INSERT INTO history (BoxName, LockStatus, Protection, OpenTime)
+            VALUES ('" . $BoxName . "', '" . $LockStatus . "', '" . $Protection . "', '" . $OpenTime . "')";
+            $link->query($sql);
         }
-
-        if ($link->query($sql) === TRUE) {
-           // echo "New record created successfully";
-
-
-            $query = "SELECT WishedAction FROM users WHERE username = '$UserName'";
-            $result = mysqli_query($link, $query);
-            $number_of_rows = mysqli_num_rows($result);
-            $response = array();
-            if($number_of_rows > 0) {
-                while($row = mysqli_fetch_assoc($result)) {
-                    $response[] = $row;
-                }
+        elseif ($RequestType == 2) {
+            $sql = "UPDATE users SET WishedAction='' WHERE username='$UserName'";
+            $link->query($sql);
+        }
+        
+        // send back WishedAction to APP
+        $query = "SELECT WishedAction FROM users WHERE username = '$UserName'";
+        $result = mysqli_query($link, $query);
+        $number_of_rows = mysqli_num_rows($result);
+        $response = array();
+        if($number_of_rows > 0) {
+            while($row = mysqli_fetch_assoc($result)) {
+                $response[] = $row;
             }
-          //  header('Content-Type: application/json');
-            echo json_encode(array("users"=>$response));
-
-
-        } 
-        else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
         }
+        echo json_encode(array("users"=>$response));
+      
+        
 }
 else {
     echo "No data posted with HTTP POST.";
