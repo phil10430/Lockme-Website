@@ -11,19 +11,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $UserName = test_input($_POST["UserName"]);   
         $BoxName = test_input($_POST["BoxName"]);  
         $LockStatus = test_input($_POST["LockStatus"]);
-        $Protection = test_input($_POST["Protection"]);
+        $ProtectionLevel = test_input($_POST["ProtectionLevel"]);
         $OpenTime = test_input($_POST["OpenTime"]);    
         
         // general status update
         $sql = "UPDATE users SET conStatus=$ConStatus,
-        LockStatus='$LockStatus', Protection = '$Protection',
+        LockStatus='$LockStatus', ProtectionLevel = '$ProtectionLevel',
         OpenTime = '$OpenTime', BoxName = '$BoxName'  WHERE username='$UserName'";
         $link->query($sql);
 
         // if lockstatus has changed update history table
         if ($RequestType == 1){
-            $sql = "INSERT INTO history (BoxName, LockStatus, Protection, OpenTime)
-            VALUES ('" . $BoxName . "', '" . $LockStatus . "', '" . $Protection . "', '" . $OpenTime . "')";
+            $sql = "INSERT INTO history (BoxName, LockStatus, ProtectionLevel, OpenTime)
+            VALUES ('" . $BoxName . "', '" . $LockStatus . "', '" . $ProtectionLevel . "', '" . $OpenTime . "')";
             $link->query($sql);
         }
         elseif ($RequestType == 2) {

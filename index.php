@@ -38,7 +38,7 @@
              else {
                 require "setup_slave.php";
              }
-             require "box_control_form.php";
+             
              require "box_control.php";
              require "show_history.php";
 
