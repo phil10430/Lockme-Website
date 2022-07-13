@@ -11,6 +11,12 @@
     <title>StimMe</title>
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/momentjs/2.14.1/moment.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 </head>
 
 <body>
@@ -21,6 +27,7 @@
         $(function() {
             $("#nav-placeholder").load("navbar.html");
             $("#footer-placeholder").load("footer.html");
+            $('#datetimepicker1').datetimepicker();
         });
     </script>
 
@@ -29,7 +36,7 @@
         <?php  if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {?>
              <!-- HTML here -->
              <h1 class="my-5">Hello <?php echo htmlspecialchars($_SESSION["role"]); ?> <?php echo htmlspecialchars($_SESSION["username"]); ?></h1>
-           
+            
              <?php  
              if ($_SESSION["role"] == "Master" ){
                 require "setup_master.php";
@@ -43,6 +50,14 @@
              require "show_history.php";
 
              ?>
+            <!-- DateTimePicker -->
+            <label class="control-label">Open Time</label>
+            <div class='input-group date' id='datetimepicker1'>
+                <input type='text' class="form-control" />
+                <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
 
             <p>
                 <a href="reset-password.php" class="btn btn-warning">Reset Your Password</a>
