@@ -11,6 +11,7 @@
     const PROTECTION_LEVEL_NONE = "0";
     const PROTECTION_LEVEL_TIMER = "1";
     const PROTECTION_LEVEL_PASSWORD = "2";
+    const PROTECTION_LEVEL_TIMER_OR_PASSWORD = "3";
 
     const CON_STATUS_NOT_CONNECTED = 0;
     const CON_STATUS_CONNECTED = 1;
@@ -30,25 +31,34 @@
        
          if($_SERVER["REQUEST_METHOD"] == "POST"){
             $OpenTime = test_input($_POST["OpenTime"]);
-            $OpenTimeUnix = strtotime($OpenTime); 
+            $dt = DateTime::createFromFormat("d/m/Y H:i", $OpenTime);
+            $OpenTimeUnix = $dt->getTimestamp();
             $Password = test_input($_POST["Password"]);
             if (isset($_POST['CloseBox'])) {
-                if($_POST['protectionLevelRadioGroup']=='timeRadio'){
+                if (isset($_POST['timeCheckbox']) && isset($_POST['passwordCheckbox'])){
+                    $message = MSG_CLOSE.MSG_SEPARATOR.
+                    PROTECTION_LEVEL_TIMER_OR_PASSWORD.MSG_SEPARATOR.
+                    $OpenTimeUnix.MSG_SEPARATOR.
+                    $Password;
+                }
+                elseif(isset($_POST['timeCheckbox'])){
                     // command sent to box: C/protectionlevel/password, 
                     $message = MSG_CLOSE.MSG_SEPARATOR.
                                 PROTECTION_LEVEL_TIMER.MSG_SEPARATOR.
                                 $OpenTimeUnix.MSG_SEPARATOR.
                                 "*";
                 }
-                elseif($_POST['protectionLevelRadioGroup']=='passwordRadio'){
-                    
+                elseif(isset($_POST['passwordCheckbox'])){
                     $message = MSG_CLOSE.MSG_SEPARATOR.
                                 PROTECTION_LEVEL_PASSWORD.MSG_SEPARATOR.
                                 "*".MSG_SEPARATOR.
                                 $Password;
                 }
                 else{
-                    echo "Select Protection Level";
+                    $message = MSG_CLOSE.MSG_SEPARATOR.
+                                PROTECTION_LEVEL_NONE.MSG_SEPARATOR.
+                                "*".MSG_SEPARATOR.
+                                "*";
                 }
              }
             

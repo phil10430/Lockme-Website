@@ -22,10 +22,10 @@
      <!-- DateTimePicker -->
      
     <div class="form-group">
-        <input type="radio" name="protectionLevelRadioGroup" id="timeRadioID" value="timeRadio" />
+        <input type="checkbox" name="timeCheckbox" id="timeCheckboxID" value="timeCheckbox" />
         <label for="timeRadioID">Time Protection</label>
 
-        <input type="radio" name="protectionLevelRadioGroup" id="passwordRadioID" value="passwordRadio" />
+        <input type="checkbox" name="passwordCheckbox" id="passwordCheckboxID" value="passwordCheckbox" />
         <label for="passwordRadioID">Password Protection</label>
     </div>
 </form>
