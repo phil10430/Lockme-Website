@@ -27,7 +27,7 @@ if ($result = $link->query($sql)) {
         $row_reading_time = date("Y-m-d H:i:s", strtotime("$row_reading_time + 2 hours"));
       
         echo '<tr> 
-                <td>' . $BoxName . '</td> 
+                <td>' .  substr( $BoxName , -2). '</td> 
                 <td>' . $LockStatus . '</td> 
                 <td>' . $ProtectionLevel . '</td> 
                 <td>' . $OpenTime . '</td> 

@@ -5,10 +5,10 @@
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="myStyle.css">
+    
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width; initial-scale=1.0;">
-    <title>StimMe</title>
+    <title>LockMe</title>
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 
      <!-- DateTimePicker -->
@@ -18,7 +18,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-     <!-- DateTimePicker -->
+    <link rel="stylesheet" href="myStyle.css"> 
+    <!-- DateTimePicker -->
 </head>
 
 <body>
@@ -29,7 +30,10 @@
         $(function() {
             $("#nav-placeholder").load("navbar.html");
             $("#footer-placeholder").load("footer.html");
-            $('#datetimepicker1').datetimepicker();
+            $('#datetimepicker1').datetimepicker({
+                minDate : new Date(),
+                format : 'DD/MM/YYYY HH:mm',
+            });
         });
     </script>
 

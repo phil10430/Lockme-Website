@@ -25,14 +25,15 @@
     
      if ($conStatus == CON_STATUS_CONNECTED){
         require "box_control_form.php";
-        echo "connected";
+        echo "Status: connected";
          // Processing form data when form is submitted
        
          if($_SERVER["REQUEST_METHOD"] == "POST"){
+            $OpenTime = test_input($_POST["OpenTime"]);
+            $OpenTimeUnix = strtotime($OpenTime); 
+            $Password = test_input($_POST["Password"]);
             if (isset($_POST['CloseBox'])) {
                 if($_POST['protectionLevelRadioGroup']=='timeRadio'){
-                    $OpenTime = test_input($_POST["OpenTime"]);
-                    $OpenTimeUnix = strtotime($OpenTime); 
                     // command sent to box: C/protectionlevel/password, 
                     $message = MSG_CLOSE.MSG_SEPARATOR.
                                 PROTECTION_LEVEL_TIMER.MSG_SEPARATOR.
@@ -40,7 +41,7 @@
                                 "*";
                 }
                 elseif($_POST['protectionLevelRadioGroup']=='passwordRadio'){
-                    $Password = test_input($_POST["Password"]);
+                    
                     $message = MSG_CLOSE.MSG_SEPARATOR.
                                 PROTECTION_LEVEL_PASSWORD.MSG_SEPARATOR.
                                 "*".MSG_SEPARATOR.
@@ -52,7 +53,8 @@
              }
             
             if (isset($_POST['OpenBox'])) {
-                $message = MSG_OPEN;
+                $message = MSG_OPEN.MSG_SEPARATOR.
+                $Password;
             }
         
             $sql = "UPDATE users SET WishedAction='$message' WHERE username='$name'";
@@ -60,7 +62,7 @@
          } 
      }  
      elseif ($conStatus == CON_STATUS_NOT_CONNECTED){
-        echo "not connected - connect to control box";
+        echo "Status: not connected";
      }
 
      function test_input($data) {
