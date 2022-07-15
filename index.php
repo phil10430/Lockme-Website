@@ -40,9 +40,10 @@
 
         <?php  if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {?>
              <!-- HTML here -->
-             <h1 class="my-5">Hello <?php echo htmlspecialchars($_SESSION["role"]); ?> <?php echo htmlspecialchars($_SESSION["username"]); ?></h1>
+             <h1 class="my-5">Hello <?php echo htmlspecialchars($_SESSION["username"]); ?></h1>
             
              <?php  
+             /*
              if ($_SESSION["role"] == "Master" ){
                 require "setup_master.php";
                 require "setup_master_form.php";
@@ -50,6 +51,7 @@
              else {
                 require "setup_slave.php";
              }
+             */
              require "box_control.php";
              require "show_history.php";
              ?>

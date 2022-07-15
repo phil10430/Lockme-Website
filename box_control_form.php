@@ -7,7 +7,7 @@
     </div>
     <div class="form-group">
         <label class="control-label">Password</label>
-        <input type="text" name="Password"><br>
+        <input type="text"  maxlength='10' name="Password"><br>
     </div>
      <!-- DateTimePicker -->
      <div class="form-group">
@@ -24,7 +24,6 @@
     <div class="form-group">
         <input type="checkbox" name="timeCheckbox" id="timeCheckboxID" value="timeCheckbox" />
         <label for="timeRadioID">Time Protection</label>
-
         <input type="checkbox" name="passwordCheckbox" id="passwordCheckboxID" value="passwordCheckbox" />
         <label for="passwordRadioID">Password Protection</label>
     </div>

@@ -11,13 +11,6 @@
                 <span class="invalid-feedback"><?php echo $username_err; ?></span>
             </div>
             <div class="form-group">
-                <label>Role</label>
-                <select name="role">
-                     <option value="Master">Master</option>
-                    <option value="Slave">Slave</option>
-                </select>
-            </div>
-            <div class="form-group">
                 <label>E-Mail</label>
                 <input type="text" name="email" class="form-control <?php echo (!empty($email_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $email; ?>">
                 <span class="invalid-feedback"><?php echo $email_err; ?></span>

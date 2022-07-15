@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html><body>
 <?php
-$sql = "SELECT id, BoxName, LockStatus, ProtectionLevel, OpenTime, reading_time FROM history ORDER BY id DESC";
+$name = $_SESSION["username"]; 
+$sql = "SELECT id, BoxName, LockStatus, ProtectionLevel, OpenTime, reading_time FROM history  WHERE username = '$name' ORDER BY id DESC";
 
 echo '<table cellspacing="5" cellpadding="5">
       <tr> 

@@ -2,14 +2,12 @@
  
 // Define variables and initialize with empty values
 $username = $password = $confirm_password = "";
-$role = "role_init";
 $email = "";
 $email_err = "";
 $username_err = $password_err = $confirm_password_err = "";
  
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
- 
     // Validate username
     if(empty(trim($_POST["username"]))){
         $username_err = "Please enter a username.";
@@ -25,9 +23,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             
             // Set parameters
             $param_username = trim($_POST["username"]);
-            $param_role = trim($_POST["role"]);
-
-            
+         
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
                 /* store result */
@@ -37,7 +33,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     $username_err = "This username is already taken.";
                 } else{
                     $username = mysqli_real_escape_string($link,trim($_POST["username"]));
-                    $role = trim($_POST["role"]);
                 }
             } else{
                 echo "Oops! Something went wrong. Please try again later.";
@@ -80,16 +75,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(empty($username_err) && empty($password_err) && empty($confirm_password_err) &&  empty($email_err) ){
         
         // Prepare an insert statement
-        $sql = "INSERT INTO users (username, password, role, email) VALUES (?,?,?,?)";
+        $sql = "INSERT INTO users (username, password, email) VALUES (?,?,?)";
          
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
             // sss = number of columns 
-            mysqli_stmt_bind_param($stmt, "ssss", $param_username, $param_password, $param_role, $email);
+            mysqli_stmt_bind_param($stmt, "sss", $param_username, $param_password, $email);
             
             // Set parameters
             $param_username = $username;
-            $param_role = $role;
             $param_email = $email;
             $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
             
@@ -103,7 +97,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                  $_SESSION["loggedin"] = true;
                  $_SESSION["id"] = $id;
                  $_SESSION["username"] = $username;                            
-                 $_SESSION["role"] = $role;    
                  $_SESSION["email"] = $email;    
                  // Redirect user to welcome page
                   header("location: index.php");
