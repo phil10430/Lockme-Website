@@ -34,32 +34,20 @@
             $dt = DateTime::createFromFormat("d/m/Y H:i", $OpenTime);
             $OpenTimeUnix = $dt->getTimestamp();
             $Password = test_input($_POST["Password"]);
+        
             if (isset($_POST['CloseBox'])) {
-                if (isset($_POST['timeCheckbox']) && isset($_POST['passwordCheckbox'])){
-                    $message = MSG_CLOSE.MSG_SEPARATOR.
-                    PROTECTION_LEVEL_TIMER_OR_PASSWORD.MSG_SEPARATOR.
-                    $OpenTimeUnix.MSG_SEPARATOR.
-                    $Password;
-                }
-                elseif(isset($_POST['timeCheckbox'])){
-                    // command sent to box: C/protectionlevel/password, 
-                    $message = MSG_CLOSE.MSG_SEPARATOR.
-                                PROTECTION_LEVEL_TIMER.MSG_SEPARATOR.
+                $plTimer = "0";  
+                $plPassword = "0"; 
+                if (isset($_POST['timeCheckbox'])) { 
+                    $plTimer = "1";   
+                } 
+                if (isset($_POST['passwordCheckbox'])) { 
+                    $plPassword = "1";   
+                } 
+                $message = MSG_CLOSE.MSG_SEPARATOR.
+                                $plTimer.MSG_SEPARATOR.$plPassword.MSG_SEPARATOR.
                                 $OpenTimeUnix.MSG_SEPARATOR.
-                                "*";
-                }
-                elseif(isset($_POST['passwordCheckbox'])){
-                    $message = MSG_CLOSE.MSG_SEPARATOR.
-                                PROTECTION_LEVEL_PASSWORD.MSG_SEPARATOR.
-                                "*".MSG_SEPARATOR.
                                 $Password;
-                }
-                else{
-                    $message = MSG_CLOSE.MSG_SEPARATOR.
-                                PROTECTION_LEVEL_NONE.MSG_SEPARATOR.
-                                "*".MSG_SEPARATOR.
-                                "*";
-                }
              }
             
             if (isset($_POST['OpenBox'])) {
@@ -69,6 +57,7 @@
         
             $sql = "UPDATE users SET WishedAction='$message' WHERE username='$name'";
             $link->query($sql);
+       
          } 
      }  
      elseif ($conStatus == CON_STATUS_NOT_CONNECTED){

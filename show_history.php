@@ -2,13 +2,16 @@
 <html><body>
 <?php
 $name = $_SESSION["username"]; 
-$sql = "SELECT id, BoxName, LockStatus, ProtectionLevel, OpenTime, reading_time FROM history  WHERE username = '$name' ORDER BY id DESC";
+$sql = "SELECT id, BoxName, LockStatus, ProtectionLevelTimer, 
+                ProtectionLevelPassword, OpenTime, reading_time 
+               FROM history  WHERE username = '$name' ORDER BY id DESC";
 
 echo '<table cellspacing="5" cellpadding="5">
       <tr> 
         <td>BoxName</td> 
         <td>LockStatus</td> 
-        <td>ProtectionLevel</td> 
+        <td>Timer</td> 
+        <td>Password</td> 
         <td>OpenTime</td>
         <td>Timestamp</td> 
       </tr>';
@@ -18,7 +21,8 @@ if ($result = $link->query($sql)) {
         $row_id = $row["id"];
         $BoxName = $row["BoxName"];
         $LockStatus = $row["LockStatus"];
-        $ProtectionLevel = $row["ProtectionLevel"];
+        $ProtectionLevelTimer = $row["ProtectionLevelTimer"];
+        $ProtectionLevelPassword = $row["ProtectionLevelPassword"];
         $OpenTime = $row["OpenTime"]; 
         $row_reading_time = $row["reading_time"];
         // Uncomment to set timezone to - 1 hour (you can change 1 to any number)
@@ -28,9 +32,10 @@ if ($result = $link->query($sql)) {
         $row_reading_time = date("Y-m-d H:i:s", strtotime("$row_reading_time + 2 hours"));
       
         echo '<tr> 
-                <td>' .  substr( $BoxName , -2). '</td> 
+                <td>' . substr( $BoxName , -2). '</td> 
                 <td>' . $LockStatus . '</td> 
-                <td>' . $ProtectionLevel . '</td> 
+                <td>' . $ProtectionLevelTimer . '</td> 
+                <td>' . $ProtectionLevelPassword . '</td> 
                 <td>' . $OpenTime . '</td> 
                 <td>' . $row_reading_time . '</td> 
               </tr>';

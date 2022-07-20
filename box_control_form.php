@@ -12,7 +12,7 @@
      <!-- DateTimePicker -->
      <div class="form-group">
        <label class="control-label">Open Time</label>
-            <div class='input-group date' id='datetimepicker1'>
+            <div class='input-group date' id='datetimepicker1' >
                 <input type='text' class="form-control" name="OpenTime"/>
                 <span class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar"></span>
