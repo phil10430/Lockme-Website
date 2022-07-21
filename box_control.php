@@ -26,7 +26,6 @@
     
      if ($conStatus == CON_STATUS_CONNECTED){
         require "box_control_form.php";
-        echo "Status: connected";
          // Processing form data when form is submitted
        
          if($_SERVER["REQUEST_METHOD"] == "POST"){
