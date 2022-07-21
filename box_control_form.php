@@ -1,10 +1,10 @@
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
 
     <div class="row form-group">
-        <div class="col-2">
+        <div class="col-1">
             <input type="submit" class="btn btn-primary" value="Close" name="CloseBox">
         </div>
-        <div class="col-2">
+        <div class="col-1">
             <input type="submit" class="btn btn-primary" value="Open" name="OpenBox">
         </div>
     </div>

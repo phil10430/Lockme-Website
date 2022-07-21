@@ -1,6 +1,5 @@
 <?php require "login.php"; ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,23 +9,20 @@
     <meta name="viewport" content="width=device-width; initial-scale=1.0;">
     <title>LockMe</title>
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-    <!-- CSS only -->
+    <!-- DateTimePicker -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css">
-
-
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
-    <!-- DateTimePicker -->
+
 </head>
 
 <body>
-    <!--  <div id="nav-placeholder"></div> -->
     <script>
+        // load datetime picker
         $(function() {
             $('#datetimepicker1').datetimepicker({
                 minDate: new Date(),
@@ -42,12 +38,14 @@
 
     <section class="container" id="main">
 
-        <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) { ?>
 
-            <div class="card">
+
+        <div class="card">
+
+            <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) { ?>
 
                 <div class="card-header">
-                    <h1 class="my-5">Hello <?php echo htmlspecialchars($_SESSION["username"]); ?></h1>
+                     Hello <?php echo htmlspecialchars($_SESSION["username"]); ?>
                 </div>
 
                 <div class="card-body">
@@ -56,19 +54,8 @@
                     require "show_history.php";
                     ?>
 
-                    <div class="row form-group">
-                        <div class="col-sm">
-                            <?php
-                            if (!empty($boxControlError)) {
-                                echo '<div class="alert alert-danger">' .$boxControlError. '</div>';
-                            }
-                            ?>
-                            <?php echo $connectionStatus ?>
-                        </div>
-                    </div>
-
-
                 </div>
+
                 <div class="card-footer">
                     <div class="row form-group">
                         <div class="col-sm">
@@ -76,12 +63,25 @@
                         </div>
                     </div>
                 </div>
-                <div class="card">
+
+            <?php } else{ ?>
+                <div class="card-header">
+                    Login to use LockMe-Box.
+                </div>
+
+                <div class="card-body">
+                    <?php  require "login_form.php"; } ?>
+                </div>
+
+                <div class="card-footer">
+                </div>
+       
+           
+
+            <div class="card">
 
 
-                <?php } else {
-                require "login_form.php";
-            } ?>
+
 
     </section>
 
