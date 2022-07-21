@@ -56,6 +56,17 @@
                     require "show_history.php";
                     ?>
 
+                    <div class="row form-group">
+                        <div class="col-sm">
+                            <?php
+                            if (!empty($boxControlError)) {
+                                echo '<div class="alert alert-danger">' .$boxControlError. '</div>';
+                            }
+                            ?>
+                            <?php echo $connectionStatus ?>
+                        </div>
+                    </div>
+
 
                 </div>
                 <div class="card-footer">

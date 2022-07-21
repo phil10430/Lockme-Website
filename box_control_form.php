@@ -1,12 +1,6 @@
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
 
     <div class="row form-group">
-        <div class="col-sm">
-            Connected to <?php echo $BoxName ?>
-        </div>
-    </div>
-
-    <div class="row form-group">
         <div class="col-2">
             <input type="submit" class="btn btn-primary" value="Close" name="CloseBox">
         </div>
@@ -14,7 +8,7 @@
             <input type="submit" class="btn btn-primary" value="Open" name="OpenBox">
         </div>
     </div>
-
+ 
 
     <div class="row form-group">
         <div class="col-2">
@@ -44,6 +38,6 @@
             <input type="text" maxlength='10' id="Password" name="Password"><br>
         </div>
     </div>
-  
+
 
 </form>

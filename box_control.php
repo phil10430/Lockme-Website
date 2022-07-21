@@ -8,14 +8,11 @@
 
     const MSG_SEPARATOR = "/";
 
-    const PROTECTION_LEVEL_NONE = "0";
-    const PROTECTION_LEVEL_TIMER = "1";
-    const PROTECTION_LEVEL_PASSWORD = "2";
-    const PROTECTION_LEVEL_TIMER_OR_PASSWORD = "3";
-
     const CON_STATUS_NOT_CONNECTED = 0;
     const CON_STATUS_CONNECTED = 1;
 
+    $boxControlError = "";
+    $connectionStatus = "";
     $name = $_SESSION["username"]; 
 
      // get variables from Database
@@ -27,9 +24,8 @@
      }
     
      if ($conStatus == CON_STATUS_CONNECTED){
-
         require "box_control_form.php";
-
+        $connectionStatus =  "Connected to ". $BoxName;
          // Processing form data when form is submitted
          if($_SERVER["REQUEST_METHOD"] == "POST"){
             $OpenTimeUnix = "";
@@ -45,7 +41,7 @@
                         $OpenTimeUnix = $dt->getTimestamp();
                         $plTimer = "1";   
                     }else {
-                        echo 'invalid date';
+                        $boxControlError = "Invalid date";
                     }
                 } 
                 if (isset($_POST['passwordCheckbox'])) { 
@@ -69,9 +65,9 @@
          } 
      }  
      elseif ($conStatus == CON_STATUS_NOT_CONNECTED){
-        echo "Status: not connected";
+        $connectionStatus = "Not connected to LockMe-Box";
      }
-
+   
      function test_input($data) {
         $data = trim($data);
         $data = stripslashes($data);
