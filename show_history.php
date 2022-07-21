@@ -1,7 +1,6 @@
 <?php
 $name = $_SESSION["username"];
-$sql = "SELECT id, BoxName, LockStatus, ProtectionLevelTimer, 
-                ProtectionLevelPassword, OpenTime, reading_time 
+$sql = "SELECT id, BoxName, LockStatus, ProtectionLevelTimer, ProtectionLevelPassword, OpenTime, reading_time 
                FROM history  WHERE username = '$name' ORDER BY id DESC";
 ?>
 <div class="container">
@@ -38,6 +37,15 @@ if ($result = $link->query($sql)) {
     $ProtectionLevelPassword = $row["ProtectionLevelPassword"];
     $OpenTime = $row["OpenTime"];
     $row_reading_time = $row["reading_time"];
+
+    $plPassword="no";
+    $plTimer="no";
+    if ($ProtectionLevelTimer == 1){
+      $plTimer = "yes";
+    }
+    if ($ProtectionLevelPassword == 1){
+      $plPassword = "yes";
+    }
     // Uncomment to set timezone to - 1 hour (you can change 1 to any number)
     // $row_reading_time = date("Y-m-d H:i:s", strtotime("$row_reading_time - 1 hours"));
 
@@ -53,10 +61,10 @@ if ($result = $link->query($sql)) {
           <?php echo $LockStatus ?>
         </div>
         <div class="col-sm">
-          <?php echo $ProtectionLevelTimer ?>
+          <?php echo $plTimer ?>
         </div>
         <div class="col-sm">
-          <?php echo $ProtectionLevelPassword ?>
+          <?php echo $plPassword ?>
         </div>
         <div class="col-sm">
           <?php echo $OpenTime ?>
@@ -72,4 +80,19 @@ if ($result = $link->query($sql)) {
   }
   $result->free();
 }
+/*
+ $ProtectionLevel = "";
+            if (( $ProtectionLevelTimer==1) && ( $ProtectionLevelPassword==1)){
+                $ProtectionLevel = "Timer or Password";
+            }elseif( $ProtectionLevelTimer == 1)
+            {
+                $ProtectionLevel = "Timer";
+            }elseif ( $ProtectionLevelPassword == 1){
+                $ProtectionLevel = "Password";
+            }else{
+                $ProtectionLevel = "None";
+            }
+*/
+
 ?>
+

@@ -23,6 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // if lockstatus has changed or open time was extended update history table
         if ($RequestType == 1){
+
             $sql = "INSERT INTO history (BoxName, LockStatus, ProtectionLevelTimer, ProtectionLevelPassword, OpenTime, username)
             VALUES ('" . $BoxName . "', '" . $LockStatus . "', '" . $ProtectionLevelTimer . "', '" . $ProtectionLevelPassword . "', '" . $OpenTime . "', '" . $UserName . "')";
             $link->query($sql);

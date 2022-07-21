@@ -18,29 +18,38 @@
 
     $name = $_SESSION["username"]; 
 
-     // get conStatus from Database
-     $result = mysqli_query($link,"SELECT conStatus FROM users WHERE username = '$name'");
-     while($row = mysqli_fetch_array($result))
-     $conStatus =  $row['conStatus'];
+     // get variables from Database
+     $result = mysqli_query($link,"SELECT conStatus, BoxName FROM users WHERE username = '$name'");
     
+     while ($row = $result->fetch_assoc()){
+        $conStatus =  $row['conStatus'];
+        $BoxName =  $row['BoxName'];
+     }
     
      if ($conStatus == CON_STATUS_CONNECTED){
+
         require "box_control_form.php";
+
          // Processing form data when form is submitted
-       
          if($_SERVER["REQUEST_METHOD"] == "POST"){
-            $OpenTime = test_input($_POST["OpenTime"]);
-            $dt = DateTime::createFromFormat("d/m/Y H:i", $OpenTime);
-            $OpenTimeUnix = $dt->getTimestamp();
-            $Password = test_input($_POST["Password"]);
-        
+            $OpenTimeUnix = "";
+            $Password ="";
+
             if (isset($_POST['CloseBox'])) {
                 $plTimer = "0";  
                 $plPassword = "0"; 
                 if (isset($_POST['timeCheckbox'])) { 
-                    $plTimer = "1";   
+                    $OpenTime = test_input($_POST["OpenTime"]);
+                    if (validateDate($OpenTime)){
+                        $dt = DateTime::createFromFormat("d/m/Y H:i", $OpenTime);
+                        $OpenTimeUnix = $dt->getTimestamp();
+                        $plTimer = "1";   
+                    }else {
+                        echo 'invalid date';
+                    }
                 } 
                 if (isset($_POST['passwordCheckbox'])) { 
+                    $Password = test_input($_POST["Password"]);
                     $plPassword = "1";   
                 } 
                 $message = MSG_CLOSE.MSG_SEPARATOR.
@@ -69,5 +78,14 @@
         $data = htmlspecialchars($data);
         return $data;
       }
-   
-?>
+
+      function validateDate($date) {
+        $format = 'd/m/Y H:i'; // Eg : 21/07/2022 14:40
+        $dateTime = DateTime::createFromFormat($format, $date);
+    
+        if ($dateTime instanceof DateTime && $dateTime->format('d/m/Y H:i') == $date) {
+            return true;
+        }
+    
+        return false;
+    }

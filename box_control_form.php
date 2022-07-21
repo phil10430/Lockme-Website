@@ -2,10 +2,10 @@
 
     <div class="row form-group">
         <div class="col-sm">
-            Connected to 
+            Connected to <?php echo $BoxName ?>
         </div>
     </div>
-    
+
     <div class="row form-group">
         <div class="col-2">
             <input type="submit" class="btn btn-primary" value="Close" name="CloseBox">
