@@ -1,4 +1,7 @@
 <?php
+
+const MAX_NR_OF_ROWS = 10; // nr of rows to be displayed
+
 $name = $_SESSION["username"];
 $sql = "SELECT id, BoxName, LockStatus, ProtectionLevelTimer, ProtectionLevelPassword, OpenTime, reading_time 
                FROM history  WHERE username = '$name' ORDER BY id DESC";
@@ -15,9 +18,10 @@ $sql = "SELECT id, BoxName, LockStatus, ProtectionLevelTimer, ProtectionLevelPas
   <tbody>
 
     <?php
-
+    $rowCounter = 0;
     if ($result = $link->query($sql)) {
-      while ($row = $result->fetch_assoc()) {
+      while (($row = $result->fetch_assoc())&& ($rowCounter < MAX_NR_OF_ROWS)) {
+        $rowCounter = $rowCounter + 1;
         $row_id = $row["id"];
         $BoxName = $row["BoxName"];
         $LockStatus = $row["LockStatus"];
