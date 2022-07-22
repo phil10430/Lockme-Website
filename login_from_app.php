@@ -57,15 +57,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 $link->query($sql);
                                 echo "logged_in";
                             } else {
-                                // Password is not valid, display a generic error message
-                                $login_err = "Invalid password.";
-                                echo "password_invalid";
+                                echo "Invalid password";
                             }
                         }
-                    } else {
-                        // Username doesn't exist, display a generic error message
-                        $login_err = "Invalid username.";
-                        echo "password_invalid";
+                    } else { 
+                        echo "sername doesn't exist";
                     }
                 } else {
                     echo "Oops! Something went wrong. Please try again later.";
@@ -74,6 +70,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Close statement
                 mysqli_stmt_close($stmt);
             }
+        }else{
+            echo 'Username or Password is empty.';
         }
 
         // Close connection

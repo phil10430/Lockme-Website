@@ -30,14 +30,9 @@ if ($appLoggedIn == CON_STATUS_CONNECTED) {
 }
 
 
-
-?> <div class="row form-group">
-    <div class="col-sm">
-        <?php echo $connectionStatus ?>
-    </div>
-</div>
-<?php
-
+echo '<div class="alert alert-info">' . $connectionStatus . '</div>';
+ 
+ 
 if (($conStatus == CON_STATUS_CONNECTED) && ($appLoggedIn == CON_STATUS_CONNECTED) ){
     // load box control form
     require "box_control_form.php";
@@ -84,17 +79,11 @@ if (($conStatus == CON_STATUS_CONNECTED) && ($appLoggedIn == CON_STATUS_CONNECTE
     }
 }
 
-?> <div class="row form-group">
-    <div class="col-2">
-        <?php
+ 
         if (!empty($boxControlError)) {
             echo '<div class="alert alert-danger">' . $boxControlError . '</div>';
         }
-        ?>
-
-    </div>
-</div>
-<?php
+ 
 
 function test_input($data)
 {

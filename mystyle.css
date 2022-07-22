@@ -1,0 +1,14 @@
+[class*="col-"] {
+    margin-bottom: 5px;
+}
+
+[class*="btn-group"] {
+    margin-bottom: 5px;
+}
+
+.card{
+    margin: 30px auto; /* Added */
+    float: none; /* Added */
+    background-color: rgba(255,255,255,100);
+    Max-width: 500px;  
+}
