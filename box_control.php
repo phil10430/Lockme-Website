@@ -5,6 +5,8 @@ const MSG_OPEN = "O";
 const MSG_CLOSE = "C";
 const MSG_SEPARATOR = "/";
 const CON_STATUS_CONNECTED = 1;
+const PLACEHOLDER = "*";
+
 
 $boxControlError = "";
 $connectionStatus = "";
@@ -49,9 +51,10 @@ if (($conStatus == CON_STATUS_CONNECTED) && ($appLoggedIn == CON_STATUS_CONNECTE
         if ($CloseBoxIntent) {
             $plTimer = "0";
             $plPassword = "0";
+            $OpenTimeUnix = PLACEHOLDER; // initialize as placeholder
             if ($isTimeProtection) {
                 if (validateDate($OpenTime)) {
-                    $dt = DateTime::createFromFormat("d/m/Y H:i", $OpenTime);
+                    $dt = DateTime::createFromFormat("d/m/Y H:i", $OpenTime, new DateTimeZone('Europe/Berlin'));
                     $OpenTimeUnix = $dt->getTimestamp();
                     $plTimer = "1";
                 } else {
@@ -59,7 +62,7 @@ if (($conStatus == CON_STATUS_CONNECTED) && ($appLoggedIn == CON_STATUS_CONNECTE
                 }
             }
             if ($isPasswordProtection) {
-                if($Password != ""){
+                if($Password != PLACEHOLDER){
                     $plPassword = "1";
                 }else{
                     $boxControlError = "Invalid password";

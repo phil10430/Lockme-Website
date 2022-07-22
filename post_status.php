@@ -1,8 +1,7 @@
 <?php
 require_once "config.php";
 
-//$UserName = $_POST["UserName"];
-
+ 
 const REQUEST_TYPE_DEFAULT = "0";
 const REQUEST_UPDATE_HISTORY = "1";
 const REQUEST_CLEAR_WISHED_ACTION = "2";
@@ -35,13 +34,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $link->query($sql);
         }
-        elseif ($RequestType == REQUEST_CLEAR_WISHED_ACTION) {
+        elseif ($RequestType == REQUEST_CLEAR_WISHED_ACTION){
             $sql = "UPDATE users SET WishedAction='' WHERE username='$UserName'";
             $link->query($sql);
         }
-        elseif ($RequestType == REQUEST_TYPE_LOGIN) {
-            
-        }
+    
         
         // send back WishedAction to APP
         $query = "SELECT WishedAction FROM users WHERE username = '$UserName'";
