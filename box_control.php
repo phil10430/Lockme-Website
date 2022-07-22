@@ -11,17 +11,25 @@ $connectionStatus = "";
 $name = $_SESSION["username"];
 
 // get variables from Database
-$result = mysqli_query($link, "SELECT conStatus, BoxName FROM users WHERE username = '$name'");
+$result = mysqli_query($link, "SELECT conStatus, BoxName, appLoggedIn FROM users WHERE username = '$name'");
 
 while ($row = $result->fetch_assoc()) {
     $conStatus =  $row['conStatus'];
+    $appLoggedIn =  $row['appLoggedIn'];
     $BoxName =  $row['BoxName'];
 }
-if ($conStatus == CON_STATUS_CONNECTED) {
-    $connectionStatus =  "Connected to " . $BoxName;
-} else {
-    $connectionStatus = "Not connected to LockMe-Box";
+
+if ($appLoggedIn == CON_STATUS_CONNECTED) { 
+    if ($conStatus == CON_STATUS_CONNECTED) {
+        $connectionStatus =  "Connected to " . $BoxName;
+    } else {
+        $connectionStatus = "Not connected to LockMe-Box. Connect App to LockMe-Box to enable control.";
+    }
+} else{
+    $connectionStatus = "App is not connected to Account. Open your App and login.";
 }
+
+
 
 ?> <div class="row form-group">
     <div class="col-sm">
@@ -30,7 +38,7 @@ if ($conStatus == CON_STATUS_CONNECTED) {
 </div>
 <?php
 
-if ($conStatus == CON_STATUS_CONNECTED) {
+if (($conStatus == CON_STATUS_CONNECTED) && ($appLoggedIn == CON_STATUS_CONNECTED) ){
     // load box control form
     require "box_control_form.php";
     // Processing form data when form is submitted
@@ -56,7 +64,11 @@ if ($conStatus == CON_STATUS_CONNECTED) {
                 }
             }
             if ($isPasswordProtection) {
-                $plPassword = "1";
+                if($Password != ""){
+                    $plPassword = "1";
+                }else{
+                    $boxControlError = "Invalid password";
+                }
             }
             $message = MSG_CLOSE . MSG_SEPARATOR .
                 $plTimer . MSG_SEPARATOR . $plPassword . MSG_SEPARATOR .

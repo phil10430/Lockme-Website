@@ -1,14 +1,20 @@
 <?php
 require_once "config.php";
 
-$UserName = $_POST["UserName"];
+//$UserName = $_POST["UserName"];
+
+const REQUEST_TYPE_DEFAULT = "0";
+const REQUEST_UPDATE_HISTORY = "1";
+const REQUEST_CLEAR_WISHED_ACTION = "2";
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
         // get posted variables from APP
-        $RequestType = test_input($_POST["RequestType"]);  //0: default,  1: update history, 2: clear wished action
+        $RequestType = test_input($_POST["RequestType"]); 
         $ConStatus = test_input($_POST["ConStatus"]);        
         $UserName = test_input($_POST["UserName"]);   
+        $Password = test_input($_POST["Password"]);
         $BoxName = test_input($_POST["BoxName"]);  
         $LockStatus = test_input($_POST["LockStatus"]);
         $ProtectionLevelTimer = test_input($_POST["ProtectionLevelTimer"]);
@@ -22,15 +28,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $link->query($sql);
 
         // if lockstatus has changed or open time was extended update history table
-        if ($RequestType == 1){
-
+        if ($RequestType == REQUEST_UPDATE_HISTORY){
             $sql = "INSERT INTO history (BoxName, LockStatus, ProtectionLevelTimer, ProtectionLevelPassword, OpenTime, username)
-            VALUES ('" . $BoxName . "', '" . $LockStatus . "', '" . $ProtectionLevelTimer . "', '" . $ProtectionLevelPassword . "', '" . $OpenTime . "', '" . $UserName . "')";
+            VALUES ('" . $BoxName . "', '" . $LockStatus . "', '" . $ProtectionLevelTimer . "', 
+            '" . $ProtectionLevelPassword . "', '" . $OpenTime . "', '" . $UserName . "')";
+
             $link->query($sql);
         }
-        elseif ($RequestType == 2) {
+        elseif ($RequestType == REQUEST_CLEAR_WISHED_ACTION) {
             $sql = "UPDATE users SET WishedAction='' WHERE username='$UserName'";
             $link->query($sql);
+        }
+        elseif ($RequestType == REQUEST_TYPE_LOGIN) {
+            
         }
         
         // send back WishedAction to APP
