@@ -1,14 +1,11 @@
-[class*="col-"] {
-    margin-bottom: 5px;
-}
-
-[class*="btn-group"] {
-    margin-bottom: 5px;
-}
-
 .card{
-    margin: 30px auto; /* Added */
+    margin: 10px auto;
+    margin-bottom: 0px;
     float: none; /* Added */
-    background-color: rgba(255,255,255,100);
+    background-color: #c8efff;
     Max-width: 500px;  
+}
+
+.row{
+    margin-top: 10px;
 }

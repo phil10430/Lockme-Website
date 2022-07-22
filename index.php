@@ -48,7 +48,7 @@
             <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) { ?>
                 <div class="text-center">
                     <div class="card-header">              
-                        Hello <?php echo htmlspecialchars($_SESSION["username"]); ?>
+                        <h4>Hello <?php echo htmlspecialchars($_SESSION["username"]); ?></h4>
                     </div>
                 </div>
 
@@ -71,8 +71,12 @@
                     Login to use LockMe-Box.
                 </div>
                 <div class="card-body">
-                <?php require "login_form.php";
-            } ?>
+                    <?php require "login_form.php"; ?>
+                </div>
+                <div class="card-footer">
+                        Don't have an account? <a href="register_page.php">Sign up now</a>.
+                </div>
+            <?php } ?>
 
         </div>
     </section>
