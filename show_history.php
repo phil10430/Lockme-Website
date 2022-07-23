@@ -9,6 +9,7 @@ $sql = "SELECT id, BoxName, LockStatus, ProtectionLevelTimer, ProtectionLevelPas
 <table class="table table-sm">
   <thead>
     <tr>
+      <th scope="col">Box-ID</th>
       <th scope="col">Timestamp</th>
       <th scope="col">Status</th>
       <th scope="col">Protection</th>
@@ -50,6 +51,7 @@ $sql = "SELECT id, BoxName, LockStatus, ProtectionLevelTimer, ProtectionLevelPas
     ?>
 
         <tr>
+          <td><?php echo '#'.$BoxName ?></td>
           <td><?php echo $row_reading_time ?></td>
           <td><?php echo $LockStatus ?></td>
           <td><?php echo $ProtectionLevel ?></td>

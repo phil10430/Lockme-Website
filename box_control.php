@@ -23,7 +23,7 @@ while ($row = $result->fetch_assoc()) {
 
 if ($appLoggedIn == CON_STATUS_CONNECTED) { 
     if ($conStatus == CON_STATUS_CONNECTED) {
-        $connectionStatus =  "Connected to " . $BoxName;
+        $connectionStatus =  "Connected to LockMe-Box #" . $BoxName;
     } else {
         $connectionStatus = "Not connected to LockMe-Box. Connect App to LockMe-Box to enable control.";
     }
@@ -62,10 +62,10 @@ if (($conStatus == CON_STATUS_CONNECTED) && ($appLoggedIn == CON_STATUS_CONNECTE
                 }
             }
             if ($isPasswordProtection) {
-                if($Password != PLACEHOLDER){
+                if(($Password != PLACEHOLDER ) && isValidPassword($Password)){
                     $plPassword = "1";
                 }else{
-                    $boxControlError = "Invalid password";
+                    $boxControlError = "Invalid password! Password must only contain a-zA-Z0-9(1-10).";
                 }
             }
             $message = MSG_CLOSE . MSG_SEPARATOR .
@@ -106,4 +106,10 @@ function validateDate($date)
     }
 
     return false;
+}
+
+function isValidPassword($pw)
+{
+   // only letters and numbers allowed
+   return preg_match("/^[a-zA-Z0-9]+$/", $pw);
 }
