@@ -6,7 +6,7 @@ const MSG_CLOSE = "C";
 const MSG_SEPARATOR = "/";
 const CON_STATUS_CONNECTED = 1;
 const PLACEHOLDER = "*";
-
+const PASSWORD_REGEX = "/^[a-zA-Z0-9]+$/";
 
 $boxControlError = "";
 $connectionStatus = "";
@@ -111,5 +111,5 @@ function validateDate($date)
 function isValidPassword($pw)
 {
    // only letters and numbers allowed
-   return preg_match("/^[a-zA-Z0-9]+$/", $pw);
+   return preg_match(PASSWORD_REGEX, $pw);
 }

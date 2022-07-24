@@ -1,5 +1,5 @@
 <?php
- 
+ require "config.php";
 // Define variables and initialize with empty values
 $username = $password = $confirm_password = "";
 $email = "";
@@ -58,6 +58,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     } else{
         $confirm_password = trim($_POST["confirm_password"]);
         if(empty($password_err) && ($password != $confirm_password)){
+            echo $password. 'confirm: '. $confirm_password;
             $confirm_password_err = "Password did not match.";
         }
     }
