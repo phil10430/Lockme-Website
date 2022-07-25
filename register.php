@@ -1,17 +1,18 @@
 <?php
- require "config.php";
 // Define variables and initialize with empty values
 $username = $password = $confirm_password = "";
 $email = "";
 $email_err = "";
 $username_err = $password_err = $confirm_password_err = "";
- 
+
+const USERNAME_REGEX = "/^[a-zA-Z0-9]+$/";
+
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate username
     if(empty(trim($_POST["username"]))){
         $username_err = "Please enter a username.";
-    } elseif(!preg_match('/^[a-zA-Z0-9_]+$/', trim($_POST["username"]))){
+    } elseif(!preg_match(USERNAME_REGEX, trim($_POST["username"]))){
         $username_err = "Username can only contain letters, numbers, and underscores.";
     } else{
         // Prepare a select statement
@@ -58,10 +59,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     } else{
         $confirm_password = trim($_POST["confirm_password"]);
         if(empty($password_err) && ($password != $confirm_password)){
-            echo $password. 'confirm: '. $confirm_password;
             $confirm_password_err = "Password did not match.";
         }
     }
+ 
 
        // Validate email
     if(empty(trim($_POST["email"]))){
@@ -88,12 +89,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $param_email = $email;
             $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
             
+           
+           // echo "name: ".$username." email: ".$email." pw: ".$password . " cPw: ". $confirm_password . "   ";
+          
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
-                // Redirect to login page
                  // Password is correct, so start a new session
                  session_start();
-                            
                  // Store data in session variables
                  $_SESSION["loggedin"] = true;
                  $_SESSION["id"] = $id;
@@ -102,7 +104,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                  // Redirect user to welcome page
                   header("location: index.php");
             } else{
-                echo "Oops! Something went wrong. Please try again later.";
+                echo "2 Oops! Something went wrong. Please try again later.";
             }
 
             // Close statement

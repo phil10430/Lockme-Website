@@ -22,3 +22,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 
 </head>
+
+<body>
+    <script>
+        // load datetime picker
+        $(function() {
+            $('#datetimepicker1').datetimepicker({
+                minDate: new Date(),
+                format: 'DD/MM/YYYY HH:mm',
+            });
+        });
+
+        // prevent post on refresh
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+    </script>
