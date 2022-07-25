@@ -14,8 +14,14 @@ if (isset($_POST['subforgot'])) {
             $oldftemail = $res['email'];
         }
         $token = bin2hex(random_bytes(50));
-        $inresult = mysqli_query($link, "insert into pass_reset values('','$oldftemail','$token')");
-        if ($inresult) {
+        $sql = "INSERT INTO pass_reset (email,token) VALUES (?,?)";
+        if($stmt = mysqli_prepare($link, $sql)){
+            // Bind variables to the prepared statement as parameters
+            // sss = number of columns 
+            mysqli_stmt_bind_param($stmt,"ss", $oldftemail, $token,);
+             
+        }
+        if (mysqli_stmt_execute($stmt)) {
             $FromName = "Lock-Me";
             $FromEmail = "lockmetest@stim-me.de";
             $ReplyTo = "lockmetest@stim-me.de";
@@ -29,21 +35,27 @@ if (isset($_POST['subforgot'])) {
             $headers .= "X-Priority: 1\n";
             $headers .= "Return-Path: <" . $FromEmail . ">\n";
             $subject = "You have received password reset email";
-            $msg = "Your password reset link <br> http://localhost:8081/php/form/password-reset.php?token=" . $token . " <br> Reset your password with this link .Click or open in new tab<br><br> <br> <br> <center>" . $credits . "</center>";
+            $msg = "Your password reset link: https://lockmetest.stim-me.de/password-reset.php?token=" . $token . "      Reset your password with this link .Click or open in new tab       " . $credits;
             if (mail($oldftemail, $subject, $msg)) {
                 header("location:forgot_password_form.php?sent=1");
                 echo 'email sent';
                 $hide = '1';
             } else {
               //  header("location:forgot_password_form.php?servererr=1");
+                 // uncomment following line to see error message
+                echo mysqli_error($link);
                 echo 'server error';
             }
         } else {
             //header("location:forgot_password_form.php?something_wrong=1");
+             // uncomment following line to see error message
+             echo mysqli_error($link);
             echo 'something went wrong';
         }
     } else {
        //header("location:forgot_password_form.php?err=" . $login);
+        // uncomment following line to see error message
+        echo mysqli_error($link);
        echo 'username or email not found';
     }
 }
