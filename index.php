@@ -12,6 +12,7 @@
                 </div>
 
                 <div class="card-body">
+                    test
                     <?php
                     require "box_control.php";
                     require "show_history.php";
