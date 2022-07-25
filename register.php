@@ -12,8 +12,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate username
     if(empty(trim($_POST["username"]))){
         $username_err = "Please enter a username.";
-    } elseif(!preg_match(USERNAME_REGEX, trim($_POST["username"]))){
-        $username_err = "Username can only contain letters, numbers, and underscores.";
+    } elseif(!isValidUsername(trim($_POST["username"]))){
+        $username_err = "Username can only contain letters and numbers. Max 20 characters.";
     } else{
         // Prepare a select statement
         $sql = "SELECT id FROM users WHERE username = ?";
@@ -64,13 +64,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
  
 
-       // Validate email
-    if(empty(trim($_POST["email"]))){
+    // Validate email
+    $email_temp = trim($_POST["email"]);
+
+    if(empty($email_temp)){
         $email_err = "Please enter a Email.";     
-    } elseif(strlen(trim($_POST["email"])) < 6){
+    } elseif(strlen($email_temp) < 6){
         $email_err = "email must have at least 6 characters.";
-    } else{
-        $email = mysqli_real_escape_string($link,trim($_POST["email"]));
+    } elseif(!isValidEmail($email_temp)){
+        $email_err = "email has wrong format.";
+    }  else{
+        $email = mysqli_real_escape_string($link,$email_temp);
     }
     
     // Check input errors before inserting in database
@@ -88,9 +92,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $param_username = $username;
             $param_email = $email;
             $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
-            
-           
-           // echo "name: ".$username." email: ".$email." pw: ".$password . " cPw: ". $confirm_password . "   ";
           
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
@@ -104,7 +105,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                  // Redirect user to welcome page
                   header("location: index.php");
             } else{
-                echo "2 Oops! Something went wrong. Please try again later.";
+                // uncomment following line to see error message
+                // echo mysqli_error($link);
+                echo "Oops! Something went wrong. Please try again later.";
             }
 
             // Close statement
@@ -115,4 +118,23 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Close connection
     mysqli_close($link);
 }
-?>
+
+function isValidUsername($name)
+{
+   // only letters and numbers allowed
+    if ((strlen($name) < 20) && preg_match(USERNAME_REGEX, $name))
+    {
+        return true;
+    } 
+   return false;
+}
+
+function isValidEmail($email){
+    $clean_email = "";
+    $clean_email = filter_var($email,FILTER_SANITIZE_EMAIL);
+    if (filter_var($clean_email,FILTER_VALIDATE_EMAIL)){
+        return true;
+    } else {
+        return false;
+    }
+}
