@@ -1,7 +1,7 @@
 <?php require "reset_password.php"; ?>
 <?php require "header.php"; ?>
 
-<body>
+
 
     <section class="container" id="register">
 
