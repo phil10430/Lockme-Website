@@ -1,5 +1,6 @@
 <?php
 require_once "config.php";
+include 'helper_functions.php';
 
     if(isset($_GET['token']))
     {
@@ -51,12 +52,3 @@ require_once "config.php";
             }
         }
     }
-
-
-function test_input($data)
-{
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
-}

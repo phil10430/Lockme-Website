@@ -1,4 +1,3 @@
-
 <?php
 // Reference https://technosmarter.com/php/forgot-password-and-password-reset-form-in-php
 require_once("config.php");
@@ -34,7 +33,7 @@ if (isset($_POST['subforgot'])) {
             $subject = "You have received a password reset email";
 
 
-            $mlink = "https://lockmetest.stim-me.de/password-reset.php?token=".$token;
+            $mlink = "https://lockmetest.stim-me.de/password_reset.php?token=".$token;
             $msg = "
                 <html>
                 <head>

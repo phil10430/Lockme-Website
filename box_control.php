@@ -1,19 +1,16 @@
 <?php
 require_once "config.php";
+include 'helper_functions.php';
 
-const MSG_OPEN = "O";
-const MSG_CLOSE = "C";
-const MSG_SEPARATOR = "/";
-const CON_STATUS_CONNECTED = 1;
-const PLACEHOLDER = "*";
-const PASSWORD_REGEX = "/^[a-zA-Z0-9]+$/";
+
+
 
 $boxControlError = "";
 $connectionStatus = "";
-$name = $_SESSION["username"];
+$username = $_SESSION["username"];
 
 // get variables from Database
-$result = mysqli_query($link, "SELECT conStatus, BoxName, appLoggedIn FROM users WHERE username = '$name'");
+$result = mysqli_query($link, "SELECT conStatus, BoxName, appLoggedIn FROM users WHERE username = '$username' ");
 
 while ($row = $result->fetch_assoc()) {
     $conStatus =  $row['conStatus'];
@@ -77,7 +74,7 @@ if (($conStatus == CON_STATUS_CONNECTED) && ($appLoggedIn == CON_STATUS_CONNECTE
                 $Password;
         }
 
-        $sql = "UPDATE users SET WishedAction='$message' WHERE username='$name'";
+        $sql = "UPDATE users SET WishedAction='$message' WHERE username='$username'";
         $link->query($sql);
     }
 }
@@ -87,29 +84,4 @@ if (($conStatus == CON_STATUS_CONNECTED) && ($appLoggedIn == CON_STATUS_CONNECTE
             echo '<div class="alert alert-danger">' . $boxControlError . '</div>';
         }
  
-
-function test_input($data)
-{
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
-}
-
-function validateDate($date)
-{
-    $format = 'd/m/Y H:i'; // Eg : 21/07/2022 14:40
-    $dateTime = DateTime::createFromFormat($format, $date);
-
-    if ($dateTime instanceof DateTime && $dateTime->format('d/m/Y H:i') == $date) {
-        return true;
-    }
-
-    return false;
-}
-
-function isValidPassword($pw)
-{
-   // only letters and numbers allowed
-   return preg_match(PASSWORD_REGEX, $pw);
-}
+?>

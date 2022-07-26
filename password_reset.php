@@ -8,7 +8,9 @@ if (isset($_GET['token'])) {
 
 //form for submit 
 if (isset($_POST['sub_set'])) {
+
     extract($_POST);
+    
     if ($password == '') {
         $error[] = 'Please enter the password.';
     }
@@ -24,6 +26,8 @@ if (isset($_POST['sub_set'])) {
     if (strlen($password) > 50) { // Max 
         $error[] = 'Password: Max length 50 Characters Not allowed';
     }
+
+
     $fetchresultok = mysqli_query($link, "SELECT email FROM pass_reset WHERE token='$token'");
     if ($res = mysqli_fetch_array($fetchresultok)) {
         $email = $res['email'];

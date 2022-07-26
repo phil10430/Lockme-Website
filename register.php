@@ -1,11 +1,11 @@
 <?php
+include 'helper_functions.php';
+
 // Define variables and initialize with empty values
 $username = $password = $confirm_password = "";
 $email = "";
 $email_err = "";
 $username_err = $password_err = $confirm_password_err = "";
-
-const USERNAME_REGEX = "/^[a-zA-Z0-9]+$/";
 
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -118,23 +118,4 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Close connection
     mysqli_close($link);
 }
-
-function isValidUsername($name)
-{
-   // only letters and numbers allowed
-    if ((strlen($name) < 20) && preg_match(USERNAME_REGEX, $name))
-    {
-        return true;
-    } 
-   return false;
-}
-
-function isValidEmail($email){
-    $clean_email = "";
-    $clean_email = filter_var($email,FILTER_SANITIZE_EMAIL);
-    if (filter_var($clean_email,FILTER_VALIDATE_EMAIL)){
-        return true;
-    } else {
-        return false;
-    }
-}
+?>

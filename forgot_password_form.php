@@ -1,18 +1,12 @@
 <?php require "header.php"; ?>
 
-
-
 <section class="container" id="main">
   <div class="card">
-
-
     <div class="card-header">
 
     </div>
 
-
     <div class="card-body">
-
 
       <form action="forgot_process.php" method="POST">
         

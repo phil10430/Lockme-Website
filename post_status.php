@@ -1,11 +1,6 @@
 <?php
 require_once "config.php";
-
- 
-const REQUEST_TYPE_DEFAULT = "0";
-const REQUEST_UPDATE_HISTORY = "1";
-const REQUEST_CLEAR_WISHED_ACTION = "2";
-
+include 'helper_functions.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
@@ -32,8 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if($stmt = mysqli_prepare($link, $query)){
                 mysqli_stmt_bind_param($stmt,"iiiiss", $BoxName, $LockStatus, $ProtectionLevelTimer, $ProtectionLevelPassword, $OpenTime, $UserName);      
             }
-            mysqli_stmt_execute($stmt);
-            
+            mysqli_stmt_execute($stmt); 
         }
         elseif ($RequestType == REQUEST_CLEAR_WISHED_ACTION){
             $query = "UPDATE users SET WishedAction='' WHERE username=?";
@@ -58,14 +52,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 else {
     echo "No data posted with HTTP POST.";
 }
-
-function test_input($data) {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
-}
-
 
     
 ?>
