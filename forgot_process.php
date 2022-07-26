@@ -45,21 +45,21 @@ if (isset($_POST['subforgot'])) {
                 </html>";
 
             if (@mail($oldftemail, $subject, $msg, $headers,'-f'.$FromEmail)) {
-                header("location:forgot_password_form.php?sent=1");
+                header("location:forgot_password_page.php?sent=1");
                 echo 'email sent';
                 $hide = '1';
             } else {
-                header("location:forgot_password_form.php?servererr=1");
+                header("location:forgot_password_page.php?servererr=1");
                 // uncomment following line to see error message
                 // echo mysqli_error($link);
             }
         } else {
-            header("location:forgot_password_form.php?something_wrong=1");
+            header("location:forgot_password_page.php?something_wrong=1");
             // uncomment following line to see error message
             // echo mysqli_error($link);
         }
     } else {
-       header("location:forgot_password_form.php?err=" . $login);
+       header("location:forgot_password_page.php?err=" . $login);
         // uncomment following line to see error message
        // echo mysqli_error($link); 
     }
