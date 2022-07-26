@@ -53,9 +53,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         if (mysqli_stmt_fetch($stmt)) {
                             if (password_verify($password, $hashed_password)) {
                                 // Password is correct, so start a new session
-                                $sql = "UPDATE users SET appLoggedIn='1' WHERE username='$username'";
-                                $link->query($sql);
-                                echo "logged_in";
+                              $isLoggedIn = 1;
+                              $query = "UPDATE users SET appLoggedIn=? WHERE username=?";
+                              $stmt = mysqli_prepare($link, $query);
+                              mysqli_stmt_bind_param($stmt, 'is', $isLoggedIn, $username);
+                              mysqli_stmt_execute($stmt);
+                              echo "logged_in";
                             } else {
                                 echo "Invalid password";
                             }
@@ -79,9 +82,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     else{
         //Logout
-        $username = trim($_POST["username"]);
-        $sql = "UPDATE users SET appLoggedIn='0' WHERE username='$username'";
-        $link->query($sql);
+        $isLoggedIn = 0;
+        $query = "UPDATE users SET appLoggedIn=? WHERE username=?";
+        $stmt = mysqli_prepare($link, $query);
+        mysqli_stmt_bind_param($stmt, 'is', $isLoggedIn, $username);
+        mysqli_stmt_execute($stmt);
+            
         echo "logged_out";
     }
 }

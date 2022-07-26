@@ -20,23 +20,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $ProtectionLevelPassword = test_input($_POST["ProtectionLevelPassword"]);
         $OpenTime = test_input($_POST["OpenTime"]);    
         
-        // general status update
-        $sql = "UPDATE users SET conStatus=$ConStatus,
-        LockStatus='$LockStatus', ProtectionLevelTimer = '$ProtectionLevelTimer', ProtectionLevelPassword = '$ProtectionLevelPassword',
-        OpenTime = '$OpenTime', BoxName = '$BoxName'  WHERE username='$UserName'";
-        $link->query($sql);
-
+         // general status update
+        $query = "UPDATE users SET BoxName=?, conStatus = ?, ProtectionLevelTimer = ?, ProtectionLevelPassword = ?, LockStatus = ?, OpenTime = ? WHERE username=?";
+        $stmt = mysqli_prepare($link, $query);
+        mysqli_stmt_bind_param($stmt, 'iiiiiss', $BoxName, $ConStatus, $ProtectionLevelTimer, $ProtectionLevelPassword, $LockStatus,  $OpenTime, $UserName);
+        mysqli_stmt_execute($stmt);
+        
         // if lockstatus has changed or open time was extended update history table
         if ($RequestType == REQUEST_UPDATE_HISTORY){
-            $sql = "INSERT INTO history (BoxName, LockStatus, ProtectionLevelTimer, ProtectionLevelPassword, OpenTime, username)
-            VALUES ('" . $BoxName . "', '" . $LockStatus . "', '" . $ProtectionLevelTimer . "', 
-            '" . $ProtectionLevelPassword . "', '" . $OpenTime . "', '" . $UserName . "')";
-
-            $link->query($sql);
+            $query = "INSERT INTO history (BoxName, LockStatus, ProtectionLevelTimer, ProtectionLevelPassword, OpenTime, username) VALUES (?,?,?,?,?,?)";
+            if($stmt = mysqli_prepare($link, $query)){
+                mysqli_stmt_bind_param($stmt,"iiiiss", $BoxName, $LockStatus, $ProtectionLevelTimer, $ProtectionLevelPassword, $OpenTime, $UserName);      
+            }
+            mysqli_stmt_execute($stmt);
+            
         }
         elseif ($RequestType == REQUEST_CLEAR_WISHED_ACTION){
-            $sql = "UPDATE users SET WishedAction='' WHERE username='$UserName'";
-            $link->query($sql);
+            $query = "UPDATE users SET WishedAction='' WHERE username=?";
+            $stmt = mysqli_prepare($link, $query);
+            mysqli_stmt_bind_param($stmt, 's', $UserName);
+            mysqli_stmt_execute($stmt);
         }
     
         
@@ -51,8 +54,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
         echo json_encode(array("users"=>$response));
-      
-        
 }
 else {
     echo "No data posted with HTTP POST.";

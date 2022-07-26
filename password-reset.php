@@ -34,9 +34,9 @@ if (isset($_POST['sub_set'])) {
         $error[] = 'Link has been expired or something missing ';
         $hide = 1;
     }
-    if (!isset($error)) {
-        $options = array("cost" => 4);
-        $password = password_hash($password, PASSWORD_BCRYPT, $options);
+    if (!isset($error)) { 
+ 
+        $password = password_hash($password, PASSWORD_DEFAULT);
         $resultresetpass = mysqli_query($link, "UPDATE users SET password='$password' WHERE email='$emailtok'");
         if ($resultresetpass) {
             $success = "<div class='successmsg'> Your password has been updated successfully. Login <a href='index.php' style='color:#fff;'> here. </a> </div>";

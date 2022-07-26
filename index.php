@@ -7,7 +7,7 @@
             <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) { ?>
                 <div class="text-center">
                     <div class="card-header">              
-                        <h4>Hello x <?php echo htmlspecialchars($_SESSION["username"]); ?></h4>
+                        <h4>Hello <?php echo htmlspecialchars($_SESSION["username"]); ?></h4>
                     </div>
                 </div>
 
