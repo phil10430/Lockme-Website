@@ -49,7 +49,7 @@ $result = $stmt->get_result();
 
       $ProtectionLevel = "";
       if (($ProtectionLevelTimer == 1) && ($ProtectionLevelPassword == 1)) {
-        $ProtectionLevel = "Timer/Password";
+        $ProtectionLevel = "Timer / Password";
       } elseif ($ProtectionLevelTimer == 1) {
         $ProtectionLevel = "Timer";
       } elseif ($ProtectionLevelPassword == 1) {

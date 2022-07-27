@@ -13,7 +13,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(empty(trim($_POST["username"]))){
         $username_err = "Please enter a username.";
     } elseif(!isValidUsername(trim($_POST["username"]))){
-        $username_err = "Username can only contain letters and numbers. Max 20 characters.";
+        $username_err = "Username can only contain letters and numbers.";
     } else{
         // Prepare a select statement
         $sql = "SELECT id FROM users WHERE username = ?";

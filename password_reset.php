@@ -14,19 +14,16 @@ if (isset($_POST['sub_set'])) {
     $passwordConfirm =  test_input($_POST["passwordConfirm"]);
 
     if ($password == '') {
-        $error[] = 'Please enter the password.';
+        $error[] = 'Please enter a password.';
     }
     if ($passwordConfirm == '') {
-        $error[] = 'Please confirm the password.';
+        $error[] = 'Please confirm password.';
     }
     if ($password != $passwordConfirm) {
-        $error[] = 'Passwords do not match.';
+        $error[] = 'Password did not match.';
     }
-    if (strlen($password) < 5) { // min 
-        $error[] = 'The password is 6 characters long.';
-    }
-    if (strlen($password) > 50) { // Max 
-        $error[] = 'Password: Max length 50 Characters Not allowed';
+    if (strlen($password) < 6) { // min 
+        $error[] = 'Password must have atleast 6 characters.';
     }
 
 

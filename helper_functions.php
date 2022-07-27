@@ -45,7 +45,7 @@ function isValidPassword($pw)
 function isValidUsername($name)
 {
    // only letters and numbers allowed
-    if ((strlen($name) < 20) && preg_match(USERNAME_REGEX, $name))
+    if (preg_match(USERNAME_REGEX, $name))
     {
         return true;
     } 
