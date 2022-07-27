@@ -1,4 +1,5 @@
 <?php
+ // attention!!!!!!! include helper_functions.php does not work !!!!!!!!
 $query =  "SELECT id, BoxName, LockStatus, ProtectionLevelTimer, ProtectionLevelPassword, OpenTime, reading_time 
 FROM history  WHERE username = ? ORDER BY id DESC LIMIT 10";
 
@@ -20,8 +21,8 @@ $result = $stmt->get_result();
   </thead>
   <tbody>
 
+  
     <?php
-
 
     while ($row = $result->fetch_assoc()) {
 
@@ -30,10 +31,15 @@ $result = $stmt->get_result();
       $LockStatus = $row["LockStatus"];
       $ProtectionLevelTimer = $row["ProtectionLevelTimer"];
       $ProtectionLevelPassword = $row["ProtectionLevelPassword"];
+  
       $OpenTime = $row["OpenTime"];
       $row_reading_time = $row["reading_time"];
 
-      $row_reading_time = date("m-d H:i", strtotime("$row_reading_time"));
+      $row_reading_time = date("d.m. H:i", strtotime("$row_reading_time"));
+    
+      if( !empty($OpenTime)){
+        $OpenTime = date("d.m. H:i", strtotime("$OpenTime"));
+      }
 
       if ($LockStatus == 1) {
         $LockStatus_String = "closed";

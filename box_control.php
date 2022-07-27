@@ -19,7 +19,7 @@ if ($appLoggedIn == CON_STATUS_CONNECTED) {
     if ($conStatus == CON_STATUS_CONNECTED) {
         $connectionStatus =  "Connected to LockMe-Box #" . $BoxName;
     } else {
-        $connectionStatus = "Not connected to LockMe-Box. Connect App to LockMe-Box to enable control.";
+        $connectionStatus = "App not connected to LockMe-Box. Connect App to LockMe-Box to enable control.";
     }
 } else{
     $connectionStatus = "App is not connected to Account. Open your App and login.";
@@ -57,7 +57,7 @@ if (($conStatus == CON_STATUS_CONNECTED) && ($appLoggedIn == CON_STATUS_CONNECTE
                 if(($Password != PLACEHOLDER ) && isValidPassword($Password)){
                     $plPassword = "1";
                 }else{
-                    $boxControlError = "Invalid password! Password must only contain a-zA-Z0-9(1-10).";
+                    $boxControlError = "Invalid password! Password must only contain a-z A-Z 0-9 and have 1 to 10 characters.";
                 }
             }
             $message = MSG_CLOSE . MSG_SEPARATOR .

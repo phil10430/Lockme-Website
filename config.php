@@ -1,9 +1,9 @@
 <?php
 /* stim-me.de */
 define('DB_SERVER', 'localhost:3306');
-define('DB_USERNAME', 'web688s4_lockme');
-define('DB_PASSWORD', 'cgaVduKyYHQ04BKfsJadfaaV8QRI40kkal');
-define('DB_NAME', 'web688s4_lockme');
+define('DB_USERNAME', 'web688s4_lockmetest');
+define('DB_PASSWORD', 'Q8O~mA*)#2J-l6yxc+MITvC[k!`?{');
+define('DB_NAME', 'web688s4_lockmetest');
  
 
 /* Attempt to connect to MySQL database */

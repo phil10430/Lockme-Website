@@ -17,7 +17,7 @@
         }
         // If Success | Link sent 
         if (isset($_GET['sent'])) {
-            echo "<div class='successmsg'>A reset link has been sent to your registered eMail. Please check your eail. </div>";
+            echo "<div class='successmsg'>A reset link has been sent to your registered email. Please check your email. </div>";
         }
         ?>
 

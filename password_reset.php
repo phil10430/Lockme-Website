@@ -56,7 +56,7 @@ if (isset($_POST['sub_set'])) {
        
 
        if ($updateSuccess) {
-            $success = "<div class='successmsg'> Your password has been updated successfully. Login <a href='index.php'>here</a>. </div>";
+            $success = "<div class='alert-warning'> Your password has been updated successfully. Login <a href='index.php'>here</a>. </div>";
 
             $resultdel = mysqli_query($link, "DELETE FROM pass_reset WHERE token='$token'");
 
