@@ -10,8 +10,8 @@ if(isset($_GET['token']))
 
 if (isset($_POST['sub_set'])) {
 
-    $password = test_input($_POST["password"]);
-    $passwordConfirm =  test_input($_POST["passwordConfirm"]);
+    $password = trim($_POST["password"]);
+    $passwordConfirm =  trim($_POST["passwordConfirm"]);
 
     if ($password == '') {
         $error[] = 'Please enter a password.';
@@ -44,7 +44,7 @@ if (isset($_POST['sub_set'])) {
     }
 
     if (!isset($error)) {
-
+        $password = mysqli_real_escape_string($link,$password);
         $password = password_hash($password, PASSWORD_DEFAULT);
 
         $stmt = $link -> prepare( "UPDATE users SET password=? WHERE email=?");

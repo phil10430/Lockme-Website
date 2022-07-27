@@ -50,7 +50,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     } elseif(strlen(trim($_POST["password"])) < 6){
         $password_err = "Password must have atleast 6 characters.";
     } else{
-        $password = mysqli_real_escape_string($link,trim($_POST["password"]));
+        $password = trim($_POST["password"]);
     }
     
     // Validate confirm password
@@ -62,7 +62,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $confirm_password_err = "Password did not match.";
         }
     }
- 
+  
 
     // Validate email
     $email_temp = trim($_POST["email"]);
@@ -77,6 +77,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $email = mysqli_real_escape_string($link,$email_temp);
     }
     
+
     // Check input errors before inserting in database
     if(empty($username_err) && empty($password_err) && empty($confirm_password_err) &&  empty($email_err) ){
         
@@ -91,6 +92,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             // Set parameters
             $param_username = $username;
             $param_email = $email;
+            $password = mysqli_real_escape_string($link,$password);
             $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
           
             // Attempt to execute the prepared statement
@@ -114,6 +116,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             mysqli_stmt_close($stmt);
         }
     }
+
+    
     
     // Close connection
     mysqli_close($link);
