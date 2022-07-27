@@ -5,7 +5,7 @@ include 'helper_functions.php';
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
   
-    $login = test_input(trim($_POST["login_var"]));
+    $login = test_input($_POST["login_var"]);
 
 
     $query = "SELECT * FROM  users WHERE (username=? OR email = ?)";
