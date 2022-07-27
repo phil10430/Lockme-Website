@@ -1,7 +1,7 @@
 <?php
  // attention!!!!!!! include helper_functions.php does not work !!!!!!!!
 $query =  "SELECT id, BoxName, LockStatus, ProtectionLevelTimer, ProtectionLevelPassword, OpenTime, reading_time 
-FROM history  WHERE username = ? ORDER BY id DESC LIMIT 10";
+FROM history  WHERE username = ? ORDER BY id DESC LIMIT 20";
 
 $stmt = $link->prepare($query);
 $stmt->bind_param("s", $_SESSION["username"]);
@@ -9,10 +9,11 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 ?>
-<table class="table table-sm">
+<br>
+<table class="table table-condensed">
   <thead>
     <tr>
-      <th scope="col">Box-ID</th>
+      <th scope="col">BoxID</th>
       <th scope="col">Timestamp</th>
       <th scope="col">Status</th>
       <th scope="col">Protection</th>
@@ -41,30 +42,30 @@ $result = $stmt->get_result();
         $OpenTime = date("d.m. H:i", strtotime("$OpenTime"));
       }
 
-      if ($LockStatus == 1) {
-        $LockStatus_String = "closed";
-      } else {
-        $LockStatus_String = "open";
-      }
-
-      $ProtectionLevel = "";
-      if (($ProtectionLevelTimer == 1) && ($ProtectionLevelPassword == 1)) {
-        $ProtectionLevel = "Timer / Password";
-      } elseif ($ProtectionLevelTimer == 1) {
-        $ProtectionLevel = "Timer";
-      } elseif ($ProtectionLevelPassword == 1) {
-        $ProtectionLevel = "Password";
-      } else {
-        $ProtectionLevel = "None";
-      }
-
     ?>
+
 
       <tr>
         <td><?php echo '#' . $BoxName ?></td>
         <td><?php echo $row_reading_time ?></td>
-        <td><?php echo $LockStatus_String ?></td>
-        <td><?php echo $ProtectionLevel ?></td>
+        <td class="text-center">
+          <?php
+            if ($LockStatus == 1) {
+              ?> <span class="glyphicon glyphicon-lock"></span>  <?php
+            }  
+           ?>
+       </td>
+        <td class="text-center">
+          <?php 
+          if (($ProtectionLevelTimer == 1) && ($ProtectionLevelPassword == 1)) {
+           ?> <span class="glyphicon glyphicon-time"></span> / <span class="glyphicon glyphicon-text-color"></span>  <?php
+          } elseif ($ProtectionLevelTimer == 1) {
+            ?> <span class="glyphicon glyphicon-time"></span>  <?php
+          } elseif ($ProtectionLevelPassword == 1) {
+            ?> <span class="glyphicon glyphicon-text-color"></span>  <?php
+          } 
+          ?>
+        </td>
         <td><?php echo $OpenTime ?></td>
       </tr>
 
