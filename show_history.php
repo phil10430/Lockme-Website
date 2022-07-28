@@ -58,13 +58,13 @@ $result = $stmt->get_result();
         <td class="text-center">
           <?php 
           if (($ProtectionLevelTimer == 1) && ($ProtectionLevelPassword == 1)) {
-           ?> <span class="glyphicon glyphicon-time"></span> / <span class="glyphicon glyphicon-text-color"></span>  <?php
+           ?> <span class="glyphicon glyphicon-time"></span> / <span class="glyphicon glyphicon-option-horizontal"></span>  <?php
           } elseif ($ProtectionLevelTimer == 1) {
             ?> <span class="glyphicon glyphicon-time"></span>  <?php
           } elseif ($ProtectionLevelPassword == 1) {
-            ?> <span class="glyphicon glyphicon-text-color"></span>  <?php
+            ?> <span class="glyphicon glyphicon-option-horizontal"></span>  <?php
           } 
-          ?>
+          ?> 
         </td>
         <td><?php echo $OpenTime ?></td>
       </tr>
@@ -78,3 +78,4 @@ $result = $stmt->get_result();
 
   </tbody>
 </table>
+

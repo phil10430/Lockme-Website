@@ -77,6 +77,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $email = mysqli_real_escape_string($link,$email_temp);
     }
     
+    // check if email is used????
+
 
     // Check input errors before inserting in database
     if(empty($username_err) && empty($password_err) && empty($confirm_password_err) &&  empty($email_err) ){
