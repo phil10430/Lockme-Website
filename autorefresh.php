@@ -1,18 +1,23 @@
 <?php
 // get lock-status from database and send it back to ajax script
 require "config.php"; 
-$username = $_POST["username"];
-$query = "SELECT LockStatus FROM users WHERE username = '$username'";
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+    // $username = $_POST["username"];
+    $username = mysqli_real_escape_string($link,trim($_POST["username"]));
+    $query = "SELECT LockStatus, conStatus, appLoggedIn 
+    FROM users WHERE username = '$username'";
 
-$stmt = $link->prepare($query);
-$stmt->execute();
-$result = $stmt->get_result();
+    $stmt = $link->prepare($query);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-while ($row = $result->fetch_assoc()) {
-    //$response[] = $row;
-    $LockStatus = $row["LockStatus"];
+    while ($row = $result->fetch_assoc()) {
+        echo json_encode($row);
+       // $LockStatus = $row["LockStatus"];
 }
 
- //echo json_encode(array("users"=>$response));
- echo  $LockStatus;
+// only export first line
+
+ //echo  $LockStatus;
+}
 ?>

@@ -24,48 +24,9 @@
             require "box_control.php";
             require "show_history.php";
             ?>
-
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-            <?php 
-             //get lockstatus
-            $username = $_SESSION["username"];
-            $result = mysqli_query($link, "SELECT LockStatus FROM users WHERE username = '$username' ");
-            while ($row = $result->fetch_assoc()) {
-                $LockStatus =  $row['LockStatus'];
-            }
-            ?>
-           
-        
-            <script>
-                var oldLockStatus = <?php echo $LockStatus?>;
-                var name = "<?php echo $username; ?>";
-                $(document).ready(function(){
-                    function getData(){
-                        $.ajax({
-                            type: 'POST',
-                            data: {username: name},
-                            url: 'autorefresh.php',
-                            success: function(data){
-                               // output data to output container div
-                               // $('#output').html(data);
-                               // output data in div-element with id = "LockStatus"
-                               // document.getElementById("LockStatus").innerHTML = data;
-                                if (oldLockStatus != data) 
-                                {
-                                    // refresh page when lockstatus has changed
-                                     window.location.href = window.location.href;
-                                }
-                                
-                            }
-                        });
-                    }
-                    setInterval(function () {
-                        getData(); 
-                    }, 1000);  // it will refresh your data every 1 sec
-
-                });
-            </script>
+            
+         
+            <script>refreshData("<?php echo $_SESSION["username"]; ?>");</script>
 
             </div>
 

@@ -25,8 +25,9 @@ $result = $stmt->get_result();
   
     <?php
 
-    while ($row = $result->fetch_assoc()) {
+    $rowCounter = 0;
 
+    while ($row = $result->fetch_assoc()) {
       $row_id = $row["id"];
       $BoxName = $row["BoxName"];
       $LockStatus = $row["LockStatus"];
@@ -41,7 +42,6 @@ $result = $stmt->get_result();
       if( !empty($OpenTime)){
         $OpenTime = date("d.m. H:i", strtotime("$OpenTime"));
       }
-
     ?>
 
 
