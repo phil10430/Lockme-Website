@@ -21,9 +21,9 @@
             <div class="card-body">
 
             <?php
-            require_once "config.php";
-            // clear wished action on each refresh
+           
             // clear wished action from database on refresh
+            require_once "config.php";
             $query = "UPDATE users SET WishedAction='' WHERE username=?";
             $stmt = mysqli_prepare($link, $query);
             mysqli_stmt_bind_param($stmt, 's', $_SESSION["username"]);

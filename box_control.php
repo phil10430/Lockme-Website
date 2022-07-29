@@ -7,7 +7,6 @@ $connectionStatus = "";
 $username = $_SESSION["username"];
 
 
-
 // get variables from Database
 $result = mysqli_query($link, "SELECT conStatus, BoxName, appLoggedIn FROM users WHERE username = '$username' ");
 
