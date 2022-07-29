@@ -34,19 +34,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
          $stmt = mysqli_prepare($link, $query);
          mysqli_stmt_bind_param($stmt, 's', $_SESSION["username"]);
          mysqli_stmt_execute($stmt);
-    } 
-    
-    // send back WishedAction to APP
-    $query = "SELECT WishedAction FROM users WHERE username = '$UserName'";
-    $result = mysqli_query($link, $query);
-    $number_of_rows = mysqli_num_rows($result);
-    $response = array();
-    if($number_of_rows > 0) {
-        while($row = mysqli_fetch_assoc($result)) {
-            $response[] = $row;
+         $response->WishedAction = "";
+    } else {
+        // send back WishedAction to APP
+        $query = "SELECT WishedAction FROM users WHERE username = '$UserName'";
+        $result = mysqli_query($link, $query);
+        $number_of_rows = mysqli_num_rows($result);
+       
+
+        if($number_of_rows > 0) {
+            while($row = mysqli_fetch_assoc($result)) {
+                $response = $row;
+            }
         }
+       
     }
-    echo json_encode(array("users"=>$response));
+    echo json_encode($response);
     
 }
 else {
