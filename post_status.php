@@ -29,13 +29,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             mysqli_stmt_execute($stmt); 
         }
-        elseif ($RequestType == REQUEST_CLEAR_WISHED_ACTION){
-            $query = "UPDATE users SET WishedAction='' WHERE username=?";
-            $stmt = mysqli_prepare($link, $query);
-            mysqli_stmt_bind_param($stmt, 's', $UserName);
-            mysqli_stmt_execute($stmt);
-        }
-    
         
         // send back WishedAction to APP
         $query = "SELECT WishedAction FROM users WHERE username = '$UserName'";

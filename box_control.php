@@ -6,6 +6,8 @@ $boxControlError = "";
 $connectionStatus = "";
 $username = $_SESSION["username"];
 
+
+
 // get variables from Database
 $result = mysqli_query($link, "SELECT conStatus, BoxName, appLoggedIn FROM users WHERE username = '$username' ");
 
@@ -68,7 +70,7 @@ if (($conStatus == CON_STATUS_CONNECTED) && ($appLoggedIn == CON_STATUS_CONNECTE
             $message = MSG_OPEN . MSG_SEPARATOR .
                 $Password;
         }
-
+        
         $query = "UPDATE users SET WishedAction=? WHERE username=?";
         $stmt = mysqli_prepare($link, $query);
         mysqli_stmt_bind_param($stmt, 'ss', $message, $username);
