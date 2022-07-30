@@ -26,7 +26,7 @@ if ($appLoggedIn == CON_STATUS_CONNECTED) {
     $connectionStatus = "App is not connected to Account. Open your App and login.";
 }
 
-echo '<div class="alert alert-info">' . $connectionStatus . '</div>';
+echo '<br><div class="alert alert-info">' . $connectionStatus . '</div>';
  
 if (($conStatus == CON_STATUS_CONNECTED) && ($appLoggedIn == CON_STATUS_CONNECTED) ){
     // load box control form
@@ -74,6 +74,7 @@ if (($conStatus == CON_STATUS_CONNECTED) && ($appLoggedIn == CON_STATUS_CONNECTE
         $stmt = mysqli_prepare($link, $query);
         mysqli_stmt_bind_param($stmt, 'ss', $message, $username);
         mysqli_stmt_execute($stmt);
+        
     }
 }
 

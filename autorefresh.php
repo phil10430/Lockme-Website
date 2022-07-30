@@ -4,7 +4,7 @@ require "config.php";
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     // $username = $_POST["username"];
     $username = mysqli_real_escape_string($link,trim($_POST["username"]));
-    $query = "SELECT LockStatus, conStatus, appLoggedIn 
+    $query = "SELECT LockStatus, conStatus, appLoggedIn, OpenTime
     FROM users WHERE username = '$username'";
 
     $stmt = $link->prepare($query);

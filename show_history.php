@@ -21,7 +21,6 @@ $result = $stmt->get_result();
     </tr>
   </thead>
   <tbody>
-
   
     <?php
 

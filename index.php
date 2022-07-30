@@ -28,9 +28,11 @@
             $stmt = mysqli_prepare($link, $query);
             mysqli_stmt_bind_param($stmt, 's', $_SESSION["username"]);
             mysqli_stmt_execute($stmt);
-
+            
+            require "show_status.php";
             require "box_control.php";
-            require "show_history.php";
+       
+           // require "show_history.php";
             ?>
             
          
