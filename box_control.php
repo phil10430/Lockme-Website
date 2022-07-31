@@ -77,10 +77,8 @@ if (($conStatus == CON_STATUS_CONNECTED) && ($appLoggedIn == CON_STATUS_CONNECTE
         
     }
 }
-
- 
-        if (!empty($boxControlError)) {
-            echo '<div class="alert alert-danger">' . $boxControlError . '</div>';
-        }
+if (!empty($boxControlError)) {
+    echo '<div class="alert alert-danger">' . $boxControlError . '</div>';
+}
  
 ?>

@@ -7,11 +7,9 @@ $(document).ready(function(){
             data: {username: name},
             url: 'autorefresh.php',
             success: function(data){
-               // output data to output container div
+             
                var json = JSON.parse(data);
-               // $('#output').html(json.LockStatus);
-               // output data in div-element with id = "LockStatus"
-               // document.getElementById("LockStatus").innerHTML = data;
+    
                var LockStatusOld = localStorage.getItem("LockStatusOld");
                var conStatusOld = localStorage.getItem("conStatusOld");
                var appLoggedInOld = localStorage.getItem("appLoggedInOld");
