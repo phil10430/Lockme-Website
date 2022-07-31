@@ -15,12 +15,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $ProtectionLevelPassword = test_input($_POST["ProtectionLevelPassword"]);
     $OpenTime = test_input($_POST["OpenTime"]);    
     
-        // general status update
-    $query = "UPDATE users SET BoxName=?, conStatus = ?, ProtectionLevelTimer = ?, ProtectionLevelPassword = ?, LockStatus = ?, OpenTime = ? WHERE username=?";
+    // general status update
+    $query = "UPDATE users SET BoxName=?, conStatus = ?, ProtectionLevelTimer = ?, 
+    ProtectionLevelPassword = ?, LockStatus = ?, OpenTime = ? WHERE username=?";
     $stmt = mysqli_prepare($link, $query);
-    mysqli_stmt_bind_param($stmt, 'iiiiiss', $BoxName, $ConStatus, $ProtectionLevelTimer, $ProtectionLevelPassword, $LockStatus,  $OpenTime, $UserName);
+    mysqli_stmt_bind_param($stmt, 'iiiiiss', $BoxName, $ConStatus, $ProtectionLevelTimer, 
+    $ProtectionLevelPassword, $LockStatus,  $OpenTime, $UserName);
     mysqli_stmt_execute($stmt);
-    
+
+    $response->WishedAction = "";
     
     // if lockstatus has changed or open time was extended update history table
     if ($RequestType == REQUEST_UPDATE_HISTORY){
@@ -35,7 +38,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
          $query = "UPDATE users SET WishedAction='' WHERE username='$UserName'";
          $stmt = mysqli_prepare($link, $query); 
          mysqli_stmt_execute($stmt);
-         $response->WishedAction = "";
     }
     else {
         // send back WishedAction to APP
