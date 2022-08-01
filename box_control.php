@@ -6,6 +6,11 @@ $boxControlError = "";
 $connectionStatus = "";
 $username = $_SESSION["username"];
 
+// clear wished action from database on refresh
+$query = "UPDATE users SET WishedAction='' WHERE username=?";
+$stmt = mysqli_prepare($link, $query);
+mysqli_stmt_bind_param($stmt, 's', $_SESSION["username"]);
+mysqli_stmt_execute($stmt);
 
 // get variables from Database
 $result = mysqli_query($link, "SELECT conStatus, BoxName, appLoggedIn FROM users WHERE username = '$username' ");

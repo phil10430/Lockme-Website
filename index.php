@@ -21,17 +21,8 @@
             <div class="card-body">
 
             <?php
-           
-            // clear wished action from database on refresh
-            require_once "config.php";
-            $query = "UPDATE users SET WishedAction='' WHERE username=?";
-            $stmt = mysqli_prepare($link, $query);
-            mysqli_stmt_bind_param($stmt, 's', $_SESSION["username"]);
-            mysqli_stmt_execute($stmt);
-            
-            require "show_status.php";
-            require "box_control.php";
-       
+                require "show_status.php";
+                require "box_control.php";
             ?>
 
             <script>refreshData("<?php echo $_SESSION["username"]; ?>");</script>
