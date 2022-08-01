@@ -6,20 +6,12 @@ $boxControlError = "";
 $connectionStatus = "";
 $username = $_SESSION["username"];
 
-// clear wished action from database on refresh
+// clear wished action from database when page is reloaded -> prevent unintended commands sent to APP
 $query = "UPDATE users SET WishedAction='' WHERE username=?";
 $stmt = mysqli_prepare($link, $query);
 mysqli_stmt_bind_param($stmt, 's', $_SESSION["username"]);
 mysqli_stmt_execute($stmt);
-
-// get variables from Database
-$result = mysqli_query($link, "SELECT conStatus, BoxName, appLoggedIn FROM users WHERE username = '$username' ");
-
-while ($row = $result->fetch_assoc()) {
-    $conStatus =  $row['conStatus'];
-    $appLoggedIn =  $row['appLoggedIn'];
-    $BoxName =  $row['BoxName'];
-}
+ 
 
 if ($appLoggedIn == CON_STATUS_CONNECTED) { 
     if ($conStatus == CON_STATUS_CONNECTED) {

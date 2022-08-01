@@ -14,10 +14,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $stmt->bind_param("ss", $login , $login);
     $stmt->execute();
     $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $email = $row["email"];
 
-    while ($row = $result->fetch_assoc()) {
-        $email = $row["email"];
-    }
 
     if (!empty($email)) {
         

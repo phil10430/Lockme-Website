@@ -1,29 +1,27 @@
 <?php
 
-$query =  "SELECT id, BoxName, LockStatus, ProtectionLevelTimer, ProtectionLevelPassword, OpenTime, conStatus, appLoggedIn
+$query =  "SELECT BoxName, LockStatus, ProtectionLevelTimer,
+ ProtectionLevelPassword, OpenTime, conStatus, appLoggedIn
 FROM users  WHERE username = ?";
 
 $stmt = $link->prepare($query);
 $stmt->bind_param("s", $_SESSION["username"]);
 $stmt->execute();
 $result = $stmt->get_result();
+$row = $result->fetch_assoc();
 
-$rowCounter = 0;
+$BoxName = $row["BoxName"];
+$LockStatus = $row["LockStatus"];
+$ProtectionLevelTimer = $row["ProtectionLevelTimer"];
+$ProtectionLevelPassword = $row["ProtectionLevelPassword"];
+$conStatus = $row["conStatus"];
+$appLoggedIn = $row["appLoggedIn"];
+$OpenTime = $row["OpenTime"]; 
 
-while ($row = $result->fetch_assoc()) {
-  $row_id = $row["id"];
-  $BoxName = $row["BoxName"];
-  $LockStatus = $row["LockStatus"];
-  $ProtectionLevelTimer = $row["ProtectionLevelTimer"];
-  $ProtectionLevelPassword = $row["ProtectionLevelPassword"];
-  $conStatus = $row["conStatus"];
-  $appLoggedIn = $row["appLoggedIn"];
-  $OpenTime = $row["OpenTime"]; 
-
-  if( !empty($OpenTime)){
-    $OpenTime = date("y-m-d H:i", strtotime("$OpenTime"));
-  }
+if( !empty($OpenTime)){
+  $OpenTime = date("y-m-d H:i", strtotime("$OpenTime"));
 }
+
 ?>
 
 
