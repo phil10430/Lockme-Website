@@ -7,6 +7,7 @@ require "password_reset.php";
 <div class="card">
 
     <div class="card-header">
+        Reset your password:
     </div>
 
     <div class="card-body">
@@ -19,7 +20,7 @@ require "password_reset.php";
                 <?php
                 if (isset($error)) {
                     foreach ($error as $error) {
-                        echo '<div class="errmsg">' . $error . '</div><br>';
+                        echo '<div class="alert-warning">' . $error . '</div><br>';
                     }
                 }
                 if (isset($success)) {
@@ -51,6 +52,8 @@ require "password_reset.php";
     </div>
 
     <div class="card-footer">
+     <p>Have an account? <a href="index.php">Login</a> </p>
+      <p>Don't have an account? <a href="register_page.php">Sign up</a> </p>
     </div>
 
 </div>

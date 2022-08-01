@@ -19,7 +19,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($_POST["RequestType"] == REQUEST_TYPE_LOGIN) {
 
-
         // Check if password is empty
         if (empty(trim($_POST["password"]))) {
             $password_err = "Please enter your password.";

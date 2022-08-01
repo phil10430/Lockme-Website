@@ -7,7 +7,7 @@ require "header.php";
 <section class="container" id="main">
   <div class="card">
     <div class="card-header">
-
+      Type in your Username or Email to reset your password.
     </div>
 
     <div class="card-body">

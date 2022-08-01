@@ -39,7 +39,7 @@ if (isset($_POST['sub_set'])) {
     if (isset($email) != '') {
         $emailtok = $email;
     } else {
-        $error[] = 'Link has been expired or something missing: ' . $token;
+        $error[] = 'Link has been expired.';
         $hide = 1;
     }
 

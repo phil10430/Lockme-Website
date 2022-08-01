@@ -6,10 +6,7 @@ include 'helper_functions.php';
 if($_SERVER["REQUEST_METHOD"] == "POST"){
   
     $login = test_input($_POST["login_var"]);
-
-
     $query = "SELECT * FROM  users WHERE (username=? OR email = ?)";
-
     $stmt = $link->prepare($query);
     $stmt->bind_param("ss", $login , $login);
     $stmt->execute();
@@ -19,6 +16,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 
     if (!empty($email)) {
+        
+        // if old entry with that email exists - delete old password reset entry
+        $sql =  "DELETE FROM pass_reset WHERE email=?";
+        if($stmt = mysqli_prepare($link, $sql)){
+            mysqli_stmt_bind_param($stmt,"s", $email,);      
+        }
+        mysqli_stmt_execute($stmt);
+
+
         
         $token = bin2hex(random_bytes(50));
 

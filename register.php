@@ -74,11 +74,31 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     } elseif(!isValidEmail($email_temp)){
         $email_err = "email has wrong format.";
     }  else{
-        $email = mysqli_real_escape_string($link,$email_temp);
-    }
-    
-    // check if email is used????
+        $sql = "SELECT id FROM users WHERE email = ?";
 
+
+        if($stmt = mysqli_prepare($link, $sql)){
+            // Bind variables to the prepared statement as parameters
+            mysqli_stmt_bind_param($stmt, "s", $email_temp);
+        
+            // Attempt to execute the prepared statement
+            if(mysqli_stmt_execute($stmt)){
+                /* store result */
+                mysqli_stmt_store_result($stmt);
+                
+                if(mysqli_stmt_num_rows($stmt) == 1){
+                    $email_err = "This email is already taken.";
+                } else{
+                    $email = mysqli_real_escape_string($link,$email_temp);
+                }
+            } else{
+                echo "Oops! Something went wrong. Please try again later.";
+            }
+
+            // Close statement
+            mysqli_stmt_close($stmt);
+        } 
+    }
 
     // Check input errors before inserting in database
     if(empty($username_err) && empty($password_err) && empty($confirm_password_err) &&  empty($email_err) ){
