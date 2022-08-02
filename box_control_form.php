@@ -1,8 +1,8 @@
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
  
     <div class="text-center">
-        <button type="submit" name="OpenBox" class="btn btn-success">Open</button>
         <button type="submit" name="CloseBox" class="btn btn-warning">Close</button>
+        <button type="submit" name="OpenBox" class="btn btn-success">Open</button>  
     </div>
  
 
@@ -13,7 +13,7 @@
                     <input type="checkbox" name="timeCheckbox" id="timeCheckboxID" value="timeCheckbox" />
                 </span>
                 <span class="input-group-addon">
-                    <label for="tbox">Open Time</label>
+                    <label for="tbox">Timer</label>
                 </span>
                 <div class='input-group date' id='datetimepicker1'>
                     <input type='text' class="form-control" name="OpenTime" />

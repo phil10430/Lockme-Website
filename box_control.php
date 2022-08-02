@@ -3,6 +3,7 @@ require_once "config.php";
 include 'helper_functions.php';
 
 $boxControlError = "";
+$message = "";
 $connectionStatus = "";
 $username = $_SESSION["username"];
 
@@ -35,6 +36,7 @@ if (($conStatus == CON_STATUS_CONNECTED) && ($appLoggedIn == CON_STATUS_CONNECTE
             $plTimer = "0";
             $plPassword = "0";
             $OpenTimeUnix = PLACEHOLDER; // initialize as placeholder
+
             if ($isTimeProtection) {
                 if (validateDate($OpenTime)) {
                     $dt = DateTime::createFromFormat("d/m/Y H:i", $OpenTime, new DateTimeZone('Europe/Berlin'));
@@ -51,10 +53,13 @@ if (($conStatus == CON_STATUS_CONNECTED) && ($appLoggedIn == CON_STATUS_CONNECTE
                     $boxControlError = "Invalid password! Password must only contain a-z A-Z 0-9 and have 1 to 10 characters.";
                 }
             }
-            $message = MSG_CLOSE . MSG_SEPARATOR .
-                $plTimer . MSG_SEPARATOR . $plPassword . MSG_SEPARATOR .
-                $OpenTimeUnix . MSG_SEPARATOR .
-                $Password;
+            if (empty($boxControlError)){
+                $message = MSG_CLOSE . MSG_SEPARATOR .
+                    $plTimer . MSG_SEPARATOR . $plPassword . MSG_SEPARATOR .
+                    $OpenTimeUnix . MSG_SEPARATOR .
+                    $Password;
+            }
+
         } elseif ($OpenBoxIntent) {
             $message = MSG_OPEN . MSG_SEPARATOR .
                 $Password;
