@@ -5,10 +5,13 @@ include 'helper_functions.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+    // init response variable
+    $response->WishedAction = "";
+
     // get posted variables from APP
+    $UserName = test_input($_POST["UserName"]);
     $RequestType = test_input($_POST["RequestType"]); 
     $ConStatus = test_input($_POST["ConStatus"]);        
-    $UserName = test_input($_POST["UserName"]);   
     $BoxName = test_input($_POST["BoxName"]);  
     $LockStatus = test_input($_POST["LockStatus"]);
     $ProtectionLevelTimer = test_input($_POST["ProtectionLevelTimer"]);
@@ -41,20 +44,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         mysqli_stmt_execute($stmt); 
     }
-
-     // clear wished action from database after command has been executed from APP
-    if ($RequestType == REQUEST_CLEAR_WISHED_ACTION){
-         $query = "UPDATE users SET WishedAction='' WHERE username='$UserName'";
-         $stmt = mysqli_prepare($link, $query); 
-         mysqli_stmt_execute($stmt);
-         $response->WishedAction = "";
-    }
-    else {
-         $response->WishedAction = $row["WishedAction"];
-    }
+ 
+    $response->WishedAction = $row["WishedAction"];
     // send back response to APP
     echo json_encode($response);
     
+    // clear wished action from database after command has been sent to APP
+    $query = "UPDATE users SET WishedAction='' WHERE username='$UserName'";
+    $stmt = mysqli_prepare($link, $query); 
+    mysqli_stmt_execute($stmt);
 }
 else {
     echo "No data posted with HTTP POST.";

@@ -2,7 +2,6 @@
 const REQUEST_TYPE_DEFAULT = "0"; 
 const REQUEST_TYPE_LOGIN = "3";
 const REQUEST_TYPE_LOGOUT = "4";
-const REQUEST_CLEAR_WISHED_ACTION = "5";
 
 const MSG_OPEN = "O";
 const MSG_CLOSE = "C";

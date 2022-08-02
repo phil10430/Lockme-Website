@@ -6,13 +6,6 @@ $boxControlError = "";
 $connectionStatus = "";
 $username = $_SESSION["username"];
 
-// clear wished action from database when page is reloaded -> prevent unintended commands sent to APP
-$query = "UPDATE users SET WishedAction='' WHERE username=?";
-$stmt = mysqli_prepare($link, $query);
-mysqli_stmt_bind_param($stmt, 's', $_SESSION["username"]);
-mysqli_stmt_execute($stmt);
- 
-
 if ($appLoggedIn == CON_STATUS_CONNECTED) { 
     if ($conStatus == CON_STATUS_CONNECTED) {
         $connectionStatus =  "Connected to LockMe-Box #" . $BoxName;
