@@ -1,8 +1,6 @@
 <?php require "login.php"; ?>
 <?php require "header.php"; ?>
 
-
-
     <div class="card">
 
         <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) { ?>
