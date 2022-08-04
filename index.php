@@ -15,6 +15,7 @@
             <?php
                 require "show_status.php";
                 require "box_control.php";
+                require "show_history.php";
             ?>
 
             <script>refreshData("<?php echo $_SESSION["username"]; ?>");</script>
@@ -40,6 +41,7 @@
         <?php } ?>
 
     </div>
+    
 </section>
 
 </body>

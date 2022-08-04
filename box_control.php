@@ -25,6 +25,11 @@ if (($conStatus == CON_STATUS_CONNECTED) && ($appLoggedIn == CON_STATUS_CONNECTE
     // Processing form data when form is submitted
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+        $plTimer = "0";
+        $plPassword = "0";
+        $OpenTimeUnix = PLACEHOLDER; // initialize as placeholder
+        
+
         $OpenTime = test_input($_POST["OpenTime"]);
         $Password = test_input($_POST["Password"]);
         $CloseBoxIntent = isset($_POST['CloseBox']);
@@ -32,11 +37,12 @@ if (($conStatus == CON_STATUS_CONNECTED) && ($appLoggedIn == CON_STATUS_CONNECTE
         $isTimeProtection = isset($_POST['timeCheckbox']);
         $isPasswordProtection = isset($_POST['passwordCheckbox']);
 
-        if ($CloseBoxIntent) {
-            $plTimer = "0";
-            $plPassword = "0";
-            $OpenTimeUnix = PLACEHOLDER; // initialize as placeholder
+        if(empty($Password)){
+            $Password = PLACEHOLDER;
+        }
 
+        if ($CloseBoxIntent) {
+        
             if ($isTimeProtection) {
                 if (validateDate($OpenTime)) {
                     $dt = DateTime::createFromFormat("d/m/Y H:i", $OpenTime, new DateTimeZone('Europe/Berlin'));
