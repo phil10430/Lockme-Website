@@ -96,38 +96,46 @@ $result = $stmt->get_result();
 
 <?php
 
-$nrOfDays = 8;
+$nrOfDays = 10;
 // generate start date 
-$enddate = strtotime("Today");
-$startdate = strtotime("-$nrOfDays Days", $enddate);
- 
- 
+$startdate = strtotime("Today");
+ $status = $LockStatus;
+ $superA = array();
+ $superB = array();
   // loop through days
   for ($i = 0; $i <= $nrOfDays; $i++) 
   {
   //  $enddate = strtotime("Today");
-    $day = strtotime("+$i Days", $startdate); // beginning of day timestamp
+    $day = strtotime("-$i Days", $startdate); // beginning of day timestamp
     $day_after = strtotime("+1 Days", $day); // end of day timestamp
-
     $dayDistribution = array();
     $dayDistributionStatus = array();
 
     // loop through timestamp array - start with oldest date (last element of array)
-    $j = count($timeStampArray);
-    while($j >= 0)
+    for($j = count($timeStampArray); $j >= 0; $j--)
     {
         // check if there is a timestamp entry in the current day
         if (($timeStampArray[$j] > $day ) && ($timeStampArray[$j] < $day_after )){
             //append timestamp to day array
+           // $status_before = $statusArray[$j+1];
+         
             array_push($dayDistribution, $timeStampArray[$j] - $day -  array_sum($dayDistribution));
-            array_push($dayDistributionStatus, $status_old);
-            $status_old = $statusArray[$j];
+            array_push($dayDistributionStatus,  $statusArray[$j+1]);
+            $status = $statusArray[$j];
+        } elseif ($timeStampArray[$j] < $day )
+        {
+            $status = $statusArray[$j];
         }
-        $j--;
     }
-    array_push($dayDistributionStatus, $status_old);
-    //add remaining seconds to full day as last entry
-    array_push($dayDistribution, 3600*24 - array_sum($dayDistribution)); 
+
+    array_push($dayDistributionStatus, $status);
+    if($i > 0){
+        //add remaining seconds to full day as last entry
+        array_push($dayDistribution, 3600*24 - array_sum($dayDistribution));    
+    } else{
+        array_push($dayDistribution, time()-$day);   
+    }
+
 
     foreach ($dayDistribution as $value){
       //  echo $value."\n";
@@ -137,6 +145,8 @@ $startdate = strtotime("-$nrOfDays Days", $enddate);
 
     
     echo date("Y-m-d", $day) ;
+    // echo date("D", $day) ;
+
     /*
     echo "<br>";
 
@@ -148,7 +158,7 @@ $startdate = strtotime("-$nrOfDays Days", $enddate);
     } 
     echo "<br><br>";
     */
-
+    
     ?> <div class="progress"><?php
 
     while($z < count($dayDistribution) )
@@ -156,17 +166,22 @@ $startdate = strtotime("-$nrOfDays Days", $enddate);
 
         $percentage = round($dayDistribution[$z]/(3600*24)*100,2);
         
-        if ($dayDistributionStatus[$z] == 1){
+        if ($dayDistributionStatus[$z] === 1){
             ?> <div class="progress-bar bg-danger" role="progressbar" style="width:<?php echo $percentage?>%" aria-valuenow="<?php echo $percentage?>" aria-valuemin="0" aria-valuemax="100">Locked</div><?php
-        } else{
+        } elseif ($dayDistributionStatus[$z] === 0){
             ?> <div class="progress-bar bg-success" role="progressbar" style="width:<?php echo $percentage?>%" aria-valuenow="<?php echo $percentage?>" aria-valuemin="0" aria-valuemax="100">Open</div><?php
+        } else {
+            ?> <div class="progress-bar bg-warning" role="progressbar" style="width:<?php echo $percentage?>%" aria-valuenow="<?php echo $percentage?>" aria-valuemin="0" aria-valuemax="100">?</div><?php
+
         }
         $z = $z+1;
     } 
 
     ?> </div><?php
 
-    
+    array_push($superA,$dayDistribution);
+    array_push($superB,$dayDistributionStatus);
+
     unset ($dayDistribution);
     unset ($dayDistributionStatus);
  
