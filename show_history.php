@@ -7,104 +7,45 @@ $stmt = $link->prepare($query);
 $stmt->bind_param("s", $_SESSION["username"]);
 $stmt->execute();
 $result = $stmt->get_result();
+ 
+$timestamp_old = time();  // current unix time
+$i = 0; // loopCounter
 
-?>
-<br>
-<table class="table table-condensed">
-  <thead>
-    <tr>
-      <th scope="col">BoxID</th>
-      <th scope="col">Timestamp</th>
-      <th scope="col">Status</th>
-      <th scope="col">Protection</th>
-      <th scope="col">OpenTime</th>
-    </tr>
-  </thead>
-  <tbody>
-  
-    <?php
+while ($row = $result->fetch_assoc()) {
+    $row_id = $row["id"];
+    $BoxName = $row["BoxName"];
+    $LockStatus = $row["LockStatus"];
+    $ProtectionLevelTimer = $row["ProtectionLevelTimer"];
+    $ProtectionLevelPassword = $row["ProtectionLevelPassword"];
+    $OpenTime = $row["OpenTime"];
+    $row_reading_time = $row["reading_time"];
 
+    $timestamp = strtotime("$row_reading_time");
+    $row_reading_time = date("d.m. H:i", $timestamp);
+    $day = date("d", $timestamp);
 
-  
-    $timestamp_old = time();  // current unix time
-    $i = 0; // loopCounter
-
-    while ($row = $result->fetch_assoc()) {
-      $row_id = $row["id"];
-      $BoxName = $row["BoxName"];
-      $LockStatus = $row["LockStatus"];
-      $ProtectionLevelTimer = $row["ProtectionLevelTimer"];
-      $ProtectionLevelPassword = $row["ProtectionLevelPassword"];
-  
-      $OpenTime = $row["OpenTime"];
-      $row_reading_time = $row["reading_time"];
-
-      $timestamp = strtotime("$row_reading_time");
-      $row_reading_time = date("d.m. H:i", $timestamp);
-      $day = date("d", $timestamp);
-
-      if( !empty($OpenTime)){
-        $OpenTime = date("d.m. H:i", strtotime("$OpenTime"));
-      }
-    ?>
-
-
-      <tr>
-        <td><?php echo '#' . $BoxName ?></td>
-        <td><?php echo $row_reading_time ?></td>
-        <td class="text-center">
-          <?php
-            if ($LockStatus == 1) {
-              ?> <span class="glyphicon glyphicon-lock"></span>  <?php
-            }  
-           ?>
-       </td>
-        <td class="text-center">
-          <?php 
-          if (($ProtectionLevelTimer == 1) && ($ProtectionLevelPassword == 1)) {
-           ?> <span class="glyphicon glyphicon-time"></span> / <span class="glyphicon glyphicon-option-horizontal"></span>  <?php
-          } elseif ($ProtectionLevelTimer == 1) {
-            ?> <span class="glyphicon glyphicon-time"></span>  <?php
-          } elseif ($ProtectionLevelPassword == 1) {
-            ?> <span class="glyphicon glyphicon-option-horizontal"></span>  <?php
-          } 
-          ?> 
-        </td>
-        <td><?php echo $OpenTime ?></td>
-      </tr>
-      
-
-      <?php
-        // loop begins with newest entry
-        $timeStampArray[$i] = $timestamp;
-        $statusArray[$i]  = $LockStatus;
-        $i = $i + 1;
-      ?>
-
-   
-      
-
-    <?php
-
+    if( !empty($OpenTime)){
+         $OpenTime = date("d.m. H:i", strtotime("$OpenTime"));
     }
 
-    ?>
+    // loop begins with newest entry
+    $timeStampArray[$i] = $timestamp;
+    $statusArray[$i]  = $LockStatus;
+    $i = $i + 1;
+}
 
-  </tbody>
-</table>
 
-
-<?php
-
+ 
 $nrOfDays = 10;
 // generate start date 
 $startdate = strtotime("Today");
- $status = $LockStatus;
- $superA = array();
- $superB = array();
+$status = $LockStatus;
+$superA = array();
+$superB = array();
+
   // loop through days
-  for ($i = 0; $i <= $nrOfDays; $i++) 
-  {
+for ($i = 0; $i <= $nrOfDays; $i++) 
+{
   //  $enddate = strtotime("Today");
     $day = strtotime("-$i Days", $startdate); // beginning of day timestamp
     $day_after = strtotime("+1 Days", $day); // end of day timestamp
@@ -141,12 +82,12 @@ $startdate = strtotime("Today");
       //  echo $value."\n";
     }
     
-    $z = 0;
+   
 
     
-    echo date("Y-m-d", $day) ;
-    // echo date("D", $day) ;
-
+   
+    echo date("D", $day).": ";
+    echo date("y-m-d", $day) ;
     /*
     echo "<br>";
 
@@ -161,9 +102,8 @@ $startdate = strtotime("Today");
     
     ?> <div class="progress"><?php
 
-    while($z < count($dayDistribution) )
+    for($z =0; $z< count($dayDistribution); $z++)
     {
-
         $percentage = round($dayDistribution[$z]/(3600*24)*100,2);
         
         if ($dayDistributionStatus[$z] === 1){
@@ -172,19 +112,12 @@ $startdate = strtotime("Today");
             ?> <div class="progress-bar bg-success" role="progressbar" style="width:<?php echo $percentage?>%" aria-valuenow="<?php echo $percentage?>" aria-valuemin="0" aria-valuemax="100">Open</div><?php
         } else {
             ?> <div class="progress-bar bg-warning" role="progressbar" style="width:<?php echo $percentage?>%" aria-valuenow="<?php echo $percentage?>" aria-valuemin="0" aria-valuemax="100">?</div><?php
-
-        }
-        $z = $z+1;
+        } 
     } 
 
     ?> </div><?php
-
-    array_push($superA,$dayDistribution);
-    array_push($superB,$dayDistributionStatus);
-
     unset ($dayDistribution);
     unset ($dayDistributionStatus);
- 
 }
  
 ?>
