@@ -1,4 +1,7 @@
 <?php
+
+const STATUS_TIMER_LOCKED = 2;
+
  // attention!!!!!!! include helper_functions.php does not work !!!!!!!!
 $query =  "SELECT id, BoxName, LockStatus, ProtectionLevelTimer, ProtectionLevelPassword, OpenTime, reading_time 
 FROM history  WHERE username = ? ORDER BY id DESC LIMIT 20";
@@ -23,25 +26,23 @@ while ($row = $result->fetch_assoc()) {
     $timestamp = strtotime("$row_reading_time");
     $row_reading_time = date("d.m. H:i", $timestamp);
     $day = date("d", $timestamp);
-
+    
     if( !empty($OpenTime)){
-         $OpenTime = date("d.m. H:i", strtotime("$OpenTime"));
+         $OpenTime =  strtotime("$OpenTime");
     }
-
+    
     // loop begins with newest entry
     $timeStampArray[$i] = $timestamp;
     $statusArray[$i]  = $LockStatus;
+    $openTimeArray[$i]  = $OpenTime;
     $i = $i + 1;
 }
 
-
- 
 $nrOfDays = 10;
 // generate start date 
 $startdate = strtotime("Today");
 $status = $LockStatus;
-$superA = array();
-$superB = array();
+
 
   // loop through days
 for ($i = 0; $i <= $nrOfDays; $i++) 
@@ -58,8 +59,6 @@ for ($i = 0; $i <= $nrOfDays; $i++)
         // check if there is a timestamp entry in the current day
         if (($timeStampArray[$j] > $day ) && ($timeStampArray[$j] < $day_after )){
             //append timestamp to day array
-           // $status_before = $statusArray[$j+1];
-         
             array_push($dayDistribution, $timeStampArray[$j] - $day -  array_sum($dayDistribution));
             array_push($dayDistributionStatus,  $statusArray[$j+1]);
             $status = $statusArray[$j];
@@ -74,32 +73,32 @@ for ($i = 0; $i <= $nrOfDays; $i++)
         //add remaining seconds to full day as last entry
         array_push($dayDistribution, 3600*24 - array_sum($dayDistribution));    
     } else{
-        array_push($dayDistribution, time()-$day);   
+        // newest entry until now
+        array_push($dayDistribution, time() - array_sum($dayDistribution)- $day);   
+        
+        // display forecast
+        if ($ProtectionLevelTimer == 1){
+            array_push($dayDistributionStatus, STATUS_TIMER_LOCKED);
+            array_push($dayDistribution, $openTimeArray[0] - time());   
+        }
+
     }
 
-
-    foreach ($dayDistribution as $value){
-      //  echo $value."\n";
-    }
-    
-   
-
-    
-   
+ 
     echo date("D", $day).": ";
     echo date("y-m-d", $day) ;
+      
     /*
     echo "<br>";
-
-    while($z < count($dayDistribution) )
+   for($z =0; $z< count($dayDistribution); $z++)
     {
        $percentage = round($dayDistribution[$z]/(3600*24)*100,2);
        echo $percentage."/".$dayDistributionStatus[$z]."\n";
-       $z = $z+1; 
     } 
     echo "<br><br>";
     */
     
+
     ?> <div class="progress"><?php
 
     for($z =0; $z< count($dayDistribution); $z++)
@@ -110,7 +109,10 @@ for ($i = 0; $i <= $nrOfDays; $i++)
             ?> <div class="progress-bar bg-danger" role="progressbar" style="width:<?php echo $percentage?>%" aria-valuenow="<?php echo $percentage?>" aria-valuemin="0" aria-valuemax="100">Locked</div><?php
         } elseif ($dayDistributionStatus[$z] === 0){
             ?> <div class="progress-bar bg-success" role="progressbar" style="width:<?php echo $percentage?>%" aria-valuenow="<?php echo $percentage?>" aria-valuemin="0" aria-valuemax="100">Open</div><?php
-        } else {
+        } elseif ($dayDistributionStatus[$z] === STATUS_TIMER_LOCKED){
+            ?> <div class="progress-bar progress-bar-striped active bg-danger" role="progressbar" style="width:<?php echo $percentage?>%" aria-valuenow="<?php echo $percentage?>" aria-valuemin="0" aria-valuemax="100">Locked</div><?php
+        }  
+        else {
             ?> <div class="progress-bar bg-warning" role="progressbar" style="width:<?php echo $percentage?>%" aria-valuenow="<?php echo $percentage?>" aria-valuemin="0" aria-valuemax="100">?</div><?php
         } 
     } 

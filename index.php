@@ -15,6 +15,7 @@
             <?php
                 require "show_status.php";
                 require "box_control.php";
+                require "show_history_table.php";
                 require "show_history.php";
             ?>
 
