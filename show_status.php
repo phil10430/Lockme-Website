@@ -1,7 +1,7 @@
 <?php
 
 $query =  "SELECT BoxName, LockStatus, ProtectionLevelTimer,
- ProtectionLevelPassword, OpenTime, conStatus, appLoggedIn
+ ProtectionLevelPassword, OpenTime, conStatus, appLoggedIn, AppActive
 FROM users  WHERE username = ?";
 
 $stmt = $link->prepare($query);
@@ -16,6 +16,7 @@ $ProtectionLevelTimer = $row["ProtectionLevelTimer"];
 $ProtectionLevelPassword = $row["ProtectionLevelPassword"];
 $conStatus = $row["conStatus"];
 $appLoggedIn = $row["appLoggedIn"];
+$AppActive = $row["AppActive"];
 $OpenTime = $row["OpenTime"]; 
 
 if( !empty($OpenTime)){
@@ -28,7 +29,7 @@ if( !empty($OpenTime)){
 <img class="center-block" style="height:200px;width:auto;"
 
 <?php
-if(($appLoggedIn==1) && ($conStatus==1)){
+if(($appLoggedIn==1) && ($conStatus==1) && ($AppActive == 1)){
   if ($LockStatus == 0) {
 
     ?>  src="/pictures/lockme_symbol_open.png"><?php
@@ -61,6 +62,22 @@ if(($appLoggedIn==1) && ($conStatus==1)){
 }
       
     
+$connectionStatusMessage = "";
+if ($AppActive == 1){
+    if ($appLoggedIn == 1) { 
+            if ($conStatus == 1) {
+                $connectionStatusMessage =  "Connected to LockMe-Box #" . $BoxName;
+            } else {
+                $connectionStatusMessage = "App not connected to LockMe-Box. Connect App to LockMe-Box to enable control.";
+            }
+    }  else{
+        $connectionStatusMessage = "App is not connected to Account. Open your App and login.";
+    }
+} else {
+    $connectionStatusMessage = "App is not active. Please open App to enable control.";
+}
+
+echo '<br><div class="alert alert-info">' . $connectionStatusMessage . '</div>';
 
 ?>
  

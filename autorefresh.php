@@ -5,7 +5,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
    
     $username = mysqli_real_escape_string($link,trim($_POST["username"]));
 
-    $query = "SELECT LockStatus, conStatus, appLoggedIn, OpenTime
+    $query = "SELECT LockStatus, conStatus, appLoggedIn, OpenTime, AppActive
     FROM users WHERE username = '$username'";
 
     $stmt = $link->prepare($query);

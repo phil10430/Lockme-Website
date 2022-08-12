@@ -38,7 +38,7 @@ while ($row = $result->fetch_assoc()) {
     $i = $i + 1;
 }
 
-$nrOfDays = 10;
+$nrOfDays = 14;
 // generate start date 
 $startdate = strtotime("Today");
 $status = $LockStatus;
@@ -79,7 +79,7 @@ for ($i = 0; $i <= $nrOfDays; $i++)
         // display forecast
         if ($ProtectionLevelTimer == 1){
             array_push($dayDistributionStatus, STATUS_TIMER_LOCKED);
-            array_push($dayDistribution, $openTimeArray[0] - time());   
+            array_push($dayDistribution, min($day_after,$openTimeArray[0]) - time());   
         }
 
     }

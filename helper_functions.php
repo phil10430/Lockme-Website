@@ -2,8 +2,7 @@
 
 const MSG_OPEN = "O";
 const MSG_CLOSE = "C";
-const MSG_SEPARATOR = "/";
-const CON_STATUS_CONNECTED = 1;
+const MSG_SEPARATOR = "/"; 
 const PLACEHOLDER = "*";
 
 const PASSWORD_REGEX = "/^[a-zA-Z0-9]+$/";

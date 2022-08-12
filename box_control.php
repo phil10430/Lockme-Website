@@ -4,22 +4,10 @@ include 'helper_functions.php';
 
 $boxControlError = "";
 $message = "";
-$connectionStatus = "";
 $username = $_SESSION["username"];
 
-if ($appLoggedIn == CON_STATUS_CONNECTED) { 
-    if ($conStatus == CON_STATUS_CONNECTED) {
-        $connectionStatus =  "Connected to LockMe-Box #" . $BoxName;
-    } else {
-        $connectionStatus = "App not connected to LockMe-Box. Connect App to LockMe-Box to enable control.";
-    }
-} else{
-    $connectionStatus = "App is not connected to Account. Open your App and login.";
-}
-
-echo '<br><div class="alert alert-info">' . $connectionStatus . '</div>';
  
-if (($conStatus == CON_STATUS_CONNECTED) && ($appLoggedIn == CON_STATUS_CONNECTED) ){
+if (($conStatus == 1) && ($appLoggedIn == 1)  && ($AppActive == 1)){
     // load box control form
     require "box_control_form.php";
     // Processing form data when form is submitted
