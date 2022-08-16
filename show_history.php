@@ -35,6 +35,7 @@ while ($row = $result->fetch_assoc()) {
     $timeStampArray[$i] = $timestamp;
     $statusArray[$i]  = $LockStatus;
     $openTimeArray[$i]  = $OpenTime;
+    $ProtectionLevelTimerArray[$i]  = $ProtectionLevelTimer;
     $i = $i + 1;
 }
 
@@ -77,9 +78,10 @@ for ($i = 0; $i <= $nrOfDays; $i++)
         array_push($dayDistribution, time() - array_sum($dayDistribution)- $day);   
         
         // display forecast
-        if ($ProtectionLevelTimer == 1){
+        if ($ProtectionLevelTimerArray[0]== 1){
             array_push($dayDistributionStatus, STATUS_TIMER_LOCKED);
             array_push($dayDistribution, min($day_after,$openTimeArray[0]) - time());   
+            echo 'test';
         }
 
     }
