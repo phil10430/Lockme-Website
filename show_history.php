@@ -14,37 +14,22 @@ $result = $stmt->get_result();
 $timestamp_old = time();  // current unix time
 $i = 0; // loopCounter
 
-while ($row = $result->fetch_assoc()) {
-    $row_id = $row["id"];
-    $BoxName = $row["BoxName"];
-    $LockStatus = $row["LockStatus"];
-    $ProtectionLevelTimer = $row["ProtectionLevelTimer"];
-    $ProtectionLevelPassword = $row["ProtectionLevelPassword"];
-    $OpenTime = $row["OpenTime"];
-    $row_reading_time = $row["reading_time"];
+$statusArray = array();
+$timeStampArray = array();
+$openTimeArray = array();
+$ProtectionLevelTimer = array();
 
-    $timestamp = strtotime("$row_reading_time");
-    $row_reading_time = date("d.m. H:i", $timestamp);
-    $day = date("d", $timestamp);
-    
-    if( !empty($OpenTime)){
-         $OpenTime =  strtotime("$OpenTime");
-    }
-    
+while ($row = $result->fetch_assoc()) {
     // loop begins with newest entry
-    $timeStampArray[$i] = $timestamp;
-    $statusArray[$i]  = $LockStatus;
-    $openTimeArray[$i]  = $OpenTime;
-    $ProtectionLevelTimerArray[$i]  = $ProtectionLevelTimer;
-    $i = $i + 1;
+    $statusArray[] = $row["LockStatus"];
+    $timeStampArray[] = strtotime( $row["reading_time"]);
+    $ProtectionLevelTimer[] = $row["ProtectionLevelTimer"];
+    $openTimeArray[]  = strtotime($row["OpenTime"]);
 }
 
 $nrOfDays = 14;
 // generate start date 
 $startdate = strtotime("Today");
-$status = $LockStatus;
-
-
   // loop through days
 for ($i = 0; $i <= $nrOfDays; $i++) 
 {
@@ -78,10 +63,9 @@ for ($i = 0; $i <= $nrOfDays; $i++)
         array_push($dayDistribution, time() - array_sum($dayDistribution)- $day);   
         
         // display forecast
-        if ($ProtectionLevelTimerArray[0]== 1){
+        if ($ProtectionLevelTimer[0] == 1){
             array_push($dayDistributionStatus, STATUS_TIMER_LOCKED);
-            array_push($dayDistribution, min($day_after,$openTimeArray[0]) - time());   
-            echo 'test';
+            array_push($dayDistribution, min($day_after, $openTimeArray[0]) - time());   
         }
 
     }
