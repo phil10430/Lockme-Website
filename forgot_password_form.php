@@ -11,8 +11,12 @@
         if (isset($_GET['servererr'])) {
             echo "<p class='errmsg'>The server failed to send the message. Please try again later.</p>";
         }
+         // If server error 
+         if (isset($_GET['emailformat_invalid'])) {
+            echo "<p class='errmsg'>Email format is not valid.</p>";
+        }
         //if other issues 
-        if (isset($_GET['somethingwrong'])) {
+        if (isset($_GET['something_wrong'])) {
             echo '<p class="errmsg">Something went wrong.  </p>';
         }
         // If Success | Link sent 
@@ -24,7 +28,7 @@
 
         
         <?php if (!isset($_GET['sent'])) { ?>
-            <label class="label_txt">Username or Email </label>
+            <label class="label_txt">Your Email: </label>
             <input type="text" name="login_var" value="<?php if (!empty($error_forgot)) {
                                                             echo $error_forgot;
                                                         } ?>" class="form-control" required="">

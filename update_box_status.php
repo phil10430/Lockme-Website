@@ -1,5 +1,5 @@
 <?php
-/* This script is called periodically from APP every x seconds */
+/* This script is called when Box sends a response  to APP */
 require_once "config.php";
 include 'helper_functions.php';
 
@@ -11,8 +11,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $LockStatus = test_input($_POST["LockStatus"]);
     $ProtectionLevelTimer = test_input($_POST["ProtectionLevelTimer"]);
     $ProtectionLevelPassword = test_input($_POST["ProtectionLevelPassword"]);
-    $OpenTime = test_input($_POST["OpenTime"]);    
+    $OpenTime = test_input($_POST["OpenTime"]); 
+    $emergencyDays = test_input($_POST["emergencyDays"]);     
     
+    $RtcClcRate = test_input($_POST["RtcClcRate"]);    
+    $ccf = test_input($_POST["ccf"]);    
+    $TimeDifferenceSec = test_input($_POST["TimeDifferenceSec"]);    
+    $SleepTime = test_input($_POST["SleepTime"]);    
+    $SoC = test_input($_POST["SoC"]);    
+  
     // get variables from database
     $query = "SELECT LockStatus, OpenTime, WishedAction FROM users WHERE username = '$UserName'";
     $stmt = $link->prepare($query);
@@ -22,10 +29,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
  
     // update users table with posted variables
     $query = "UPDATE users SET BoxName=?, ProtectionLevelTimer = ?, 
-    ProtectionLevelPassword = ?, LockStatus = ?, OpenTime = ? WHERE username=?";
+    ProtectionLevelPassword = ?, LockStatus = ?, emergencyDays = ? , OpenTime = ? WHERE username=?";
     $stmt = mysqli_prepare($link, $query);
-    mysqli_stmt_bind_param($stmt, 'iiiiss', $BoxName, $ProtectionLevelTimer, 
-    $ProtectionLevelPassword, $LockStatus,  $OpenTime, $UserName);
+    mysqli_stmt_bind_param($stmt, 'iiiiiss', $BoxName, $ProtectionLevelTimer, 
+    $ProtectionLevelPassword, $LockStatus, $emergencyDays,  $OpenTime, $UserName);
     mysqli_stmt_execute($stmt);
 
     // if lockstatus has changed or open time was extended update history table
@@ -39,6 +46,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         mysqli_stmt_execute($stmt); 
     }
+
+    /*-------check when to update box data --------*/
+   $query = "INSERT INTO history_boxdata (BoxName, LockStatus, RtcClcRate, ccf, TimeDifferenceSec, SleepTime, SoC, username) VALUES (?,?,?,?, ?,?,?,?)";
+   if($stmt = mysqli_prepare($link, $query)){
+       mysqli_stmt_bind_param($stmt,"iissssss", $BoxName, $LockStatus, $RtcClcRate, 
+       $ccf, $TimeDifferenceSec, $SleepTime, $SoC, $UserName);      
+   }
+   mysqli_stmt_execute($stmt); 
+   
 }
 else {
     echo "No data posted with HTTP POST.";

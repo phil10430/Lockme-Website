@@ -29,13 +29,13 @@ while ($row = $result->fetch_assoc()) {
 
 $nrOfDays = 14;
 // generate start date 
-$startdate = strtotime("Today");
+ 
   // loop through days
 for ($i = 0; $i <= $nrOfDays; $i++) 
 {
-  //  $enddate = strtotime("Today");
-    $day = strtotime("-$i Days", $startdate); // beginning of day timestamp
-    $day_after = strtotime("+1 Days", $day); // end of day timestamp
+    $day = strtotime("-$i Days", strtotime("Today")); // beginning of day timestamp
+    $day_after = $day + 86400; // end of day timestamp
+
     $dayDistribution = array();
     $dayDistributionStatus = array();
 
@@ -57,7 +57,7 @@ for ($i = 0; $i <= $nrOfDays; $i++)
     array_push($dayDistributionStatus, $status);
     if($i > 0){
         //add remaining seconds to full day as last entry
-        array_push($dayDistribution, 3600*24 - array_sum($dayDistribution));    
+        array_push($dayDistribution, 86400 - array_sum($dayDistribution));    
     } else{
         // newest entry until now
         array_push($dayDistribution, time() - array_sum($dayDistribution)- $day);   
