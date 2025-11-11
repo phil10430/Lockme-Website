@@ -19,7 +19,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $TimeDifferenceSec = test_input($_POST["TimeDifferenceSec"]);    
     $SleepTime = test_input($_POST["SleepTime"]);    
     $SoC = test_input($_POST["SoC"]);    
-  
+    $firmwareVersion = test_input($_POST["firmwareVersion"]);   
+
     // get variables from database
     $query = "SELECT LockStatus, OpenTime, WishedAction FROM users WHERE username = '$UserName'";
     $stmt = $link->prepare($query);
