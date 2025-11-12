@@ -1,6 +1,15 @@
-<?php require "login.php"; ?>
-<?php require "header.php"; ?>
+<?php 
+require "login.php"; 
+require "header.php";
 
+session_start();
+if (isset($_SESSION['flash_message'])) {
+    echo "<div style='background:#e0ffe0; color:#006600; padding:10px; border-radius:8px; margin:10px 0;'>
+            {$_SESSION['flash_message']}
+          </div>";
+    unset($_SESSION['flash_message']); // Nachricht nur einmal anzeigen
+}
+?>
     <div class="card">
 
         <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) { ?>
