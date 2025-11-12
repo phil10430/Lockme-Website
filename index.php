@@ -16,7 +16,7 @@
                 require "show_status.php";
                 require "box_control.php";
                 require "show_history_table.php";
-                require "show_history.php";
+              //  require "show_history.php";
             ?>
 
             <script>refreshData("<?php echo $_SESSION["username"]; ?>");</script>

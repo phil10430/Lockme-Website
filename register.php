@@ -104,14 +104,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(empty($username_err) && empty($password_err) && empty($confirm_password_err) &&  empty($email_err) ){
         
         // Prepare an insert statement
-        $sql = "INSERT INTO users (username, password, email, emergencyDays, firmwareVersion) VALUES (?,?,?,?,?)";
+        $sql = "INSERT INTO users (username, password, email) VALUES (?,?,?)";
          
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
             // sss = number of columns 
-            $defalutEmergencyDays = 3;
-            $firmwareVersion = 100;
-            mysqli_stmt_bind_param($stmt, "sssii", $param_username, $param_password, $email , $defalutEmergencyDays,  $firmwareVersion);
+            mysqli_stmt_bind_param($stmt, "sss", $param_username, $param_password, $email);
             
             // Set parameters
             $param_username = $username;
@@ -132,7 +130,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                   header("location: index.php");
             } else{
                 // uncomment following line to see error message
-                // echo mysqli_error($link);
+                 echo mysqli_error($link);
                 echo "Oops! Something went wrong. Please try again later.";
             }
 

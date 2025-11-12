@@ -4,10 +4,6 @@ require_once "config.php";
 include 'helper_functions.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-   
-
- 
     // get posted variables from APP
     $UserName = test_input($_POST["UserName"]);
     $ConStatus = test_input($_POST["ConStatus"]);        
