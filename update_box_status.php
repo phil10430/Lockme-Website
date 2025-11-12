@@ -27,32 +27,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute();
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
- 
+
+    
     // update users table with posted variables
-    $query = "UPDATE users SET BoxName=?, ProtectionLevelTimer = ?, 
-    ProtectionLevelPassword = ?, LockStatus = ?, emergencyDays = ? , OpenTime = ? WHERE username=?";
+    $query = "UPDATE users SET BoxName=?, ProtectionLevelTimer = ?, ProtectionLevelPassword = ?, LockStatus = ?, emergencyDays = ? , OpenTime = ? , firmwareVersion = ? WHERE username=?";
     $stmt = mysqli_prepare($link, $query);
-    mysqli_stmt_bind_param($stmt, 'iiiiiss', $BoxName, $ProtectionLevelTimer, 
-    $ProtectionLevelPassword, $LockStatus, $emergencyDays,  $OpenTime, $UserName);
+    mysqli_stmt_bind_param($stmt, 'iiiiisis', 
+    $BoxName, 
+    $ProtectionLevelTimer, 
+    $ProtectionLevelPassword, 
+    $LockStatus, 
+    $emergencyDays, 
+    $OpenTime, 
+    $firmwareVersion,
+    $UserName 
+    );
     mysqli_stmt_execute($stmt);
+    
 
     // if lockstatus has changed or open time was extended update history table
     if(($row["LockStatus"] != $LockStatus) || ($row["OpenTime"] != $OpenTime))
     {
-        $query = "INSERT INTO history (BoxName, LockStatus, ProtectionLevelTimer,
-         ProtectionLevelPassword, OpenTime, username) VALUES (?,?,?,?,?,?)";
+        $query = "INSERT INTO history (
+            BoxName, 
+            LockStatus, 
+            ProtectionLevelTimer,
+            ProtectionLevelPassword, 
+            OpenTime, 
+            username
+        ) VALUES (?,?,?,?,?,?)";
+
         if($stmt = mysqli_prepare($link, $query)){
-            mysqli_stmt_bind_param($stmt,"iiiiss", $BoxName, $LockStatus, $ProtectionLevelTimer, 
-            $ProtectionLevelPassword, $OpenTime, $UserName);      
+            mysqli_stmt_bind_param($stmt,"iiiiss", 
+            $BoxName, 
+            $LockStatus, 
+            $ProtectionLevelTimer, 
+            $ProtectionLevelPassword, 
+            $OpenTime, 
+            $UserName
+            );      
         }
         mysqli_stmt_execute($stmt); 
     }
 
     /*-------check when to update box data --------*/
-   $query = "INSERT INTO history_boxdata (BoxName, LockStatus, RtcClcRate, ccf, TimeDifferenceSec, SleepTime, SoC, username) VALUES (?,?,?,?, ?,?,?,?)";
+   $query = "INSERT INTO history_boxdata (BoxName, LockStatus, RtcClcRate, ccf, TimeDifferenceSec, SleepTime, SoC, username) VALUES (?,?,?,?,?,?,?,?)";
    if($stmt = mysqli_prepare($link, $query)){
-       mysqli_stmt_bind_param($stmt,"iissssss", $BoxName, $LockStatus, $RtcClcRate, 
-       $ccf, $TimeDifferenceSec, $SleepTime, $SoC, $UserName);      
+       mysqli_stmt_bind_param($stmt,"iissssss", 
+       $BoxName, 
+       $LockStatus, 
+       $RtcClcRate, 
+       $ccf, 
+       $TimeDifferenceSec, 
+       $SleepTime, 
+       $SoC, 
+       $UserName);      
    }
    mysqli_stmt_execute($stmt); 
    

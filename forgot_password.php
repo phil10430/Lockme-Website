@@ -41,7 +41,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 $FromName = "Lock-Me";
                 $FromEmail = "lockmetest@stim-me.de";
                 $ReplyTo = "lockmetest@stim-me.de";
-                $credits = "https://lockmetest.stim-me.de/";
+                $credits = "https://lockmebox.de/";
                 $headers  = "MIME-Version: 1.0\n";
                 $headers .= "Content-type: text/html; charset=iso-8859-1\n";
                 $headers .= "From: " . $FromName . " <" . $FromEmail . ">\n";
@@ -53,7 +53,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 $subject = "You have received a password reset email";
 
 
-                $mlink = "https://lockmetest.stim-me.de/password_reset_page.php?token=".$token;
+                $mlink = "https://lockmebox.de/password_reset_page.php?token=".$token;
                 $msg = "
                     <html>
                     <head>
