@@ -6,7 +6,7 @@ const MSG_SEPARATOR = "/";
 const PLACEHOLDER = "*";
 
 const PASSWORD_REGEX = "/^[a-zA-Z0-9]+$/";
-const USERNAME_REGEX = "/^[a-zA-Z0-9]+$/";
+const username_REGEX = "/^[a-zA-Z0-9]+$/";
 
 
 function test_input($data)
@@ -36,10 +36,10 @@ function isValidPassword($pw)
 }
 
 
-function isValidUsername($name)
+function isValidusername($name)
 {
    // only letters and numbers allowed
-    if (preg_match(USERNAME_REGEX, $name))
+    if (preg_match(username_REGEX, $name))
     {
         return true;
     } 

@@ -1,5 +1,7 @@
 <?php
+
 require_once 'config.php';
+
 session_start(); // Session starten, damit wir Flash-Messages nutzen können
 
 if (isset($_GET['token'])) {

@@ -7,12 +7,12 @@ $errors = [];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    // 🔹 Username prüfen
+    // 🔹 username prüfen
     $username = trim($_POST["username"] ?? '');
     if (empty($username)) {
         $errors['username'] = "Please enter a username.";
-    } elseif (!isValidUsername($username)) {
-        $errors['username'] = "Username can only contain letters and numbers.";
+    } elseif (!isValidusername($username)) {
+        $errors['username'] = "username can only contain letters and numbers.";
     } else {
         $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
         $stmt->execute([$username]);

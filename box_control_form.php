@@ -1,8 +1,8 @@
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
  
     <div class="text-center">
-        <button type="submit" name="CloseBox" class="btn btn-warning">Close</button>
-        <button type="submit" name="OpenBox" class="btn btn-success">Open</button>  
+        <button type="submit" name="closeBox" class="btn btn-warning">Close</button>
+        <button type="submit" name="openBox" class="btn btn-success">Open</button>  
     </div>
  
 
@@ -16,7 +16,7 @@
                     <label for="tbox">Timer</label>
                 </span>
                 <div class='input-group date' id='datetimepicker1'>
-                    <input type='text' class="form-control" name="OpenTime" />
+                    <input type='text' class="form-control" name="openTime" />
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
@@ -35,7 +35,7 @@
                 <span class="input-group-addon">
                     <label for="tbox">Password</label>
                 </span>
-                <input type="text" class="form-control" maxlength='10' id="Password" name="Password"><br>
+                <input type="text" class="form-control" maxlength='10' id="password" name="password"><br>
             </div>
         </div>
     </div>

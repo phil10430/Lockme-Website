@@ -9,13 +9,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
     if (isValidEmail($login))
     {
-        $query = "SELECT * FROM  users WHERE (email = ?)";
-        $stmt = $link->prepare($query);
-        $stmt->bind_param("s", $login);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-        $email = $row["email"];
+    
+        $query = "SELECT * FROM users WHERE email = :email";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute([':email' => $login]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($row) {
+            $email = $row['email'];
+        } else {
+            $email = null; // oder Fehlerbehandlung, falls nichts gefunden wurde
+        }
 
 
         if (!empty($email)) {

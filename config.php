@@ -32,8 +32,4 @@ try {
     // oder: error_log($e->getMessage()); // Für Logs
 }
 
-// 🔹 Optional: Start der Session (wenn du oft Sessions brauchst)
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 ?>

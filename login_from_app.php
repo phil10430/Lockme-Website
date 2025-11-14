@@ -7,58 +7,49 @@ include 'helper_functions.php';
 $username = $password = "";
 $username_err = $password_err = $login_err = "";
 
-// Processing form data when form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $username = mysqli_real_escape_string($link, trim($_POST["username"]));
-    $password = mysqli_real_escape_string($link, trim($_POST["password"]));
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    // Validate credentials
-    if (empty($username_err) && empty($password_err)) {
-        // Prepare a select statement
-        $sql = "SELECT id, username,  password FROM users WHERE username = ?";
+    // Eingaben holen & trimmen
+    $username = trim($_POST["username"] ?? '');
+    $password = trim($_POST["password"] ?? '');
 
-        if ($stmt = mysqli_prepare($link, $sql)) {
-            // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "s", $param_username);
+    // Validierung
+    if (empty($username) || empty($password)) {
+        echo "username or password is empty.";
+        exit;
+    }
 
-            // Set parameters
-            $param_username = $username;
+    try {
+        // Nutzer abrufen
+        $stmt = $pdo->prepare("SELECT id, username, password FROM users WHERE username = :username");
+        $stmt->execute([':username' => $username]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Attempt to execute the prepared statement
-            if (mysqli_stmt_execute($stmt)) {
-                // Store result
-                mysqli_stmt_store_result($stmt);
+        if ($user) {
+            // Passwort prüfen
+            if (password_verify($password, $user['password'])) {
+                // Loginstatus updaten
+                $stmt = $pdo->prepare("UPDATE users SET app_logged_in = 1 WHERE username = :username");
+                $stmt->execute([':username' => $username]);
 
-                // Check if username exists, if yes then verify password
-                // checks if 1 row is returend
-                if (mysqli_stmt_num_rows($stmt) == 1) {
+                // Session setzen (optional)
+                $_SESSION["loggedin"] = true;
+                $_SESSION["id"] = $user["id"];
+                $_SESSION["username"] = $user["username"];
 
-                    // Bind result variables
-                    mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password);
-                    if (mysqli_stmt_fetch($stmt)) {
-                        if (password_verify($password, $hashed_password)) {
-                            $query = "UPDATE users SET appLoggedIn=? WHERE username=?";
-                            $stmt = mysqli_prepare($link, $query);
-                            $isLoggedIn = 1;
-                            mysqli_stmt_bind_param($stmt, 'is',   $isLoggedIn, $username);
-                            mysqli_stmt_execute($stmt);
-                            echo "logged_in";
-                        } else {
-                            echo "Invalid password";
-                        }
-                    }
-                } else {
-                    echo "servername doesn't exist";
-                }
+                echo "logged_in"; // Android: public void onResponse(String response)
             } else {
-                echo "Oops! Something went wrong. Please try again later.";
+                echo "Invalid password.";
             }
-
-            // Close statement
-            mysqli_stmt_close($stmt);
+        } else {
+            echo "Username doesn't exist.";
         }
-    } else {
-        echo 'Username or Password is empty.';
+    } catch (PDOException $e) {
+        // Bei Fehlern keine SQL-Daten ausgeben!
+        echo "Database error. Please try again later.";
+        // Für Debugging (nur lokal!): echo $e->getMessage();
     }
 }
+
+?>

@@ -1,89 +1,44 @@
 <?php
+
 /* This script is called when Box sends a response  to APP */
+
 require_once "config.php";
 include 'helper_functions.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // get posted variables from APP
-    $UserName = test_input($_POST["UserName"]); 
-    $BoxName = test_input($_POST["BoxName"]);  
-    $LockStatus = test_input($_POST["LockStatus"]);
-    $ProtectionLevelTimer = test_input($_POST["ProtectionLevelTimer"]);
-    $ProtectionLevelPassword = test_input($_POST["ProtectionLevelPassword"]);
-    $OpenTime = test_input($_POST["OpenTime"]); 
-    $emergencyDays = test_input($_POST["emergencyDays"]);     
-    
-    $RtcClcRate = test_input($_POST["RtcClcRate"]);    
-    $ccf = test_input($_POST["ccf"]);    
-    $TimeDifferenceSec = test_input($_POST["TimeDifferenceSec"]);    
-    $SleepTime = test_input($_POST["SleepTime"]);    
-    $SoC = test_input($_POST["SoC"]);    
+    $username = test_input($_POST["username"]); 
+    $boxName = test_input($_POST["boxName"]);  
+    $lockStatus = test_input($_POST["lockStatus"]);
+    $protectionLevelTimer = test_input($_POST["protectionLevelTimer"]);
+    $protectionLevelPassword = test_input($_POST["protectionLevelPassword"]);
+    $openTime = test_input($_POST["openTime"]); 
+    $emergencyDays = test_input($_POST["emergencyDays"]);  
     $firmwareVersion = test_input($_POST["firmwareVersion"]);   
 
-    // get variables from database
-    $query = "SELECT LockStatus, OpenTime, WishedAction FROM users WHERE username = '$UserName'";
-    $stmt = $link->prepare($query);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
-
+    $sql = "UPDATE users SET 
+    box_name = :box_name, 
+    protection_level_timer = :protection_level_timer, 
+    protection_level_password = :protection_level_password, 
+    lock_status = :lock_status, 
+    emergency_days = :emergency_days, 
+    open_time = :open_time, 
+    firmware_version = :firmware_version
+    WHERE username = :username";
     
-    // update users table with posted variables
-    $query = "UPDATE users SET BoxName=?, ProtectionLevelTimer = ?, ProtectionLevelPassword = ?, LockStatus = ?, emergencyDays = ? , OpenTime = ? , firmwareVersion = ? WHERE username=?";
-    $stmt = mysqli_prepare($link, $query);
-    mysqli_stmt_bind_param($stmt, 'iiiiisis', 
-    $BoxName, 
-    $ProtectionLevelTimer, 
-    $ProtectionLevelPassword, 
-    $LockStatus, 
-    $emergencyDays, 
-    $OpenTime, 
-    $firmwareVersion,
-    $UserName 
-    );
-    mysqli_stmt_execute($stmt);
-    
+    $stmt = $pdo->prepare($sql);
 
-    // if lockstatus has changed or open time was extended update history table
-    if(($row["LockStatus"] != $LockStatus) || ($row["OpenTime"] != $OpenTime))
-    {
-        $query = "INSERT INTO history (
-            BoxName, 
-            LockStatus, 
-            ProtectionLevelTimer,
-            ProtectionLevelPassword, 
-            OpenTime, 
-            username
-        ) VALUES (?,?,?,?,?,?)";
-
-        if($stmt = mysqli_prepare($link, $query)){
-            mysqli_stmt_bind_param($stmt,"iiiiss", 
-            $BoxName, 
-            $LockStatus, 
-            $ProtectionLevelTimer, 
-            $ProtectionLevelPassword, 
-            $OpenTime, 
-            $UserName
-            );      
-        }
-        mysqli_stmt_execute($stmt); 
-    }
-
-    /*-------check when to update box data --------*/
-   $query = "INSERT INTO history_boxdata (BoxName, LockStatus, RtcClcRate, ccf, TimeDifferenceSec, SleepTime, SoC, username) VALUES (?,?,?,?,?,?,?,?)";
-   if($stmt = mysqli_prepare($link, $query)){
-       mysqli_stmt_bind_param($stmt,"iissssss", 
-       $BoxName, 
-       $LockStatus, 
-       $RtcClcRate, 
-       $ccf, 
-       $TimeDifferenceSec, 
-       $SleepTime, 
-       $SoC, 
-       $UserName);      
-   }
-   mysqli_stmt_execute($stmt); 
+    $stmt->execute([
+        ':username' => $username,
+        ':box_name' => $boxName,       
+        ':lock_status' => $lockStatus,  
+        ':protection_level_timer' => $protectionLevelTimer,     
+        ':protection_level_password' => $protectionLevelPassword,    
+        ':open_time' => $openTime,
+        ':emergency_days' => $emergencyDays,    
+        ':firmware_version' => $firmwareVersion  
+    ]);
    
 }
 else {

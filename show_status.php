@@ -1,26 +1,26 @@
 <?php
 
-$query =  "SELECT BoxName, LockStatus, ProtectionLevelTimer,
- ProtectionLevelPassword, OpenTime, conStatus, appLoggedIn, AppActive
-FROM users  WHERE username = ?";
+session_start();
+$username = $_SESSION["username"];
 
-$stmt = $link->prepare($query);
-$stmt->bind_param("s", $_SESSION["username"]);
-$stmt->execute();
-$result = $stmt->get_result();
-$row = $result->fetch_assoc();
+$sql = "SELECT * FROM users WHERE username = :username";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([':username' => $username]);
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$BoxName = $row["BoxName"];
-$LockStatus = $row["LockStatus"];
-$ProtectionLevelTimer = $row["ProtectionLevelTimer"];
-$ProtectionLevelPassword = $row["ProtectionLevelPassword"];
-$conStatus = $row["conStatus"];
-$appLoggedIn = $row["appLoggedIn"];
-$AppActive = $row["AppActive"];
-$OpenTime = $row["OpenTime"]; 
 
-if( !empty($OpenTime)){
-  $OpenTime = date("y-m-d H:i", strtotime("$OpenTime"));
+$boxName = $row['box_name'];
+$lockStatus = $row['lock_status'];
+$protectionLevelTimer   = $row['protection_level_timer'];
+$protectionLevelPassword   = $row['protection_level_password'];
+$openTime   = $row['open_time'];
+$conStatus = $row['con_status'];
+$appLoggedIn = $row['app_logged_in'];
+$appActive = $row['app_active'];
+
+
+if( !empty($openTime  )){
+  $openTime   = date("y-m-d H:i", strtotime("$openTime  "));
 }
 
 ?>
@@ -29,23 +29,23 @@ if( !empty($OpenTime)){
 <img class="center-block" style="height:200px;width:auto;"
 
 <?php
-if(($appLoggedIn==1) && ($conStatus==1) && ($AppActive == 1)){
-  if ($LockStatus == 0) {
+if(($appLoggedIn==1) && ($conStatus==1) && ($appActive == 1)){
+  if ($lockStatus == 0) {
 
     ?>  src="/pictures/lockme_symbol_open.png"><?php
 
-  }elseif ($LockStatus == 1) {
-    if (($ProtectionLevelTimer == 1) && ($ProtectionLevelPassword == 1)) {
+  }elseif ($lockStatus == 1) {
+    if (($protectionLevelTimer   == 1) && ($protectionLevelPassword   == 1)) {
 
         ?> src="/pictures/lockme_symbol_closed_timer_password.png" > <?php
-        ?><p class="text-center"> <?php echo $OpenTime; ?> </p> <?php
+        ?><p class="text-center"> <?php echo $openTime  ; ?> </p> <?php
 
-    } elseif ($ProtectionLevelTimer == 1) {
+    } elseif ($protectionLevelTimer   == 1) {
 
       ?> src="/pictures/lockme_symbol_closed_timer.png">  <?php
-      ?><p class="text-center"> <?php echo $OpenTime; ?> </p> <?php
+      ?><p class="text-center"> <?php echo $openTime  ; ?> </p> <?php
 
-    } elseif ($ProtectionLevelPassword == 1) {
+    } elseif ($protectionLevelPassword   == 1) {
 
       ?> src="/pictures/lockme_symbol_closed_password.png"> <?php
 
@@ -63,10 +63,10 @@ if(($appLoggedIn==1) && ($conStatus==1) && ($AppActive == 1)){
       
     
 $connectionStatusMessage = "";
-if ($AppActive == 1){
+if ($appActive == 1){
     if ($appLoggedIn == 1) { 
             if ($conStatus == 1) {
-                $connectionStatusMessage =  "Connected to LockMe-Box #" . $BoxName;
+                $connectionStatusMessage =  "Connected to LockMe-Box #" . $boxName;
             } else {
                 $connectionStatusMessage = "App not connected to LockMe-Box. Connect App to LockMe-Box to enable control.";
             }

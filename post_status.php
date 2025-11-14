@@ -1,48 +1,60 @@
 <?php
-/* This script is called periodically from APP every x seconds */
+
+/* This script is called periodically from Android APP every second  */
+
+
 require_once "config.php";
 include 'helper_functions.php';
 
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // get posted variables from APP
-    $UserName = test_input($_POST["UserName"]);
-    $ConStatus = test_input($_POST["ConStatus"]);        
-    $AppActive = test_input($_POST["AppActive"]);      
-     
-    // get variables from database
-    $query = "SELECT  WishedAction FROM users WHERE username = '$UserName'";
-    $stmt = $link->prepare($query);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
+    $username = test_input($_POST["username"]);
+    $conStatus = test_input($_POST["conStatus"]);        
+    $appActive = test_input($_POST["appActive"]);      
+    
+    $query = "SELECT wished_action FROM users WHERE username = :username";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([':username' => $username]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+   
 
-    // update users table with posted variables
-    $query = "UPDATE users SET  conStatus = ?,  AppActive = ? WHERE username=?";
-    $stmt = mysqli_prepare($link, $query);
-    mysqli_stmt_bind_param($stmt, 'iis', $ConStatus, $AppActive, $UserName);
-    mysqli_stmt_execute($stmt);
+    $sql = "UPDATE users SET con_status = :con_status, app_active = :app_active WHERE username = :username";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        ':app_active' => $appActive,
+        ':con_status' => $conStatus,
+        ':username' => $username
+    ]);
+
     
     // init response variable
     $response = new stdClass();
-    if (isset($row["WishedAction"])) {
-        $response->WishedAction = $row["WishedAction"];
+    if (isset($row["wished_action"])) {
+        $response->wishedAction = $row["wished_action"];
     } else {
-        $response->WishedAction = "";
+        $response->wishedAction = "";
     }
 
     // send back response to APP
     echo json_encode($response);
    
-
+    
     // clear wished action from database after command has been sent to APP
-    $query = "UPDATE users SET WishedAction='' WHERE username='$UserName'";
-    $stmt = mysqli_prepare($link, $query); 
-    mysqli_stmt_execute($stmt);
+    $sql = "UPDATE users SET wished_action = :wished_action WHERE username = :username";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        ':wished_action'        => '',
+        ':username' => $username
+    ]);
+    
 }
 else {
     echo "No data posted with HTTP POST.";
+
   
 }
+ 
   
-    
 ?>

@@ -1,18 +1,24 @@
 <?php
+
 // get lock/con-status from database and send it back to ajax script
 require "config.php"; 
+
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-   
-    $username = mysqli_real_escape_string($link,trim($_POST["username"]));
+$username = trim($_POST['username']);
+$query = "SELECT * FROM users WHERE username = :username";
+$stmt = $pdo->prepare($query);
+$stmt->execute([':username' => $username]);
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    $query = "SELECT LockStatus, conStatus, appLoggedIn, OpenTime, AppActive
-    FROM users WHERE username = '$username'";
+$jsonOutput = [   
+    'lockStatus'    => $row['lock_status'],
+    'conStatus'     => $row['con_status'],
+    'appLoggedIn'   => $row['app_logged_in'],
+    'appActive'     => $row['app_active'],
+    'openTime'      => $row['open_time']
+];
 
-    $stmt = $link->prepare($query);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
-  
-    echo json_encode($row);
+echo json_encode($jsonOutput);
+
 }
 ?>
