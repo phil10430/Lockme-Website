@@ -5,6 +5,12 @@ include 'helper_functions.php';
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 
+    /* activate error debug messages */
+    // ini_set('display_errors', 1);
+    // ini_set('display_startup_errors', 1);
+    // error_reporting(E_ALL);
+
+
     $login = test_input($_POST["login_var"]);
 
     if (isValidEmail($login))
@@ -14,34 +20,28 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $stmt = $pdo->prepare($query);
         $stmt->execute([':email' => $login]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($row) {
-            $email = $row['email'];
-        } else {
-            $email = null; // oder Fehlerbehandlung, falls nichts gefunden wurde
-        }
+        $email = $row['email'];
+     
 
 
         if (!empty($email)) {
             
             // if old entry with that email exists - delete old password reset entry
-            $sql =  "DELETE FROM pass_reset WHERE email=?";
-            if($stmt = mysqli_prepare($link, $sql)){
-                mysqli_stmt_bind_param($stmt,"s", $email,);      
-            }
-            mysqli_stmt_execute($stmt);
-
+        
+            $sql = "DELETE FROM pass_reset WHERE email = :email";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
 
             
             $token = bin2hex(random_bytes(50));
 
-            $sql = "INSERT INTO pass_reset (email,token) VALUES (?,?)";
+            $sql = "INSERT INTO pass_reset (email, token) VALUES (:email, :token)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            $stmt->bindParam(':token', $token, PDO::PARAM_STR);
 
-            if($stmt = mysqli_prepare($link, $sql)){
-                mysqli_stmt_bind_param($stmt,"ss", $email, $token,);      
-            }
-
-            if (mysqli_stmt_execute($stmt)) {
+            if ($stmt->execute()) {
                 $FromName = "Lock-Me";
                 $FromEmail = "lockmetest@stim-me.de";
                 $ReplyTo = "lockmetest@stim-me.de";

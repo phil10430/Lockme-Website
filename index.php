@@ -1,8 +1,8 @@
 <?php 
-session_start();
 
 require "login.php"; 
 require "header.php";
+
 
 if (isset($_SESSION['flash_message'])) {
     echo "<div style='background:#e0ffe0; color:#006600; padding:10px; border-radius:8px; margin:10px 0;'>
@@ -26,7 +26,8 @@ if (isset($_SESSION['flash_message'])) {
                 require "show_status.php";
                 require "box_control.php";
             ?>
-
+            
+            <script src="autorefresh_script.js?v=<?php echo time(); ?>"></script>
             <script>refreshData("<?php echo $_SESSION["username"]; ?>");</script>
 
             </div>

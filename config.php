@@ -32,4 +32,8 @@ try {
     // oder: error_log($e->getMessage()); // Für Logs
 }
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 ?>

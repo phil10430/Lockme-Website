@@ -1,6 +1,7 @@
- function refreshData(name){
+function refreshData(name){
 
  // Attention: if something is changed in this document websession has to be reset!
+
  // this script file is loaded in from header file!
 
 $(document).ready(function(){

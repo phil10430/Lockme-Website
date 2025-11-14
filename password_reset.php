@@ -27,11 +27,11 @@ if (isset($_POST['sub_set'])) {
     }
 
 
-    $stmt = $link -> prepare("SELECT email FROM pass_reset WHERE token = ?");
-    $stmt->bind_param("s", $token);
+    $sql = "SELECT email FROM pass_reset WHERE token = :token";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':token', $token, PDO::PARAM_STR);
     $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
     $email = $row['email'];
     
     
@@ -44,18 +44,23 @@ if (isset($_POST['sub_set'])) {
     }
 
     if (!isset($error)) {
-        $password = mysqli_real_escape_string($link,$password);
         $password = password_hash($password, PASSWORD_DEFAULT);
 
-        $stmt = $link -> prepare( "UPDATE users SET password=? WHERE email=?");
-        $stmt->bind_param("ss", $password, $emailtok);
+        $sql = "UPDATE users SET password = :password WHERE email = :email";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':password', $password, PDO::PARAM_STR);
+        $stmt->bindParam(':email', $emailtok, PDO::PARAM_STR);
         $updateSuccess = $stmt->execute();
-       
+
 
        if ($updateSuccess) {
             $success = "<div class='alert-warning'> Your password has been updated successfully. Login <a href='index.php'>here</a>. </div>";
 
-            $resultdel = mysqli_query($link, "DELETE FROM pass_reset WHERE token='$token'");
+            $sql = "DELETE FROM pass_reset WHERE token = :token";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':token', $token, PDO::PARAM_STR);
+            $resultdel = $stmt->execute();
+
 
             $hide = 1;
        }

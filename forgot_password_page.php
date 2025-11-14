@@ -1,7 +1,7 @@
 <?php 
 require_once "config.php";
-require "forgot_password.php"; 
 require "header.php"; 
+require "forgot_password.php"; 
 ?>
 
 <section class="container" id="main">

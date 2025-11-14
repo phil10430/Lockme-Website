@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // 🔹 username prüfen
     $username = trim($_POST["username"] ?? '');
     if (empty($username)) {
-        $errors['username'] = "Please enter a username.";
+        $username_err['username'] = "Please enter a username.";
     } elseif (!isValidusername($username)) {
         $errors['username'] = "username can only contain letters and numbers.";
     } else {
@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $_SESSION['flash_message'] = "Registration successful! Please check your email.";
         header("Location: index.php");
         exit;
-        }
+       }
 
     }
 }
