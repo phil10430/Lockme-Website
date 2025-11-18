@@ -2,6 +2,7 @@
 
 const MSG_OPEN = "O";
 const MSG_CLOSE = "C";
+const EXTEND_OPEN_TIME = "X";
 const MSG_SEPARATOR = "/"; 
 const PLACEHOLDER = "*";
 

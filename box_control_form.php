@@ -1,8 +1,9 @@
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
  
     <div class="text-center">
-        <button type="submit" name="closeBox" class="btn btn-warning">Close</button>
         <button type="submit" name="openBox" class="btn btn-success">Open</button>  
+        <button type="submit" name="closeBox" class="btn btn-warning">Close</button>
+        <button type="submit" name="setTimer" class="btn btn-warning">Set Timer</button>
     </div>
  
 

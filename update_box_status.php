@@ -10,11 +10,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // get posted variables from APP
     $username = test_input($_POST["username"]); 
     $boxName = test_input($_POST["boxName"]);  
-    $lockStatus = test_input($_POST["lockStatus"]);
     $protectionLevelTimer = test_input($_POST["protectionLevelTimer"]);
     $protectionLevelPassword = test_input($_POST["protectionLevelPassword"]);
-    $openTime = test_input($_POST["openTime"]); 
-    $emergencyDays = test_input($_POST["emergencyDays"]);  
+    $lockStatus = test_input($_POST["lockStatus"]);
+    $openTime = test_input($_POST["openTime"]);
+    $lockedSince = test_input($_POST["lockedSince"]);     
     $firmwareVersion = test_input($_POST["firmwareVersion"]);   
 
     $sql = "UPDATE users SET 
@@ -22,9 +22,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     protection_level_timer = :protection_level_timer, 
     protection_level_password = :protection_level_password, 
     lock_status = :lock_status, 
-    emergency_days = :emergency_days, 
     open_time = :open_time, 
-    firmware_version = :firmware_version
+    firmware_version = :firmware_version,
+    locked_since = :locked_since
     WHERE username = :username";
     
     $stmt = $pdo->prepare($sql);
@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ':protection_level_timer' => $protectionLevelTimer,     
         ':protection_level_password' => $protectionLevelPassword,    
         ':open_time' => $openTime,
-        ':emergency_days' => $emergencyDays,    
+        ':locked_since' => $lockedSince,    
         ':firmware_version' => $firmwareVersion  
     ]);
    

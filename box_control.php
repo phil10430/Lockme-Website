@@ -23,6 +23,7 @@ if (($conStatus == 1) && ($appLoggedIn == 1)  && ($appActive == 1)){
         $openTime = test_input($_POST["openTime"]);
         $password = test_input($_POST["password"]);
         $closeBoxIntent = isset($_POST['closeBox']);
+        $setTimerIntent = isset($_POST['setTimer']);
         $openBoxIntent = isset($_POST['openBox']);
         $isTimeProtection = isset($_POST['timeCheckbox']);
         $isPasswordProtection = isset($_POST['passwordCheckbox']);
@@ -55,11 +56,25 @@ if (($conStatus == 1) && ($appLoggedIn == 1)  && ($appActive == 1)){
                     $openTimeUnix . MSG_SEPARATOR .
                     $password ;
             }
-
         } elseif ($openBoxIntent) 
         {
             $wishedAction = MSG_OPEN . MSG_SEPARATOR .
                 $password ;
+        } elseif ($setTimerIntent)
+        {
+            if (validateDate($openTime)) {
+                $dt = DateTime::createFromFormat("d/m/Y H:i", $openTime, new DateTimeZone('Europe/Berlin'));
+                $openTimeUnix = $dt->getTimestamp();
+                $protectionLevelTimer = "1";
+            } else {
+                $boxControlError = "Invalid date";
+            }
+            if (empty($boxControlError)){
+                $wishedAction = EXTEND_OPEN_TIME . MSG_SEPARATOR .
+                    $protectionLevelTimer . MSG_SEPARATOR .
+                    $openTimeUnix . MSG_SEPARATOR .
+                    $password ;
+            }
         }
         
      

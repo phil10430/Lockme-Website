@@ -1,22 +1,130 @@
-.card{
-    margin: 10px auto;
-    margin-bottom: 0px;
-    float: none; /* Added */
-    background-color: #c8efff;
-    Max-width: 500px;  
+body {
+    background: #f3f4f7;
+    font-family: "Inter", Arial, sans-serif;
 }
 
-.row{
-    margin-top: 10px;
+
+.card {
+    max-width: 500px;
+    margin: 20px auto;
+    background: rgba(255, 255, 255, 0.2);  /* 20% deckend */
+    backdrop-filter: blur(6px);            /* schöner Glas-Effekt */
+    border:none;
 }
-.center-block {
+
+
+.navbar.bg-light {
+    background-color: transparent !important;
+    box-shadow: none !important;  /* optional: Schatten entfernen */
+    border-bottom: none !important; /* optional */
+}
+
+.login-card {
+    position: relative;
+    display: flex;
+    justify-content: center; /* horizontal zentrieren */
+    align-items: center;     /* optional: vertikal zentrieren, falls nötig */
+    border-radius: 16px;
+    overflow: hidden;
+    margin: 0px auto;
+}
+
+/* Bild als Hintergrund (zentriert) */
+.login-card .bg-image {
     display: block;
-    margin-left: auto;
-    margin-right: auto;
- }
+    width: 80%;
+    height: auto;
+    object-fit: contain;
+    z-index: 1;
+    pointer-events: none;
+    margin: 0 auto; /* horizontal zentrieren */
+}
 
- .img-fluid{
-    max-width: 10%; 
-     height: auto; 
- }
- 
+/* Inhalt über dem Bild */
+.login-card .card-content {
+    position: absolute;
+    top: 0;
+    left: 50%;          /* linke Kante in der Mitte */
+    transform: translateX(-50%); /* horizontale Verschiebung, damit Content wirklich zentriert ist */
+    width: 40%;         /* Breite des Inhalts */
+    height: 100%;
+    z-index: 2;
+    box-sizing: border-box;
+    padding: 150px 0px 0px 0px; /* oben: 150px verschiebt die Form nach unten */
+}
+
+/* Form Labels */
+label {
+    font-weight: 500;
+    color: #444;
+    margin-bottom: 5px;
+}
+
+/* Inputs */
+.form-control {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: all 0.2s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #6a5af9;
+    box-shadow: 0 0 4px rgba(106, 90, 249, 0.3);
+    outline: none;
+}
+
+/* Fehler */
+.is-invalid {
+    border-color: #dc3545 !important;
+}
+
+.invalid-feedback {
+    font-size: 0.85rem;
+    color: #dc3545;
+}
+
+/* Button */
+.btn-modern {
+    width: 100%;
+    padding: 12px 0;
+    background: #6a5af9;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.25s ease;
+}
+
+.btn-modern:hover {
+    background: #5948e0;
+}
+
+/* Fehlermeldung */
+.alert-danger {
+    background: #ffe7e7;
+    color: #c62828;
+    border: 1px solid #ffb3b3;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.forgot-link {
+    color: #6a5af9;
+    text-decoration: none;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+.card-header,
+.card-footer{
+    background: transparent;
+    border: none;
+    margin: 0 auto; /* horizontal zentrieren */
+
+}
