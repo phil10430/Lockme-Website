@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     open_time = :open_time, 
     firmware_version = :firmware_version,
     locked_since = :locked_since,
-    time_left = :time_left,
+    time_left = :time_left
     WHERE username = :username";
     
     $stmt = $pdo->prepare($sql);

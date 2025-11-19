@@ -7,7 +7,7 @@ body {
 .card {
     background-color: transparent !important;
     max-width: 500px;
-    margin: 20px auto;
+    margin: 0px auto;
     border:none;
 }
 
@@ -50,6 +50,7 @@ body {
     height: 100%;
     z-index: 2;
     box-sizing: border-box;
+    padding: 20px;
 }
 
 /* Form Labels */
@@ -129,19 +130,18 @@ label {
 
 }
 
-.status-message{
-    margin-top:30px;
-    border-radius:10px;
+
+.status-message{ /* Box #54601 */
+    margin-top:82px;
     text-align: center; /* horizontal zentrieren */
 }
 .open-time{
-    margin-top:250px;
+    margin-top:200px;
     text-align: center; /* horizontal zentrieren */
 }
-
 .uiElements{
     width: 60%;
-    margin: 130px 0px;
+    margin-top:90px;
 }
 
 .login-card {

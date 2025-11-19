@@ -49,8 +49,5 @@
     
 <section class="container" id="main">
     <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand" href="#">
-            <img src="pictures/logo.png" width="30" height="30" class="d-inline-block align-center" alt="">
-            LockMe
-        </a>
+    
     </nav>

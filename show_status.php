@@ -46,43 +46,56 @@ echo '<div class="overlay-card">';
     echo '<div class="card-content">';   
    
     
-    $connectionStatusMessage = "";
-    if ($appActive == 1){
-        if ($appLoggedIn == 1) { 
-                if ($conStatus == 1) {
-                    $connectionStatusMessage =  "Box #" . $boxName;
-                } else {
-                    $connectionStatusMessage = "Connect LOCKME app to your box.";
-                }
-        }  else{
-            $connectionStatusMessage = "Open LOCKME app and login.";
-        }
-    } else {
-        $connectionStatusMessage = "Open LOCKME app to enable control.";
-    }
+      $connectionStatusMessage = "";
+      if ($appActive == 1){
+          if ($appLoggedIn == 1) { 
+                  if ($conStatus == 1) {
+                      $connectionStatusMessage =  "Box #" . $boxName;
+                  } else {
+                      $connectionStatusMessage = "Connect LOCKME app to your box.";
+                  }
+          }  else{
+              $connectionStatusMessage = "Open LOCKME app and login.";
+          }
+      } else {
+          $connectionStatusMessage = "Open LOCKME app to enable control.";
+      }
 
-    echo '<div class="status-message">' . $connectionStatusMessage . '</div>';
+      echo '<div class="status-message">' . $connectionStatusMessage . '</div>';
 
 
-    /* show box control form only if status is not unclear */
-    if(($appLoggedIn==1) && ($conStatus==1) && ($appActive == 1)){
+      /* show box control form only if status is not unclear */
+      if(($appLoggedIn==1) && ($conStatus==1) && ($appActive == 1)){
 
-      if (($protectionLevelTimer   == 1) && ($protectionLevelPassword   == 1)) 
-      {
-        echo '<div class="open-time">'
-      . $lockedSince . '<br>'
-      . $timeLeft . '<br>'
-      . $openTime .  '<br>'
-      . "Password" .
-      '</div>';
-        } elseif ($protectionLevelTimer   == 1) {
-            echo $openTime;
-        } elseif ($protectionLevelPassword   == 1) {
-      }  
-      
-        include  "box_control_form.php";
+        if (($protectionLevelTimer   == 1) && ($protectionLevelPassword   == 1)) 
+        {
+          echo '<div class="open-time">'
+          . $lockedSince . '<br>'
+          . $timeLeft . '<br>'
+          . $openTime .  '<br>'
+          . "Password" .
+          '</div>';
+        } elseif ($protectionLevelTimer   == 1) 
+        {
+          echo '<div class="open-time">'
+          . $lockedSince . '<br>'
+          . $timeLeft . '<br>'
+          . $openTime .  '<br>'
+          .
+          '</div>';
+        } 
+        elseif ($protectionLevelPassword   == 1) 
+        {
+          echo '<div class="open-time">'
+          . "Password" .
+          '</div>';
+        }  
+        
+          include  "box_control_form.php";
 
-    }
+      }
+     echo '</div>';
+
   echo '</div>';
 
 echo '</div>';
