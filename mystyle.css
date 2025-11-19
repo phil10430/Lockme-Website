@@ -1,14 +1,13 @@
 body {
-    background: #f3f4f7;
+    background: black;
     font-family: "Inter", Arial, sans-serif;
 }
 
 
 .card {
+    background-color: transparent !important;
     max-width: 500px;
     margin: 20px auto;
-    background: rgba(255, 255, 255, 0.2);  /* 20% deckend */
-    backdrop-filter: blur(6px);            /* schöner Glas-Effekt */
     border:none;
 }
 
@@ -30,7 +29,7 @@ body {
 }
 
 /* Bild als Hintergrund (zentriert) */
-.login-card .bg-image {
+.login-card .bg-image{
     display: block;
     width: 80%;
     height: auto;
@@ -46,11 +45,10 @@ body {
     top: 0;
     left: 50%;          /* linke Kante in der Mitte */
     transform: translateX(-50%); /* horizontale Verschiebung, damit Content wirklich zentriert ist */
-    width: 40%;         /* Breite des Inhalts */
+    width: 60%;         /* Breite des Inhalts */
     height: 100%;
     z-index: 2;
     box-sizing: border-box;
-    padding: 150px 0px 0px 0px; /* oben: 150px verschiebt die Form nach unten */
 }
 
 /* Form Labels */
@@ -124,7 +122,46 @@ label {
 .card-header,
 .card-footer{
     background: transparent;
+    color:yellow;
     border: none;
     margin: 0 auto; /* horizontal zentrieren */
 
+}
+
+.status-message{
+    margin-top:80px;
+    color: red;
+    border-radius:10px;
+    text-align: center; /* horizontal zentrieren */
+}
+.open-time{
+    margin-top:250px;
+    color: red;
+    text-align: center; /* horizontal zentrieren */
+}
+
+.uiElements{
+    margin-top: 100px;
+}
+
+
+/* Minimalistisches Input-Design */
+.clean-input {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    border-radius: 0;
+    padding: 8px 8px;
+    outline: none;
+    box-shadow: none;
+    width: 100%;
+}
+
+.clean-input:focus {
+    border-bottom-color: #f0ad4e;
+}
+
+.btn-round {
+    border-radius: 25px;
+    min-width: 120px;  /* gleiche Breite optional */
 }

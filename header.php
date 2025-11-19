@@ -33,7 +33,13 @@
                 minDate: new Date(),
                 format: 'DD/MM/YYYY HH:mm',
             });
+
+            // Picker automatisch öffnen, wenn man ins Inputfeld klickt
+            $('#openTimeField').on('focus click', function () {
+                $('#datetimepicker1').data("DateTimePicker").show();
+            });
         });
+
 
         // prevent post on refresh
         if (window.history.replaceState) {

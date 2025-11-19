@@ -1,44 +1,48 @@
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
  
-    <div class="text-center">
-        <button type="submit" name="openBox" class="btn btn-success">Open</button>  
-        <button type="submit" name="closeBox" class="btn btn-warning">Close</button>
-        <button type="submit" name="setTimer" class="btn btn-warning">Set Timer</button>
-    </div>
- 
+<div class="uiElements">  
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="input-group">
-                <span class="input-group-addon">
-                    <input type="checkbox" name="timeCheckbox" id="timeCheckboxID" value="timeCheckbox" />
-                </span>
-                <span class="input-group-addon">
-                    <label for="tbox">Timer</label>
-                </span>
-                <div class='input-group date' id='datetimepicker1'>
-                    <input type='text' class="form-control" name="openTime" />
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
 
+    <!-- Timer -->
+
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <div class="input-group date" id="datetimepicker1">
+                <input type="text"
+                    class="form-control clean-input"
+                    id="openTimeField"
+                    name="openTime"
+                    placeholder="Timer">
             </div>
+        </div>
+        <div class="col-md-4">
+            <button type="submit"
+                    name="setTimer"
+                    class="btn btn-warning btn-round w-100">
+                Set Timer
+            </button>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="input-group">
-                <span class="input-group-addon">
-                    <input type="checkbox" name="passwordCheckbox" id="passwordCheckboxID" value="passwordCheckbox" />
-                </span>
-                <span class="input-group-addon">
-                    <label for="tbox">Password</label>
-                </span>
-                <input type="text" class="form-control" maxlength='10' id="password" name="password"><br>
-            </div>
+
+    <!-- Password -->
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <input type="text"
+                class="form-control clean-input"
+                id="password"
+                name="password"
+                maxlength="10"
+                placeholder="Password">
+        </div>
+        <div class="col-md-4">
+            <button type="submit"
+                    name="closeBox"
+                    class="btn btn-warning btn-round w-100">
+                <?= htmlspecialchars($closeButtonText) ?>
+            </button>
         </div>
     </div>
 
+</div>
 </form>

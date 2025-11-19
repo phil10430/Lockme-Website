@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 $username = $_SESSION["username"];
 
@@ -17,67 +16,71 @@ $openTime   = $row['open_time'];
 $conStatus = $row['con_status'];
 $appLoggedIn = $row['app_logged_in'];
 $appActive = $row['app_active'];
+$lockedSince = $row['locked_since'];
 
+$closeButtonText = $closeButtonText ?? "Close"; 
 
 if( !empty($openTime  )){
   $openTime   = date("y-m-d H:i", strtotime("$openTime  "));
 }
 
-?>
+echo '<div class="login-card">';
 
+  echo '<img class="bg-image" alt="Background"';
 
-<img class="center-block" style="height:200px;width:auto;"
+    if(($appLoggedIn==1) && ($conStatus==1) && ($appActive == 1)){
+      if ($lockStatus == 0) {
+        $closeButtonText = "Close";  
+        echo 'src="/pictures/icon_box_open.png">';
 
-<?php
-if(($appLoggedIn==1) && ($conStatus==1) && ($appActive == 1)){
-  if ($lockStatus == 0) {
+      }elseif ($lockStatus == 1) 
+      {
+        $closeButtonText = "Open";  
+        echo 'src="/pictures/icon_box_closed.png">';
+      }
+    }else {
 
-    ?>  src="/pictures/lockme_symbol_open.png"><?php
-
-  }elseif ($lockStatus == 1) {
-    if (($protectionLevelTimer   == 1) && ($protectionLevelPassword   == 1)) {
-
-        ?> src="/pictures/lockme_symbol_closed_timer_password.png" > <?php
-        ?><p class="text-center"> <?php echo $openTime  ; ?> </p> <?php
-
-    } elseif ($protectionLevelTimer   == 1) {
-
-      ?> src="/pictures/lockme_symbol_closed_timer.png">  <?php
-      ?><p class="text-center"> <?php echo $openTime  ; ?> </p> <?php
-
-    } elseif ($protectionLevelPassword   == 1) {
-
-      ?> src="/pictures/lockme_symbol_closed_password.png"> <?php
-
-    }  else{
-
-    ?> src="/pictures/lockme_symbol_closed.png"> <?php
+      echo 'src="/pictures/icon_box_unclear.png">';
 
     }
-  }
-}else {
 
-  ?>  src="/pictures/lockme_symbol_unclear.png"> <?php
-
-}
-      
+    echo '<div class="card-content">';   
+   
     
-$connectionStatusMessage = "";
-if ($appActive == 1){
-    if ($appLoggedIn == 1) { 
-            if ($conStatus == 1) {
-                $connectionStatusMessage =  "Connected to LockMe-Box #" . $boxName;
-            } else {
-                $connectionStatusMessage = "App not connected to LockMe-Box. Connect App to LockMe-Box to enable control.";
-            }
-    }  else{
-        $connectionStatusMessage = "App is not connected to Account. Open your App and login.";
+    $connectionStatusMessage = "";
+    if ($appActive == 1){
+        if ($appLoggedIn == 1) { 
+                if ($conStatus == 1) {
+                    $connectionStatusMessage =  "Box #" . $boxName;
+                } else {
+                    $connectionStatusMessage = "Connect LOCKME app to your box.";
+                }
+        }  else{
+            $connectionStatusMessage = "Open LOCKME app and login.";
+        }
+    } else {
+        $connectionStatusMessage = "Open LOCKME app to enable control.";
     }
-} else {
-    $connectionStatusMessage = "App is not active. Please open App to enable control.";
-}
 
-echo '<br><div class="alert alert-info">' . $connectionStatusMessage . '</div>';
+    echo '<div class="status-message">' . $connectionStatusMessage . '</div>';
+
+    if (($protectionLevelTimer   == 1) && ($protectionLevelPassword   == 1)) 
+    {
+      echo '<div class="open-time">'
+     . $lockedSince . '<br>'
+     . $openTime .  '<br>'
+     . "Password" .
+     '</div>';
+      } elseif ($protectionLevelTimer   == 1) {
+          echo $openTime;
+      } elseif ($protectionLevelPassword   == 1) {
+    }  
+
+    include  "box_control_form.php";
+
+  echo '</div>';
+
+echo '</div>';
 
 ?>
  

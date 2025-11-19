@@ -11,8 +11,6 @@ $username = $_SESSION["username"];
  
 if (($conStatus == 1) && ($appLoggedIn == 1)  && ($appActive == 1)){
    
-    require "box_control_form.php";
-   
     if ($_SERVER["REQUEST_METHOD"] == "POST") {  // Processing form data when form is submitted
 
         $protectionLevelTimer = "0";
@@ -23,18 +21,17 @@ if (($conStatus == 1) && ($appLoggedIn == 1)  && ($appActive == 1)){
         $openTime = test_input($_POST["openTime"]);
         $password = test_input($_POST["password"]);
         $closeBoxIntent = isset($_POST['closeBox']);
-        $setTimerIntent = isset($_POST['setTimer']);
-        $openBoxIntent = isset($_POST['openBox']);
-        $isTimeProtection = isset($_POST['timeCheckbox']);
-        $isPasswordProtection = isset($_POST['passwordCheckbox']);
+        $setTimerIntent = isset($_POST['setTimer']);        
 
-        if(empty($password )){
-            $password  = PLACEHOLDER;
+
+         if (empty($password))
+        {
+            $password = PLACEHOLDER;
         }
 
-        if ($closeBoxIntent) {
-        
-            if ($isTimeProtection) {
+        if ($closeBoxIntent && ($lockStatus==0)) {
+            if (!empty($openTime))
+            {
                 if (validateDate($openTime)) {
                     $dt = DateTime::createFromFormat("d/m/Y H:i", $openTime, new DateTimeZone('Europe/Berlin'));
                     $openTimeUnix = $dt->getTimestamp();
@@ -43,20 +40,23 @@ if (($conStatus == 1) && ($appLoggedIn == 1)  && ($appActive == 1)){
                     $boxControlError = "Invalid date";
                 }
             }
-            if ($isPasswordProtection) {
-                if(($password  != PLACEHOLDER ) && isValidPassword($password )){
+            
+            if ($password !== PLACEHOLDER)
+            {
+                if (isValidPassword($password)) {
                     $protectionLevelPassword = "1";
                 }else{
                     $boxControlError = "Invalid password! Password must only contain a-z A-Z 0-9 and have 1 to 10 characters.";
                 }
             }
+            
             if (empty($boxControlError)){
                 $wishedAction = MSG_CLOSE . MSG_SEPARATOR .
                     $protectionLevelTimer . MSG_SEPARATOR . $protectionLevelPassword . MSG_SEPARATOR .
                     $openTimeUnix . MSG_SEPARATOR .
                     $password ;
             }
-        } elseif ($openBoxIntent) 
+        } elseif ($closeBoxIntent && ($lockStatus==1)) 
         {
             $wishedAction = MSG_OPEN . MSG_SEPARATOR .
                 $password ;
