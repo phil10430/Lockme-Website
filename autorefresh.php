@@ -11,11 +11,13 @@ $stmt->execute([':username' => $username]);
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $jsonOutput = [   
-    'lockStatus'    => $row['lock_status'],
-    'conStatus'     => $row['con_status'],
-    'appLoggedIn'   => $row['app_logged_in'],
-    'appActive'     => $row['app_active'],
-    'openTime'      => $row['open_time']
+    'lockStatus'        => $row['lock_status'],
+    'conStatus'         => $row['con_status'],
+    'appLoggedIn'       => $row['app_logged_in'],
+    'appActive'         => $row['app_active'],
+    'openTime'          => $row['open_time'],
+    'timeLeft'          => $row['time_left'],
+    'lockedSince'       => $row['locked_since']
 ];
 
 echo json_encode($jsonOutput);

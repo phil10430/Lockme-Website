@@ -34,7 +34,7 @@ if (isset($_SESSION['flash_message'])) {
 
             <div class="card-footer">
                 <div class="text-center">
-                    <a href="logout.php" class="btn btn-danger">Sign Out</a>
+                    <a href="logout.php" class="btn btn-danger btn-round">Sign Out</a>
                 </div>
             </div>
 

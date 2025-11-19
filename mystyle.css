@@ -18,7 +18,7 @@ body {
     border-bottom: none !important; /* optional */
 }
 
-.login-card {
+.overlay-card {
     position: relative;
     display: flex;
     justify-content: center; /* horizontal zentrieren */
@@ -29,7 +29,7 @@ body {
 }
 
 /* Bild als Hintergrund (zentriert) */
-.login-card .bg-image{
+.overlay-card .bg-image{
     display: block;
     width: 80%;
     height: auto;
@@ -40,7 +40,8 @@ body {
 }
 
 /* Inhalt über dem Bild */
-.login-card .card-content {
+.overlay-card .card-content {
+    color: #efb2ae;
     position: absolute;
     top: 0;
     left: 50%;          /* linke Kante in der Mitte */
@@ -122,26 +123,30 @@ label {
 .card-header,
 .card-footer{
     background: transparent;
-    color:yellow;
+    color:#efb2ae;
     border: none;
     margin: 0 auto; /* horizontal zentrieren */
 
 }
 
 .status-message{
-    margin-top:80px;
-    color: red;
+    margin-top:30px;
     border-radius:10px;
     text-align: center; /* horizontal zentrieren */
 }
 .open-time{
     margin-top:250px;
-    color: red;
     text-align: center; /* horizontal zentrieren */
 }
 
 .uiElements{
-    margin-top: 100px;
+    width: 60%;
+    margin: 130px 0px;
+}
+
+.login-card {
+    margin: 150px auto;
+    width: 50%;
 }
 
 
@@ -149,7 +154,7 @@ label {
 .clean-input {
     background: transparent;
     border: none;
-    border-bottom: 2px solid #ccc;
+    border-bottom: 2px solid #efb2ae;
     border-radius: 0;
     padding: 8px 8px;
     outline: none;
@@ -158,10 +163,22 @@ label {
 }
 
 .clean-input:focus {
-    border-bottom-color: #f0ad4e;
+    border-bottom-color: #c3c3c3;
+    color: #efb2ae;
+    background: transparent;
+}
+.clean-input:not(:placeholder-shown) {
+           border-bottom-color: #c3c3c3;
+    background: transparent;
 }
 
 .btn-round {
+    background-color: #efb2ae;
+    color: black;
     border-radius: 25px;
     min-width: 120px;  /* gleiche Breite optional */
+}
+.btn-round:hover {
+    background-color: #e08f8a; /* etwas dunklerer Ton */
+    color: black;              /* Textfarbe beibehalten */
 }

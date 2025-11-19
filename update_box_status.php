@@ -14,7 +14,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $protectionLevelPassword = test_input($_POST["protectionLevelPassword"]);
     $lockStatus = test_input($_POST["lockStatus"]);
     $openTime = test_input($_POST["openTime"]);
-    $lockedSince = test_input($_POST["lockedSince"]);     
+    $lockedSince = test_input($_POST["lockedSince"]); 
+    $timeLeft = test_input($_POST["timeLeft"]);       
     $firmwareVersion = test_input($_POST["firmwareVersion"]);   
 
     $sql = "UPDATE users SET 
@@ -24,7 +25,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     lock_status = :lock_status, 
     open_time = :open_time, 
     firmware_version = :firmware_version,
-    locked_since = :locked_since
+    locked_since = :locked_since,
+    time_left = :time_left,
     WHERE username = :username";
     
     $stmt = $pdo->prepare($sql);
@@ -37,6 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ':protection_level_password' => $protectionLevelPassword,    
         ':open_time' => $openTime,
         ':locked_since' => $lockedSince,    
+        ':time_left' => $timeLeft,    
         ':firmware_version' => $firmwareVersion  
     ]);
    

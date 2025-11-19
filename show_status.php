@@ -17,18 +17,19 @@ $conStatus = $row['con_status'];
 $appLoggedIn = $row['app_logged_in'];
 $appActive = $row['app_active'];
 $lockedSince = $row['locked_since'];
-
+$timeLeft = $row['time_left'];
 $closeButtonText = $closeButtonText ?? "Close"; 
 
 if( !empty($openTime  )){
   $openTime   = date("y-m-d H:i", strtotime("$openTime  "));
 }
 
-echo '<div class="login-card">';
+echo '<div class="overlay-card">';
 
   echo '<img class="bg-image" alt="Background"';
 
     if(($appLoggedIn==1) && ($conStatus==1) && ($appActive == 1)){
+      
       if ($lockStatus == 0) {
         $closeButtonText = "Close";  
         echo 'src="/pictures/icon_box_open.png">';
@@ -39,9 +40,7 @@ echo '<div class="login-card">';
         echo 'src="/pictures/icon_box_closed.png">';
       }
     }else {
-
       echo 'src="/pictures/icon_box_unclear.png">';
-
     }
 
     echo '<div class="card-content">';   
@@ -64,20 +63,26 @@ echo '<div class="login-card">';
 
     echo '<div class="status-message">' . $connectionStatusMessage . '</div>';
 
-    if (($protectionLevelTimer   == 1) && ($protectionLevelPassword   == 1)) 
-    {
-      echo '<div class="open-time">'
-     . $lockedSince . '<br>'
-     . $openTime .  '<br>'
-     . "Password" .
-     '</div>';
-      } elseif ($protectionLevelTimer   == 1) {
-          echo $openTime;
-      } elseif ($protectionLevelPassword   == 1) {
-    }  
 
-    include  "box_control_form.php";
+    /* show box control form only if status is not unclear */
+    if(($appLoggedIn==1) && ($conStatus==1) && ($appActive == 1)){
 
+      if (($protectionLevelTimer   == 1) && ($protectionLevelPassword   == 1)) 
+      {
+        echo '<div class="open-time">'
+      . $lockedSince . '<br>'
+      . $timeLeft . '<br>'
+      . $openTime .  '<br>'
+      . "Password" .
+      '</div>';
+        } elseif ($protectionLevelTimer   == 1) {
+            echo $openTime;
+        } elseif ($protectionLevelPassword   == 1) {
+      }  
+      
+        include  "box_control_form.php";
+
+    }
   echo '</div>';
 
 echo '</div>';
