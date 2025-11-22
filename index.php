@@ -4,7 +4,7 @@ require "login.php";
 require_once __DIR__ . '/templates/header.php'; 
 ?>
 
-<div class="card mt-4">
+<div class="card">
 
     <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) { ?>
 
@@ -16,7 +16,7 @@ require_once __DIR__ . '/templates/header.php';
                 unset($_SESSION['flash_message']); // nur einmal anzeigen
             }
             ?>
-            <h4>Hello <?php echo htmlspecialchars($_SESSION["username"]); ?></h4>
+            Hello <?php echo htmlspecialchars($_SESSION["username"]); ?>
         </div>
 
         <div class="card-body">

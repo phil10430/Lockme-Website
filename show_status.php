@@ -26,75 +26,77 @@ if( !empty($openTime  )){
 
 echo '<div class="overlay-card">';
 
+
   echo '<img class="bg-image" alt="Background"';
 
-    if(($appLoggedIn==1) && ($conStatus==1) && ($appActive == 1)){
-      
-      if ($lockStatus == 0) {
-        $closeButtonText = "CLOSE";  
-        echo 'src="/assets/images/icon_box_open.png">';
+  if(($appLoggedIn==1) && ($conStatus==1) && ($appActive == 1)){
+    
+    if ($lockStatus == 0) {
+      $closeButtonText = "CLOSE";  
+      echo 'src="/assets/images/icon_box_open.png">';
 
-      }elseif ($lockStatus == 1) 
-      {
-        $closeButtonText = "OPEN";  
-        echo 'src="/assets/images/icon_box_closed.png">';
-      }
-    }else {
-      echo 'src="/assets/images/icon_box_unclear.png">';
+    }elseif ($lockStatus == 1) 
+    {
+      $closeButtonText = "OPEN";  
+      echo 'src="/assets/images/icon_box_closed.png">';
+    }
+  }else {
+    echo 'src="/assets/images/icon_box_unclear.png">';
+  }
+
+  echo '<div class="card-content">';   
+  
+  
+    $connectionStatusMessage = "";
+    if ($appActive == 1){
+        if ($appLoggedIn == 1) { 
+                if ($conStatus == 1) {
+                    $connectionStatusMessage =  "Box #" . $boxName;
+                } else {
+                    $connectionStatusMessage = "Connect app to your LOCKMEBOX.";
+                }
+        }  else{
+            $connectionStatusMessage = "Open app and login.";
+        }
+    } else {
+        $connectionStatusMessage = "Open app to enable control.";
     }
 
-    echo '<div class="card-content">';   
-   
+    echo '<div class="status-message">' . $connectionStatusMessage . '</div>';
+
+
+    /* show box control form only if status is not unclear */
+    if(($appLoggedIn==1) && ($conStatus==1) && ($appActive == 1)){
+
+      if (($protectionLevelTimer   == 1) && ($protectionLevelPassword   == 1)) 
+      {
+        echo '<div class="open-time">'
+        . $lockedSince . '<br>'
+        . $timeLeft . '<br>'
+        . $openTime .  '<br>'
+        . "Password" .
+        '</div>';
+      } elseif ($protectionLevelTimer   == 1) 
+      {
+        echo '<div class="open-time">'
+        . $lockedSince . '<br>'
+        . $timeLeft . '<br>'
+        . $openTime .  '<br>'
+        .
+        '</div>';
+      } 
+      elseif ($protectionLevelPassword   == 1) 
+      {
+        echo '<div class="open-time">'
+        . "Password" .
+        '</div>';
+      }  
+      include __DIR__ . '/templates/box_control_form.php';
+    }
     
-      $connectionStatusMessage = "";
-      if ($appActive == 1){
-          if ($appLoggedIn == 1) { 
-                  if ($conStatus == 1) {
-                      $connectionStatusMessage =  "Box #" . $boxName;
-                  } else {
-                      $connectionStatusMessage = "Connect app to your LOCKMEBOX.";
-                  }
-          }  else{
-              $connectionStatusMessage = "Open app and login.";
-          }
-      } else {
-          $connectionStatusMessage = "Open app to enable control.";
-      }
-
-      echo '<div class="status-message">' . $connectionStatusMessage . '</div>';
-
-
-      /* show box control form only if status is not unclear */
-      if(($appLoggedIn==1) && ($conStatus==1) && ($appActive == 1)){
-
-        if (($protectionLevelTimer   == 1) && ($protectionLevelPassword   == 1)) 
-        {
-          echo '<div class="open-time">'
-          . $lockedSince . '<br>'
-          . $timeLeft . '<br>'
-          . $openTime .  '<br>'
-          . "Password" .
-          '</div>';
-        } elseif ($protectionLevelTimer   == 1) 
-        {
-          echo '<div class="open-time">'
-          . $lockedSince . '<br>'
-          . $timeLeft . '<br>'
-          . $openTime .  '<br>'
-          .
-          '</div>';
-        } 
-        elseif ($protectionLevelPassword   == 1) 
-        {
-          echo '<div class="open-time">'
-          . "Password" .
-          '</div>';
-        }  
-        include __DIR__ . '/templates/box_control_form.php';
-      }
-     echo '</div>';
-
   echo '</div>';
+
+ 
 
 echo '</div>';
 

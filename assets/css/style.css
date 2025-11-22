@@ -6,9 +6,18 @@ body {
 
 .card {
     background-color: transparent !important;
-    max-width: 500px;
+    max-width: 400px;
     margin: 0px auto;
     border:none;
+}
+
+.card-header,
+.card-footer{
+    background: transparent;
+    color:#efb2ae;
+    border: none;
+    text-align: center;
+    margin: 0 auto; /* horizontal zentrieren */
 }
 
 
@@ -46,11 +55,10 @@ body {
     top: 0;
     left: 50%;          /* linke Kante in der Mitte */
     transform: translateX(-50%); /* horizontale Verschiebung, damit Content wirklich zentriert ist */
-    width: 60%;         /* Breite des Inhalts */
+    /*width: 60%;         /* Breite des Inhalts */
     height: 100%;
     z-index: 2;
     box-sizing: border-box;
-    padding: 20px;
 }
 
 /* Form Labels */
@@ -120,17 +128,6 @@ label {
 .forgot-link:hover {
     text-decoration: underline;
 }
-
-
-.card-header,
-.card-footer{
-    background: transparent;
-    color:#efb2ae;
-    border: none;
-    text-align: center;
-    margin: 5 auto; /* horizontal zentrieren */
-}
-
 
 .status-message{ /* Box #54601 */
     margin-top:82px;
