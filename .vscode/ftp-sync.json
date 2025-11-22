@@ -16,6 +16,7 @@
     "ignore": [
         "\\.vscode",
         "\\.git",
+        "firmwareupdates",
         "\\.DS_Store"
     ],
     "generatedFiles": {

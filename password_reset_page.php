@@ -9,47 +9,73 @@ require "password_reset.php";
     <div class="card-header">
         Reset your password:
     </div>
+        <div class="overlay-card">
 
-    <div class="card-body">
+            <img class="bg-image" src="pictures/icon_box_unclear.png" alt="Background">
 
-        <!-- form cannot be included from external file -->
-        <!-- reference: https://technosmarter.com/php/forgot-password-and-password-reset-form-in-php -->
-        <form action="" method="POST">
+            <div class="card-content">
 
-            <div class="form-group">
-                <?php
-                if (isset($error)) {
-                    foreach ($error as $error) {
-                        echo '<div class="alert-warning">' . $error . '</div><br>';
-                    }
-                }
-                if (isset($success)) {
-                    echo $success;
-                }
-                ?>
+                <div class="login-card">
 
-                <?php if (!isset($hide)) { ?>
+                    <form action="" method="POST">
 
-                    <label class="label_txt">Password </label>
-                    <input type="password" name="password" class="form-control" required>
+                        <!-- Error / Success Messages -->
+                        <?php if (isset($error)) { ?>
+                            <?php foreach ($error as $msg) { ?>
+                                <div class="alert alert-danger mb-2"><?php echo $msg; ?></div>
+                            <?php } ?>
+                        <?php } ?>
+
+                        <?php if (isset($success)) { ?>
+                            <div class="alert alert-success mb-3"><?php echo $success; ?></div>
+                        <?php } ?>
+
+                        <?php if (!isset($hide)) { ?>
+
+                            <!-- New Password -->
+                            <div class="form-group">
+                                <input 
+                                    type="password" 
+                                    name="password" 
+                                    class="form-control clean-input <?php echo (!empty($error)) ? 'is-invalid' : ''; ?>"
+                                    placeholder="New Password"
+                                    required
+                                >
+                            </div>
+
+                            <!-- Confirm Password -->
+                            <div class="form-group">
+                                <input 
+                                    type="password" 
+                                    name="passwordConfirm" 
+                                    class="form-control clean-input <?php echo (!empty($error)) ? 'is-invalid' : ''; ?>"
+                                    placeholder="Confirm Password"
+                                    required
+                                >
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="form-group">
+                                <button 
+                                    type="submit" 
+                                    name="sub_set" 
+                                    class="btn btn-warning btn-round w-100"
+                                >
+                                    Reset Password
+                                </button>
+                            </div>
+
+                        <?php } ?>
+
+                    </form>
+
+                </div>
+
             </div>
 
-            <div class="form-group">
-                <label class="label_txt">Confirm Password </label>
-                <input type="password" name="passwordConfirm" class="form-control" required>
-            </div>
+        </div>
 
-            <div class="form-group">
-                <button type="submit" name="sub_set" class="btn btn-primary btn-group-lg form_btn">Reset Password</button>
-            </div>
-        <?php } ?>
 
-        </form>
-
-        <!-- form cannot be included from external file -->
-        
-
-    </div>
 
     <div class="card-footer">
      <p>Have an account? <a href="index.php">Login</a> </p>

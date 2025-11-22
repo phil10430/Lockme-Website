@@ -4,7 +4,7 @@
     <!-- <link rel="stylesheet" href="myStyle.css">  -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width; initial-scale=1.0;">
-    <title>LockMe</title>
+    <title>lockmebox</title>
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     
     <!-- DateTimePicker stylesheets -->

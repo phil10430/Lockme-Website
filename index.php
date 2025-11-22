@@ -1,59 +1,60 @@
-<?php 
-
+<?php
+session_start();
 require "login.php"; 
-require "header.php";
-
-
-if (isset($_SESSION['flash_message'])) {
-    echo "<div style='background:#e0ffe0; color:#006600; padding:10px; border-radius:8px; margin:10px 0;'>
-            {$_SESSION['flash_message']}
-          </div>";
-    unset($_SESSION['flash_message']); // Nachricht nur einmal anzeigen
-}
+require "header.php"; // liefert <html>, <head> und <body>
 ?>
-    <div class="card">
 
-        <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) { ?>
-            <div class="text-center">
-                <div class="card-header">
-                    <h4>Hello <?php echo htmlspecialchars($_SESSION["username"]); ?></h4>
-                </div>
-            </div>
+<div class="card mt-4">
 
-            <div class="card-body">
+    <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) { ?>
 
+        <div class="card-header text-center">
+            <?php 
+            // Flash-Message im Header anzeigen
+            if (isset($_SESSION['flash_message'])) {
+                echo "<div class='alert alert-success mb-2'>{$_SESSION['flash_message']}</div>";
+                unset($_SESSION['flash_message']); // nur einmal anzeigen
+            }
+            ?>
+            <h4>Hello <?php echo htmlspecialchars($_SESSION["username"]); ?></h4>
+        </div>
+
+        <div class="card-body">
             <?php
                 require "show_status.php";
                 require "box_control.php";
             ?>
             
-            <script src="autorefresh_script.js?v=<?php echo time(); ?>"></script>
-            <script>refreshData("<?php echo $_SESSION["username"]; ?>");</script>
+            <script>
+                refreshData("<?php echo $_SESSION["username"]; ?>");
+            </script>
+        </div>
 
-            </div>
+        <div class="card-footer text-center">
+            <a href="logout.php" class="btn btn-danger btn-round">Sign Out</a>
+        </div>
 
-            <div class="card-footer">
-                <div class="text-center">
-                    <a href="logout.php" class="btn btn-danger btn-round">Sign Out</a>
-                </div>
-            </div>
+    <?php } else { ?>
 
-        <?php } else { ?>
-            <div class="card-header">
-                Login to use LockMe-Box.
-            </div>
-            <div class="card-body">
-                <?php require "login_form.php"; ?>
-            </div>
-            <div class="card-footer">
-                Don't have an account? <a href="register_page.php">Sign up now</a>.
-            </div>
-        <?php } ?>
+        <div class="card-header text-center">
+            Login to control your x!
+            <?php 
+            // Flash-Message für z. B. Registrierungserfolg
+            if (isset($_SESSION['flash_message'])) {
+                echo "<div class='alert alert-success mt-2'>{$_SESSION['flash_message']}</div>";
+                unset($_SESSION['flash_message']);
+            }
+            ?>
+        </div>
 
-    </div>
-    
-</section>
+        <div class="card-body">
+            <?php require "login_form.php"; ?>
+        </div>
 
-</body>
+        <div class="card-footer text-center">
+            Don't have an account? <a href="register_page.php">Sign up now</a>.
+        </div>
 
-</html>
+    <?php } ?>
+
+</div>

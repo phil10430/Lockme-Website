@@ -42,10 +42,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $stmt->bindParam(':token', $token, PDO::PARAM_STR);
 
             if ($stmt->execute()) {
-                $FromName = "Lock-Me";
-                $FromEmail = "lockmetest@stim-me.de";
-                $ReplyTo = "lockmetest@stim-me.de";
-                $credits = "https://lockmebox.de/";
+                $FromName = "lockmebox.com";
+                $FromEmail = "noreply@lockmebox.com";
+                $ReplyTo = "noreply@lockmebox.com";
+                $credits = "https://lockmebox.com/";
                 $headers  = "MIME-Version: 1.0\n";
                 $headers .= "Content-type: text/html; charset=iso-8859-1\n";
                 $headers .= "From: " . $FromName . " <" . $FromEmail . ">\n";
@@ -57,7 +57,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 $subject = "You have received a password reset email";
 
 
-                $mlink = "https://lockmebox.de/password_reset_page.php?token=".$token;
+                $mlink = "https://lockmebox.com/password_reset_page.php?token=".$token;
                 $msg = "
                     <html>
                     <head>
