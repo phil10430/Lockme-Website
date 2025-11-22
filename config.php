@@ -5,10 +5,10 @@
 // ============================================================
 
 // 🔹 Datenbankverbindungsdaten
-$db_host = 'localhost:3306';      // oder IP-Adresse deines DB-Servers
-$db_name = 'web688s4_lockmebox'; // Name deiner Datenbank
-$db_user = 'web688s4_lockmebox';       // DB-Benutzername
-$db_pass = 'Q8O~mA*)#2J-l6yxc+MITvC[k!`?{';   // DB-Passwort
+$db_host = 'localhost';      // oder IP-Adresse deines DB-Servers
+$db_name = 'u456104939_lockmebox'; // Name deiner Datenbank
+$db_user = 'u456104939_phil';       // DB-Benutzername
+$db_pass = 'mq<cI(E5RRnwya-gBL^?h1HyXx3(l5';   // DB-Passwort
 
 // 🔹 Optionale Einstellungen (Fehleranzeige, Zeichensatz)
 $options = [

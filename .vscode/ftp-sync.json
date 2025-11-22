@@ -1,8 +1,8 @@
 {
-    "remotePath": "./lockmebox.de",
-    "host": "server4.rainbow-web.com",
-    "username": "web688s4",
-    "password": "_H=j)^wFapRpA!i@Fi@B/e^qjkhkja~N",
+    "remotePath": "/public_html/",
+    "host": "147.93.92.123",
+    "username": "u456104939.lockmebox.com",
+    "password": "A[W7pSoJ(?hBp+FJ/i{UgX2>Oj87ZZ~xwCFF|x",
     "port": "21",
     "protocol": "ftp",
     "secure": false,
