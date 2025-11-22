@@ -1,7 +1,7 @@
 <?php
 
 // get lock/con-status from database and send it back to ajax script
-require "config.php"; 
+require_once __DIR__ . '/includes/config.php';
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 $username = trim($_POST['username']);

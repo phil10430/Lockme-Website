@@ -121,13 +121,14 @@ label {
     text-decoration: underline;
 }
 
+
 .card-header,
 .card-footer{
     background: transparent;
     color:#efb2ae;
     border: none;
-    margin: 0 auto; /* horizontal zentrieren */
-
+    text-align: center;
+    margin: 5 auto; /* horizontal zentrieren */
 }
 
 
@@ -146,7 +147,7 @@ label {
 
 .login-card {
     margin: 150px auto;
-    width: 70%;
+    width: 80%;
 }
 
 

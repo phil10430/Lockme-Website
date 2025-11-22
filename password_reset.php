@@ -1,6 +1,5 @@
 <?php
-include 'helper_functions.php';
-
+require_once __DIR__ . '/includes/helper_functions.php';
 
 if(isset($_GET['token']))
 {

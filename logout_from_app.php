@@ -1,8 +1,7 @@
 <?php
-//Logout
-// Include config file
-require_once "config.php";
-include 'helper_functions.php';
+require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/helper_functions.php';
+
 // Processing form data when form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Eingaben trimmen (kein mysqli_real_escape_string mehr nötig)

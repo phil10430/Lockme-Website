@@ -1,6 +1,6 @@
 <?php
-require_once 'config.php'; // enthält $pdo (PDO-Verbindung)
-require_once 'helper_functions.php';
+require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/helper_functions.php';
 
 $username = $email = $password = $confirm_password = "";
 $errors = [];

@@ -27,7 +27,7 @@ function validateDate($date)
         return true;
     }
 
-    return false;
+    return false; 
 }
 
 function isValidPassword($pw)
@@ -36,6 +36,10 @@ function isValidPassword($pw)
    return preg_match(PASSWORD_REGEX, $pw);
 }
 
+function testOutput()
+{
+    echo "asdfkasödlkfjasöldkjfalsödkj";
+}
 
 function isValidusername($name)
 {

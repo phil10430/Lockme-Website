@@ -2,7 +2,7 @@
 
 session_start();
 
-require_once "config.php"; // enthält dein $pdo-Objekt
+require_once __DIR__ . '/includes/config.php';
 
 $username = $password = "";
 $username_err = $password_err = $login_err = "";

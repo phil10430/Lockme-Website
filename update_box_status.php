@@ -2,8 +2,8 @@
 
 /* This script is called when Box sends a response  to APP */
 
-require_once "config.php";
-include 'helper_functions.php';
+require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/helper_functions.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 

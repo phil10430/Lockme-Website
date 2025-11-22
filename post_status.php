@@ -3,9 +3,8 @@
 /* This script is called periodically from Android APP every second  */
 
 
-require_once "config.php";
-include 'helper_functions.php';
-
+require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/helper_functions.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // get posted variables from APP

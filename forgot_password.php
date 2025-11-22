@@ -1,5 +1,5 @@
 <?php
-include 'helper_functions.php';
+require_once __DIR__ . '/includes/helper_functions.php';
 // Reference https://technosmarter.com/php/forgot-password-and-password-reset-form-in-php
 
 // Processing form data when form is submitted

@@ -90,9 +90,7 @@ echo '<div class="overlay-card">';
           . "Password" .
           '</div>';
         }  
-        
-          include  "box_control_form.php";
-
+        include __DIR__ . '/templates/box_control_form.php';
       }
      echo '</div>';
 

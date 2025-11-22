@@ -1,6 +1,6 @@
 <?php
-require_once "config.php";
-require "header.php";
+require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/templates/header.php'; 
 require "password_reset.php"; 
 ?>
 
