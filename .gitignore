@@ -1,2 +1,4 @@
 # Firmware-Ordner vom Tracking ausschließen
 firmwareupdates/
+*.bin
+*.log
