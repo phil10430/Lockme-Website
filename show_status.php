@@ -18,7 +18,7 @@ $appLoggedIn = $row['app_logged_in'];
 $appActive = $row['app_active'];
 $lockedSince = $row['locked_since'];
 $timeLeft = $row['time_left'];
-$closeButtonText = $closeButtonText ?? "Close"; 
+$closeButtonText = $closeButtonText ?? "CLOSE"; 
 
 if( !empty($openTime  )){
   $openTime   = date("y-m-d H:i", strtotime("$openTime  "));
@@ -31,12 +31,12 @@ echo '<div class="overlay-card">';
     if(($appLoggedIn==1) && ($conStatus==1) && ($appActive == 1)){
       
       if ($lockStatus == 0) {
-        $closeButtonText = "Close";  
+        $closeButtonText = "CLOSE";  
         echo 'src="/assets/images/icon_box_open.png">';
 
       }elseif ($lockStatus == 1) 
       {
-        $closeButtonText = "Open";  
+        $closeButtonText = "OPEN";  
         echo 'src="/assets/images/icon_box_closed.png">';
       }
     }else {
@@ -52,13 +52,13 @@ echo '<div class="overlay-card">';
                   if ($conStatus == 1) {
                       $connectionStatusMessage =  "Box #" . $boxName;
                   } else {
-                      $connectionStatusMessage = "Connect LOCKME app to your box.";
+                      $connectionStatusMessage = "Connect app to your LOCKMEBOX.";
                   }
           }  else{
-              $connectionStatusMessage = "Open LOCKME app and login.";
+              $connectionStatusMessage = "Open app and login.";
           }
       } else {
-          $connectionStatusMessage = "Open LOCKME app to enable control.";
+          $connectionStatusMessage = "Open app to enable control.";
       }
 
       echo '<div class="status-message">' . $connectionStatusMessage . '</div>';

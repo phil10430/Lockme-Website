@@ -31,13 +31,13 @@ require_once __DIR__ . '/templates/header.php';
         </div>
 
         <div class="card-footer">
-            <a href="logout.php" class="btn btn-danger btn-round">Sign Out</a>
+            <a href="logout.php" class="btn btn-warning btn-round">SIGN OUT</a>
         </div>
 
     <?php } else { ?>
 
         <div class="card-header">
-            Login to control your x!
+            Login to control your LOCKMEBOX!
             <?php 
             // Flash-Message für z. B. Registrierungserfolg
             if (isset($_SESSION['flash_message'])) {

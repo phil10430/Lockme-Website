@@ -13,13 +13,15 @@
                         placeholder="Timer">
                 </div>
             </div>
-            <div class="col-md-4">
-                <button type="submit"
-                        name="setTimer"
-                        class="btn btn-warning btn-round w-100">
-                    Set Timer
-                </button>
-            </div>
+            <?php if ($lockStatus == 1) { ?>
+                <div class="col-md-4">
+                    <button type="submit"
+                            name="setTimer"
+                            class="btn btn-warning btn-round w-100">
+                        SET TIMER
+                    </button>
+                </div>
+            <?php } ?>
         </div>
 
 
