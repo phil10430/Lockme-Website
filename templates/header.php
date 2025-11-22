@@ -3,7 +3,7 @@
 <html lang="en">
 
     <head>
-        <!-- <link rel="stylesheet" href="myStyle.css">  -->
+        
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width; initial-scale=1.0;">
         <title>lockmebox</title>
@@ -15,7 +15,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css">
     
         <!-- My stylesheet must come after bootstrap styles to ensure priority -->
-        <link rel="stylesheet" href="mystyle.css">
+        <link rel="stylesheet" href="/assets/css/mystyle.css">
 
         <!-- DateTimePicker scripts -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -24,7 +24,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 
         <!-- autorefresh site when lock/con status has changed -->
-        <script  src="autorefresh_script.js"></script>
+        <script  src="/assets/js/autorefresh_script.js"></script>
         
     </head>
 

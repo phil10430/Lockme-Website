@@ -32,15 +32,15 @@ echo '<div class="overlay-card">';
       
       if ($lockStatus == 0) {
         $closeButtonText = "Close";  
-        echo 'src="/pictures/icon_box_open.png">';
+        echo 'src="/assets/images/icon_box_open.png">';
 
       }elseif ($lockStatus == 1) 
       {
         $closeButtonText = "Open";  
-        echo 'src="/pictures/icon_box_closed.png">';
+        echo 'src="/assets/images/icon_box_closed.png">';
       }
     }else {
-      echo 'src="/pictures/icon_box_unclear.png">';
+      echo 'src="/assets/images/icon_box_unclear.png">';
     }
 
     echo '<div class="card-content">';   

@@ -10,7 +10,7 @@ if (!empty($login_err)) {
 ?>
 <div class="overlay-card">
 
-    <img class="bg-image" src="pictures/icon_box_unclear.png" alt="Background">
+    <img class="bg-image" src="/assets/images/icon_box_unclear.png" alt="Background">
 
     <div class="card-content">
 
