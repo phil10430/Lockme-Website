@@ -1,0 +1,4 @@
+Entwickler modus für Website:
+Hosting -> CDN-Caching deaktivieren.
+
+nach Änderung im .css -> shift+cmd+r -> browser zieht css neu

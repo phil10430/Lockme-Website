@@ -62,7 +62,7 @@
                             <button 
                                 type="submit" 
                                 name="subforgot" 
-                                class="btn btn-warning btn-round w-100"
+                                class="btn btn-round w-100"
                             >
                                 Send Link
                             </button>

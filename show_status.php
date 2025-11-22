@@ -18,7 +18,21 @@ $appLoggedIn = $row['app_logged_in'];
 $appActive = $row['app_active'];
 $lockedSince = $row['locked_since'];
 $timeLeft = $row['time_left'];
+
 $closeButtonText = $closeButtonText ?? "CLOSE"; 
+
+/* ----------- debugging ----------------------- */
+$lockStatus                   = 1;
+$protectionLevelTimer         = 1;
+$protectionLevelPassword      = 1;
+$openTime                     = "12.11.2025 - 05:30";
+$conStatus                    = 1;
+$appLoggedIn                  = 1;
+$appActive                    = 1;
+$lockedSince                  = "since 3d:24h:50m";
+$timeLeft                     = "14d left";
+
+
 
 if( !empty($openTime  )){
   $openTime   = date("y-m-d H:i", strtotime("$openTime  "));
@@ -28,7 +42,7 @@ echo '<div class="overlay-card">';
 
 
   echo '<img class="bg-image" alt="Background"';
-
+  
   if(($appLoggedIn==1) && ($conStatus==1) && ($appActive == 1)){
     
     if ($lockStatus == 0) {
@@ -43,6 +57,7 @@ echo '<div class="overlay-card">';
   }else {
     echo 'src="/assets/images/icon_box_unclear.png">';
   }
+  
 
   echo '<div class="card-content">';   
   

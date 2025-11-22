@@ -31,7 +31,7 @@ require_once __DIR__ . '/templates/header.php';
         </div>
 
         <div class="card-footer">
-            <a href="logout.php" class="btn btn-warning btn-round">SIGN OUT</a>
+            <a href="logout.php" class="btn btn-round">SIGN OUT</a>
         </div>
 
     <?php } else { ?>

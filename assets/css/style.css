@@ -3,82 +3,90 @@ body {
     font-family: "Inter", Arial, sans-serif;
 }
 
-
 .card {
     background-color: transparent !important;
-    max-width: 400px;
+    max-width: 300px; /* etwas breiter als das Background Bild */
     margin: 0px auto;
     border:none;
 }
 
 .card-header,
 .card-footer{
-    background: transparent;
     color:#efb2ae;
     border: none;
     text-align: center;
-    margin: 0 auto; /* horizontal zentrieren */
 }
 
-
-.navbar.bg-light {
-    background-color: transparent !important;
-    box-shadow: none !important;  /* optional: Schatten entfernen */
-    border-bottom: none !important; /* optional */
+.card-body{
+    flex: none;
+    padding: 0px;
 }
 
 .overlay-card {
-    position: relative;
+    position: relative; 
     display: flex;
     justify-content: center; /* horizontal zentrieren */
-    align-items: center;     /* optional: vertikal zentrieren, falls nötig */
-    border-radius: 16px;
-    overflow: hidden;
-    margin: 0px auto;
 }
 
 /* Bild als Hintergrund (zentriert) */
 .overlay-card .bg-image{
-    display: block;
-    width: 80%;
-    height: auto;
-    object-fit: contain;
-    z-index: 1;
-    pointer-events: none;
-    margin: 0 auto; /* horizontal zentrieren */
+    width: 300px;
 }
 
 /* Inhalt über dem Bild */
 .overlay-card .card-content {
     color: #efb2ae;
     position: absolute;
-    top: 0;
-    left: 50%;          /* linke Kante in der Mitte */
-    transform: translateX(-50%); /* horizontale Verschiebung, damit Content wirklich zentriert ist */
-    /*width: 60%;         /* Breite des Inhalts */
-    height: 100%;
+    width: 100%;
     z-index: 2;
-    box-sizing: border-box;
 }
 
-/* Form Labels */
-label {
-    font-weight: 500;
-    color: #444;
-    margin-bottom: 5px;
+.status-message{ 
+    position:absolute;
+    top:66px;                       /* absoluter abstand zum überliegenden element (overlay) */
+    left: 50%;                      /* linke Kante in der Mitte des Containers */
+    transform: translateX(-50%);    /* um die eigene Breite nach links verschieben */
+    text-align: center;             /* text horizontal zentrieren */
 }
+
+.open-time{
+    position:absolute;
+    top:200px;
+    left: 50%;       
+    transform: translateX(-50%); 
+    text-align: center;
+}
+
+.uiElements{
+    position:absolute;
+    top:400px;
+    width: 150px;
+    margin-left: 20px;
+}
+
+.login-card {
+    margin: 150px auto;
+    width: 50%;
+}
+
+.register-card {
+    margin: 80px auto;
+    width: 50%;
+}
+
 
 /* Inputs */
 .form-control {
     width: 100%;
     padding: 10px 12px;
     border-radius: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid #efb2ae;
     transition: all 0.2s ease-in-out;
+    color: #efb2ae;
 }
 
 .form-control:focus {
-    border-color: #6a5af9;
+    border-color: #b59a98;
     box-shadow: 0 0 4px rgba(106, 90, 249, 0.3);
     outline: none;
 }
@@ -91,23 +99,6 @@ label {
 .invalid-feedback {
     font-size: 0.85rem;
     color: #dc3545;
-}
-
-/* Button */
-.btn-modern {
-    width: 100%;
-    padding: 12px 0;
-    background: #6a5af9;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.25s ease;
-}
-
-.btn-modern:hover {
-    background: #5948e0;
 }
 
 /* Fehlermeldung */
@@ -129,32 +120,13 @@ label {
     text-decoration: underline;
 }
 
-.status-message{ /* Box #54601 */
-    margin-top:82px;
-    text-align: center; /* horizontal zentrieren */
-}
-.open-time{
-    margin-top:200px;
-    text-align: center; /* horizontal zentrieren */
-}
-.uiElements{
-    width: 60%;
-    margin-top:90px;
-}
-
-.login-card {
-    margin: 150px auto;
-    width: 80%;
-}
-
-
-/* Minimalistisches Input-Design */
+/* Edit text fields */
 .clean-input {
     background: transparent;
     border: none;
     border-bottom: 2px solid #efb2ae;
     border-radius: 0;
-    padding: 8px 8px;
+    padding: 4px;
     outline: none;
     box-shadow: none;
     width: 100%;
@@ -170,13 +142,22 @@ label {
     background: transparent;
 }
 
+/* buttons */
+
 .btn-round {
     background-color: #efb2ae;
     color: black;
+    border:none;
     border-radius: 25px;
-    min-width: 120px;  /* gleiche Breite optional */
+    min-width: 100px;  /* gleiche Breite optional */
 }
-.btn-round:hover {
+
+.btn-round:hover, 
+.btn-round:active,
+.btn-round:focus,
+.btn-round:checked {
     background-color: #e08f8a; /* etwas dunklerer Ton */
     color: black;              /* Textfarbe beibehalten */
+    border: none;
+    transform: scale(0.98);     /* Butten wird kleiner bei hover */
 }

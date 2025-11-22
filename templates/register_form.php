@@ -4,7 +4,7 @@
 
     <div class="card-content">
 
-        <div class="login-card">
+        <div class="register-card">
 
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
 
@@ -55,7 +55,7 @@
                 </div>
 
                 <div class="form-group">
-                    <button type="submit" class="btn btn-warning btn-round w-100" name="submitRegister">Register</button>
+                    <button type="submit" class="btn btn-round w-100" name="submitRegister">Register</button>
                 </div>
 
 

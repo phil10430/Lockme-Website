@@ -4,7 +4,7 @@
 
         <!-- Timer -->
         <div class="row mb-3">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <div class="input-group date" id="datetimepicker1">
                     <input type="text"
                         class="form-control clean-input"
@@ -14,10 +14,10 @@
                 </div>
             </div>
             <?php if ($lockStatus == 1) { ?>
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <button type="submit"
                             name="setTimer"
-                            class="btn btn-warning btn-round w-100">
+                            class="btn btn-round w-100">
                         SET TIMER
                     </button>
                 </div>
@@ -27,7 +27,7 @@
 
         <!-- Password -->
         <div class="row mb-3">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <input type="text"
                     class="form-control clean-input"
                     id="password"
@@ -35,10 +35,10 @@
                     maxlength="10"
                     placeholder="Password">
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <button type="submit"
                         name="closeBox"
-                        class="btn btn-warning btn-round w-100">
+                        class="btn btn-round w-100">
                     <?= htmlspecialchars($closeButtonText) ?>
                 </button>
             </div>

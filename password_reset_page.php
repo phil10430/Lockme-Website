@@ -59,7 +59,7 @@ require "password_reset.php";
                                 <button 
                                     type="submit" 
                                     name="sub_set" 
-                                    class="btn btn-warning btn-round w-100"
+                                    class="btn btn-round w-100"
                                 >
                                     Reset Password
                                 </button>
