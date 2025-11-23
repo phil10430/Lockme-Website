@@ -51,11 +51,24 @@ body {
 
 .open-time{
     position:absolute;
-    top:200px;
+    top:150px;
+    left: 50%;       
+    transform: translateX(-50%); 
+    text-align: center;
+    font-size: 16px;
+}
+.protection-level-password{
+    position:absolute;
+    top:280px;
     left: 50%;       
     transform: translateX(-50%); 
     text-align: center;
 }
+
+.password-symbol{
+    width:150px;
+}
+
 
 .uiElements{
     position:absolute;
@@ -69,10 +82,16 @@ body {
     width: 50%;
 }
 
+.passwordreset-card {
+    margin: 110px auto;
+    width: 50%;
+}
+
 .register-card {
     margin: 80px auto;
     width: 50%;
 }
+
 
 
 /* Inputs */

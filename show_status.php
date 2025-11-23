@@ -90,8 +90,12 @@ echo '<div class="overlay-card">';
         . $lockedSince . '<br>'
         . $timeLeft . '<br>'
         . $openTime .  '<br>'
-        . "Password" .
-        '</div>';
+        .'</div>';
+
+        echo '<div class="protection-level-password">'
+        .' <img class="password-symbol" src="/assets/images/lockme_symbol_password.png">'
+        .'</div>';
+
       } elseif ($protectionLevelTimer   == 1) 
       {
         echo '<div class="open-time">'
@@ -103,9 +107,9 @@ echo '<div class="overlay-card">';
       } 
       elseif ($protectionLevelPassword   == 1) 
       {
-        echo '<div class="open-time">'
-        . "Password" .
-        '</div>';
+        echo '<div class="protection-level-password">'
+        .' <img class="password-symbol" src="/assets/images/lockme_symbol_password.png">'
+        .'</div>';
       }  
       include __DIR__ . '/templates/box_control_form.php';
     }

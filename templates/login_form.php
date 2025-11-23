@@ -40,7 +40,7 @@ if (!empty($login_err)) {
                     <span class="invalid-feedback"><?php echo $password_err; ?></span>
                 </div>
 
-                <button type="submit"  class="btn btn-round w-100" name="submitLogin">Login</button>
+                <button type="submit"  class="btn btn-round w-100" name="submitLogin">LOGIN</button>
             </form>
         </div>
 
