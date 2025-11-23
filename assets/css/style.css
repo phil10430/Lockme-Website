@@ -3,6 +3,13 @@ body {
     font-family: "Inter", Arial, sans-serif;
 }
 
+.site-header{
+    display: flex;           /* Flex-Container aktivieren */
+    justify-content: center; /* horizontal zentrieren */
+    align-items: center;     /* vertikal zentrieren */
+    padding: 10px 0;         /* optional: Abstand oben/unten */
+}
+
 .card {
     background-color: transparent !important;
     max-width: 300px; /* etwas breiter als das Background Bild */
