@@ -1,9 +1,9 @@
 <?php
 if (!empty($login_err)) {
     echo '<div class="alert alert-danger">';
-    echo $login_err;
+    echo "❌ " . $login_err;
     if ($login_err == "Invalid password.") {
-        echo '<br><a href="forgot_password_page.php" class="forgot-link">Passwort vergessen?</a>';
+        echo '<br><a href="forgot_password_page.php" class="forgot-link">Forgot your password?</a>';
     }
     echo '</div>';
 }

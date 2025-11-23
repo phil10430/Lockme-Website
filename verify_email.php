@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/includes/config.php';
 
-session_start(); // Session starten, damit wir Flash-Messages nutzen können
+session_start();
 
 if (isset($_GET['token'])) {
     $token = $_GET['token'];

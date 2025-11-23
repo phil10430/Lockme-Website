@@ -10,12 +10,14 @@ require_once __DIR__ . '/templates/header.php';
 
         <div class="card-header">
             <?php 
+
             // Flash-Message im Header anzeigen
             if (isset($_SESSION['flash_message'])) {
                 echo "<div class='alert alert-success mb-2'>{$_SESSION['flash_message']}</div>";
                 unset($_SESSION['flash_message']); // nur einmal anzeigen
             }
             ?>
+            
             Hello <?php echo htmlspecialchars($_SESSION["username"]); ?>
         </div>
 

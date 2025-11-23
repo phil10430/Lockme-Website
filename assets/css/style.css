@@ -91,33 +91,15 @@ body {
     outline: none;
 }
 
-/* Fehler */
-.is-invalid {
-    border-color: #dc3545 !important;
-}
-
-.invalid-feedback {
-    font-size: 0.85rem;
-    color: #dc3545;
-}
-
 /* Fehlermeldung */
-.alert-danger {
-    background: #ffe7e7;
-    color: #c62828;
-    border: 1px solid #ffb3b3;
-    padding: 12px;
+.alert-danger,
+.alert-success{
+    background: transparent;
+    color: #efb2ae;
+    border: none;
+    padding: 5px;
     border-radius: 10px;
-    margin-bottom: 20px;
-}
-
-.forgot-link {
-    color: #6a5af9;
-    text-decoration: none;
-}
-
-.forgot-link:hover {
-    text-decoration: underline;
+    text-align: center;
 }
 
 /* Edit text fields */

@@ -1,91 +1,74 @@
 <?php
+session_start();
+require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/helper_functions.php';
-// Reference https://technosmarter.com/php/forgot-password-and-password-reset-form-in-php
 
-// Processing form data when form is submitted
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    /* activate error debug messages */
-    // ini_set('display_errors', 1);
-    // ini_set('display_startup_errors', 1);
-    // error_reporting(E_ALL);
+    $login_email = test_input($_POST["login_var"]);
+    $username_input = test_input($_POST["username"] ?? ''); // optional Username
 
+    // neutrale Flash-Meldung immer gleich
+    $flash_msg = "✔️ If the email exists, a reset link has been sent.";
 
-    $login = test_input($_POST["login_var"]);
+    // Alte Tokens löschen (abgelaufen)
+    $sql = "DELETE FROM pass_reset WHERE expires_at <= NOW()";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
 
-    if (isValidEmail($login))
-    {
-    
-        $query = "SELECT * FROM users WHERE email = :email";
-        $stmt = $pdo->prepare($query);
-        $stmt->execute([':email' => $login]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $email = $row['email'];
-     
+    // Benutzer prüfen (E-Mail + optional Username)
+    $sql = "SELECT * FROM users WHERE email = :email";
+    $params = [':email' => $login_email];
 
-
-        if (!empty($email)) {
-            
-            // if old entry with that email exists - delete old password reset entry
-        
-            $sql = "DELETE FROM pass_reset WHERE email = :email";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-            $stmt->execute();
-
-            
-            $token = bin2hex(random_bytes(50));
-
-            $sql = "INSERT INTO pass_reset (email, token) VALUES (:email, :token)";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-            $stmt->bindParam(':token', $token, PDO::PARAM_STR);
-
-            if ($stmt->execute()) {
-                $FromName = "lockmebox.com";
-                $FromEmail = "noreply@lockmebox.com";
-                $ReplyTo = "noreply@lockmebox.com";
-                $credits = "https://lockmebox.com/";
-                $headers  = "MIME-Version: 1.0\n";
-                $headers .= "Content-type: text/html; charset=iso-8859-1\n";
-                $headers .= "From: " . $FromName . " <" . $FromEmail . ">\n";
-                $headers .= "Reply-To: " . $ReplyTo . "\n";
-                $headers .= "X-Sender: <" . $FromEmail . ">\n";
-                $headers .= "X-Mailer: PHP\n";
-                $headers .= "X-Priority: 1\n";
-                $headers .= "Return-Path: <" . $FromEmail . ">\n";
-                $subject = "You have received a password reset email";
-
-
-                $mlink = "https://lockmebox.com/password_reset_page.php?token=".$token;
-                $msg = "
-                    <html>
-                    <head>
-                        <title>Your password reset link</title>
-                    </head>
-                    <body>
-                        Reset your password with this <a href=" . $mlink . "> Link</a>. 
-                    </body>
-                    </html>";
-                
-                if (mail($email, $subject, $msg, $headers,'-f'.$FromEmail)) {
-                    header("location:forgot_password_page.php?sent=1");
-                    echo 'email sent';
-                    $hide = '1';
-                } else {
-                    header("location:forgot_password_page.php?servererr=1");
-                }
-                
-            } else {
-                header("location:forgot_password_page.php?something_wrong=1"); 
-            }
-        } else {
-            header("location:forgot_password_page.php?err=".$login); 
-        }
-    }else {
-        header("location:forgot_password_page.php?emailformat_invalid=1"); 
+    if (!empty($username_input)) {
+        $sql .= " AND username = :username";
+        $params[':username'] = $username_input;
     }
 
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    if ($user) {
+        // Token generieren
+        $token = bin2hex(random_bytes(50));
+        $expires = date("Y-m-d H:i:s", strtotime("+1 hour"));
+
+        // Token in DB speichern
+        $sql = "INSERT INTO pass_reset (email, token, expires_at) VALUES (:email, :token, :expires)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            ':email' => $user['email'],
+            ':token' => $token,
+            ':expires' => $expires
+        ]);
+
+        // Mail senden
+        $FromName  = "lockmebox.com";
+        $FromEmail = "noreply@lockmebox.com";
+        $ReplyTo   = "noreply@lockmebox.com";
+
+        $headers  = "MIME-Version: 1.0\n";
+        $headers .= "Content-type: text/html; charset=utf-8\n";
+        $headers .= "From: $FromName <$FromEmail>\n";
+        $headers .= "Reply-To: $ReplyTo\n";
+
+        $subject = "Your password reset link";
+        $mlink   = "https://lockmebox.com/password_reset_page.php?token=$token";
+
+        $msg = "
+            <html>
+            <body>
+                Reset your password with this <a href='$mlink'>link</a>.
+            </body>
+            </html>
+        ";
+
+        @mail($user['email'], $subject, $msg, $headers, '-f'.$FromEmail);
+    }
+
+    // Immer gleiche Meldung für Sicherheit
+    $_SESSION['flash_message'] = $flash_msg;
+    header("Location: forgot_password_page.php");
+    exit;
 }
-?>
