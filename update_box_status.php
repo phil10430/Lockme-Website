@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $lockedSince = test_input($_POST["lockedSince"]); 
     $timeLeft = test_input($_POST["timeLeft"]);       
     $firmwareVersion = test_input($_POST["firmwareVersion"]);   
-    $rtc_logCountSwitchCycles_String = test_input($_POST["rtc_logCountSwitchCycles_String"]);   
+    $rtc_logCountOpenCloseCycles_String = test_input($_POST["rtc_logCountOpenCloseCycles_String"]);   
     $rtc_logCountSwitchCycles_String = test_input($_POST["rtc_logCountSwitchCycles_String"]);   
     $rtc_logOnTimeSec_String = test_input($_POST["rtc_logOnTimeSec_String"]);   
     $hardwareVersion = test_input($_POST["hardwareVersion"]);
@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ':locked_since' => $lockedSince,    
         ':time_left' => $timeLeft,    
         ':firmware_version' => $firmwareVersion,  
-        ':log_openclosecycles' => $rtc_logCountSwitchCycles_String,
+        ':log_openclosecycles' => $rtc_logCountOpenCloseCycles_String,
         ':log_switchcycles' => $rtc_logCountSwitchCycles_String,    
         ':log_ontimesec' => $rtc_logOnTimeSec_String,    
         ':hardware_version' => $hardwareVersion  

@@ -27,7 +27,7 @@
     <body>
         <header class="site-header">
             <a href="index.php" class="logo">
-                <img src="/assets/images/lockmebox_site_header.png" alt="Site Logo" height="40">
+                <img src="/assets/images/lockmebox_site_header.png" alt="Site Logo" height="30">
             </a>
         </header>
 
