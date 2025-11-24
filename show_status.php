@@ -22,7 +22,7 @@ $timeLeft = $row['time_left'];
 $closeButtonText = $closeButtonText ?? "CLOSE"; 
 
 /* ----------- debugging ----------------------- */
-
+/*
 $lockStatus                   = 1;
 $protectionLevelTimer         = 1;
 $protectionLevelPassword      = 1;
@@ -32,7 +32,7 @@ $appLoggedIn                  = 1;
 $appActive                    = 1;
 $lockedSince                  = "since 3d:24h:50m";
 $timeLeft                     = "14d left";
-
+*/
 
 
 if( !empty($openTime  )){
@@ -80,6 +80,12 @@ echo '<div class="overlay-card">';
 
     echo '<div class="status-message">' . $connectionStatusMessage . '</div>';
 
+    if ($lockStatus == 1) {
+      /* show locked since */
+       echo '<div class="open-time">'
+        . $lockedSince . '<br>'
+        .'</div>';
+    }
 
     /* show box control form only if status is not unclear */
     if(($appLoggedIn==1) && ($conStatus==1) && ($appActive == 1)){
@@ -87,7 +93,6 @@ echo '<div class="overlay-card">';
       if (($protectionLevelTimer   == 1) && ($protectionLevelPassword   == 1)) 
       {
         echo '<div class="open-time">'
-        . $lockedSince . '<br>'
         . $timeLeft . '<br>'
         . $openTime .  '<br>'
         .'</div>';
@@ -99,7 +104,6 @@ echo '<div class="overlay-card">';
       } elseif ($protectionLevelTimer   == 1) 
       {
         echo '<div class="open-time">'
-        . $lockedSince . '<br>'
         . $timeLeft . '<br>'
         . $openTime .  '<br>'
         .
