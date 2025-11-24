@@ -22,7 +22,7 @@ $timeLeft = $row['time_left'];
 $closeButtonText = $closeButtonText ?? "CLOSE"; 
 
 /* ----------- debugging ----------------------- */
-/*
+
 $lockStatus                   = 1;
 $protectionLevelTimer         = 1;
 $protectionLevelPassword      = 1;
@@ -32,7 +32,7 @@ $appLoggedIn                  = 1;
 $appActive                    = 1;
 $lockedSince                  = "since 3d:24h:50m";
 $timeLeft                     = "14d left";
-*/
+
 
 
 if( !empty($openTime  )){

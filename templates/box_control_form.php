@@ -1,48 +1,54 @@
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
- 
-    <div class="uiElements">  
 
-        <!-- Timer -->
-        <div class="row mb-3">
-            <div class="col-md-10">
-                <div class="input-group date" id="datetimepicker1">
+ <div class="boxcontrol-elements">
+
+    <div class="box a">
+        <div class="input-group date" id="datetimepicker1">
                     <input type="text"
                         class="form-control clean-input"
                         id="openTimeField"
                         name="openTime"
-                        placeholder="Timer">
-                </div>
-            </div>
-            <?php if ($lockStatus == 1) { ?>
-                <div class="col-md-2">
-                    <button type="submit"
-                            name="setTimer"
-                            class="btn btn-round w-100">
-                        SET TIMER
-                    </button>
-                </div>
-            <?php } ?>
+                    placeholder="Timer">
         </div>
+    </div>
+    
 
+    <div class="box b">
 
-        <!-- Password -->
-        <div class="row mb-3">
-            <div class="col-md-10">
-                <input type="text"
-                    class="form-control clean-input"
-                    id="password"
-                    name="password"
-                    maxlength="10"
-                    placeholder="Password">
-            </div>
-            <div class="col-md-2">
-                <button type="submit"
-                        name="closeBox"
-                        class="btn btn-round w-100">
-                    <?= htmlspecialchars($closeButtonText) ?>
-                </button>
-            </div>
-        </div>
+        <?php if ($lockStatus == 1) { ?>
+                
+                        <button type="submit"
+                                name="setTimer"
+                                class="btn btn-round w-100">
+                            SET TIMER
+                        </button>
+                
+        <?php } ?>
 
     </div>
+
+
+    <div class="box c">
+        <input type="text"
+                            class="form-control clean-input"
+                            id="password"
+                            name="password"
+                            maxlength="10"
+                            placeholder="Password">
+    </div>
+
+
+
+    <div class="box d">
+        <button type="submit"
+                                name="closeBox"
+                                class="btn btn-round w-100">
+                            <?= htmlspecialchars($closeButtonText) ?>
+        </button>
+
+    </div>
+
+
+</div>
+
 </form>
