@@ -31,9 +31,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     firmware_version = :firmware_version,
     locked_since = :locked_since,
     time_left = :time_left,
-    log_openclosecycles = :log_openclosecycles, 
-    log_switchcycles = :log_switchcycles,
-    log_ontimesec = :log_ontimesec,
     hardware_version = :hardware_version
     WHERE username = :username";
     
@@ -49,11 +46,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ':locked_since' => $lockedSince,    
         ':time_left' => $timeLeft,    
         ':firmware_version' => $firmwareVersion,  
+        ':hardware_version' => $hardwareVersion  
+    ]);
+
+    
+
+    
+    $sql = "INSERT INTO log_data
+    (
+        box_name, 
+        firmware_version, 
+        log_openclosecycles, 
+        log_switchcycles, 
+        log_ontimesec, 
+        hardware_version
+    ) 
+    VALUES 
+    (
+        :box_name, 
+        :firmware_version,
+        :log_openclosecycles, 
+        :log_switchcycles,
+        :log_ontimesec,
+        :hardware_version
+    )
+    ON DUPLICATE KEY UPDATE
+        firmware_version    =  VALUES(firmware_version),
+        log_openclosecycles =  VALUES(log_openclosecycles), 
+        log_switchcycles    =  VALUES(log_switchcycles),
+        log_ontimesec       =  VALUES(log_ontimesec),
+        hardware_version    =  VALUES(hardware_version)";
+    
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([
+        ':box_name' => $boxName,       
+        ':firmware_version' => $firmwareVersion,  
         ':log_openclosecycles' => $rtc_logCountOpenCloseCycles_String,
         ':log_switchcycles' => $rtc_logCountSwitchCycles_String,    
         ':log_ontimesec' => $rtc_logOnTimeSec_String,    
         ':hardware_version' => $hardwareVersion  
     ]);
+
    
 }
 else {
