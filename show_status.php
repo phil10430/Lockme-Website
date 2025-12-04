@@ -80,15 +80,17 @@ echo '<div class="overlay-card">';
 
     echo '<div class="status-message">' . $connectionStatusMessage . '</div>';
 
-    if ($lockStatus == 1) {
-      /* show locked since */
-       echo '<div class="open-time">'
-        . $lockedSince . '<br>'
-        .'</div>';
-    }
+ 
 
     /* show box control form only if status is not unclear */
     if(($appLoggedIn==1) && ($conStatus==1) && ($appActive == 1)){
+
+      if ($lockStatus == 1) {
+        /* show locked since */
+        echo '<div class="open-time">'
+        . $lockedSince . '<br>'
+        .'</div>';
+      }
 
       if (($protectionLevelTimer   == 1) && ($protectionLevelPassword   == 1)) 
       {

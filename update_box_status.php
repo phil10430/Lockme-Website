@@ -27,11 +27,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     protection_level_timer = :protection_level_timer, 
     protection_level_password = :protection_level_password, 
     lock_status = :lock_status, 
-    open_time = :open_time, 
-    firmware_version = :firmware_version,
+    open_time = :open_time,
     locked_since = :locked_since,
-    time_left = :time_left,
-    hardware_version = :hardware_version
+    time_left = :time_left
     WHERE username = :username";
     
     $stmt = $pdo->prepare($sql);
@@ -44,13 +42,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ':protection_level_password' => $protectionLevelPassword,    
         ':open_time' => $openTime,
         ':locked_since' => $lockedSince,    
-        ':time_left' => $timeLeft,    
-        ':firmware_version' => $firmwareVersion,  
-        ':hardware_version' => $hardwareVersion  
+        ':time_left' => $timeLeft    
     ]);
-
-    
-
     
     $sql = "INSERT INTO log_data
     (
