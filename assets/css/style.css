@@ -1,5 +1,12 @@
+:root {
+    --primary-color: #efb2ae;
+    --hover-color: #e08f8a;
+    --mainbackground-color: black;
+}
+
+
 body {
-    background: black;
+    background: var(--mainbackground-color);
     font-family: "Inter", Arial, sans-serif;
 }
 
@@ -19,7 +26,7 @@ body {
 
 .card-header,
 .card-footer{
-    color:#efb2ae;
+    color:var(--primary-color);
     border: none;
     text-align: center;
 }
@@ -42,7 +49,7 @@ body {
 
 /* Inhalt über dem Bild */
 .overlay-card .card-content {
-    color: #efb2ae;
+    color: var(--primary-color);
     position: absolute;
     width: 100%;
     z-index: 2;
@@ -56,13 +63,29 @@ body {
     text-align: center;             /* text horizontal zentrieren */
 }
 
-.open-time{
+.locked-since{
     position:absolute;
     top:150px;
     left: 50%;       
     transform: translateX(-50%); 
     text-align: center;
     font-size: 16px;
+}
+.time-left{
+    position:absolute;
+    top:180px;
+    left: 50%;       
+    transform: translateX(-50%); 
+    text-align: center;
+    font-size: 16px;
+}
+
+.protection-level-timer{
+    position:absolute;
+    top:240px;
+    left: 50%;       
+    transform: translateX(-50%); 
+    text-align: center;
 }
 .protection-level-password{
     position:absolute;
@@ -73,7 +96,7 @@ body {
 }
 
 .password-symbol{
-    width:150px;
+    width:100px;
 }
 
 
@@ -101,9 +124,9 @@ body {
     width: 100%;
     padding: 10px 12px;
     border-radius: 8px;
-    border: 1px solid #efb2ae;
+    border: 1px solid var(--primary-color);
     transition: all 0.2s ease-in-out;
-    color: #efb2ae;
+    color: var(--primary-color);
 }
 
 .form-control:focus {
@@ -116,18 +139,19 @@ body {
 .alert-danger,
 .alert-success{
     background: transparent;
-    color: #efb2ae;
+    color: var(--primary-color);
     border: none;
     padding: 5px;
     border-radius: 10px;
     text-align: center;
 }
 
+
 /* Edit text fields */
-.clean-input {
+.form-control.clean-input {
     background: transparent;
     border: none;
-    border-bottom: 2px solid #efb2ae;
+    border-bottom: 2px solid var(--primary-color);
     border-radius: 0;
     padding: 4px;
     outline: none;
@@ -135,20 +159,25 @@ body {
     width: 100%;
 }
 
-.clean-input:focus {
+.form-control.clean-input:focus {
     border-bottom-color: #c3c3c3;
-    color: #efb2ae;
+    color: var(--primary-color);
     background: transparent;
 }
-.clean-input:not(:placeholder-shown) {
-           border-bottom-color: #c3c3c3;
+.form-control.clean-input:not(:placeholder-shown) {
+    border-bottom-color: #c3c3c3;
     background: transparent;
 }
+.clean-input::placeholder {
+    color: #8f7373;   /* deine Wunschfarbe */
+    opacity: 1;       /* wichtig bei Firefox, sonst wird es zu blass */
+}
+
 
 /* buttons */
 
 .btn-round {
-    background-color: #efb2ae;
+    background-color: var(--primary-color);
     color: black;
     border:none;
     border-radius: 25px;
@@ -159,7 +188,7 @@ body {
 .btn-round:active,
 .btn-round:focus,
 .btn-round:checked {
-    background-color: #e08f8a; /* etwas dunklerer Ton */
+    background-color: var(--hover-color); /* etwas dunklerer Ton */
     color: black;              /* Textfarbe beibehalten */
     border: none;
     transform: scale(0.98);     /* Butten wird kleiner bei hover */
@@ -186,4 +215,25 @@ body {
 
 .box {
     width: 100%;       /* feste Breite */
+}
+
+
+
+.footer-legal {
+    display: flex;
+    justify-content: center;  /* Center horizontally */
+    gap: 20px;               /* Space between links */
+    padding: 20px 0;
+    font-size: 14px;
+    background-color:transparent; /* Optional: footer bg */
+}
+
+.footer-legal a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-legal a:hover {
+    color: var(--hover-color);
 }

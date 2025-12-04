@@ -87,16 +87,20 @@ echo '<div class="overlay-card">';
 
       if ($lockStatus == 1) {
         /* show locked since */
-        echo '<div class="open-time">'
+        echo '<div class="locked-since">'
         . $lockedSince . '<br>'
         .'</div>';
       }
 
       if (($protectionLevelTimer   == 1) && ($protectionLevelPassword   == 1)) 
       {
-        echo '<div class="open-time">'
-        . $timeLeft . '<br>'
-        . $openTime .  '<br>'
+      
+        echo '<div class="time-left">'
+        . $timeLeft
+        .'</div>';
+
+        echo '<div class="protection-level-timer">'
+        .$openTime
         .'</div>';
 
         echo '<div class="protection-level-password">'
@@ -105,11 +109,13 @@ echo '<div class="overlay-card">';
 
       } elseif ($protectionLevelTimer   == 1) 
       {
-        echo '<div class="open-time">'
-        . $timeLeft . '<br>'
-        . $openTime .  '<br>'
-        .
-        '</div>';
+         echo '<div class="time-left">'
+        . $timeLeft
+        .'</div>';
+
+        echo '<div class="protection-level-timer">'
+        .$openTime
+        .'</div>';
       } 
       elseif ($protectionLevelPassword   == 1) 
       {

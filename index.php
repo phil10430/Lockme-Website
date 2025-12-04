@@ -60,3 +60,6 @@ require_once __DIR__ . '/templates/header.php';
     <?php } ?>
 
 </div>
+
+<?php require_once __DIR__ . '/templates/footer.php'; ?>
+

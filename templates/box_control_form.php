@@ -3,7 +3,7 @@
  <div class="boxcontrol-elements">
 
     <div class="box a">
-        <div class="input-group date" id="datetimepicker1">
+        <div class="input-group date">
                     <input type="text"
                         class="form-control clean-input"
                         id="openTimeField"
