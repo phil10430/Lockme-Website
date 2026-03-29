@@ -23,6 +23,10 @@ body {
     margin: 0px auto;
     border:none;
 }
+.card-legal {
+    max-width: 900px;
+    margin: 0px auto;
+}
 
 .card-header,
 .card-footer{

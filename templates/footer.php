@@ -1,9 +1,9 @@
     <footer>
         <div class="footer-legal">
-            <a href="/privacy-policy.html">Privacy Policy</a>
-            <a href="/terms-of-service.html">Terms of Service</a>
-            <a href="/imprint.html">Imprint</a>
-            <a href="/manual.html">Manual</a>
+            <a href="/legal/support.php">Manual & Support</a>
+            <a href="/legal/privacy.php">Privacy Policy</a>
+            <a href="/legal/terms.php">Terms of Service</a>
+            <a href="/legal/imprint.php">Imprint</a>  
         </div>
     </footer>
 
