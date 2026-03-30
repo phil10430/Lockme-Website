@@ -2,10 +2,14 @@
 
 <div class="card-legal">
     <div class="card-body">
+        <h2>Shop</h2>
+        <p>
+            Purchase your LockMeBox on <a href="https://kinkystuffmade.com"> kinkystuffmade.com </a>
+        </p>
+
         <h2>Manual</h2>
         <p>
-            Here you can describe how to use your device, connect via Bluetooth,
-            and control it through the web interface.
+             <a href="https://kinkystuffmade.com/wp-content/uploads/2026/03/lockmebox_usermanual_v1.0.pdf"> Manual V1.0 </a> 
         </p>
 
         <h2>Support</h2>

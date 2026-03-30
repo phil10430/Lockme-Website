@@ -26,6 +26,7 @@ body {
 .card-legal {
     max-width: 900px;
     margin: 0px auto;
+    color:var(--primary-color);
 }
 
 .card-header,
