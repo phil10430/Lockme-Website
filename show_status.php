@@ -18,6 +18,7 @@ $appLoggedIn = $row['app_logged_in'];
 $appActive = $row['app_active'];
 $lockedSince = $row['locked_since'];
 $timeLeft = $row['time_left'];
+$proVersion = $row['pro_version'];
 
 $closeButtonText = $closeButtonText ?? "CLOSE"; 
 
@@ -126,10 +127,15 @@ echo '<div class="overlay-card">';
       include __DIR__ . '/templates/box_control_form.php';
     }
     
+    
   echo '</div>';
 
- 
+echo '</div>';
 
+echo '<div class="card-footer">';
+ if($proVersion=="1"){
+      echo "LockMeBox Pro";
+  } 
 echo '</div>';
 
 ?>

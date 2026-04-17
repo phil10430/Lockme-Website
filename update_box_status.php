@@ -21,6 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $rtc_logCountSwitchCycles_String = test_input($_POST["rtc_logCountSwitchCycles_String"]);   
     $rtc_logOnTimeSec_String = test_input($_POST["rtc_logOnTimeSec_String"]);   
     $hardwareVersion = test_input($_POST["hardwareVersion"]);
+    $proVersion = test_input($_POST["proVersion"]);
 
     $sql = "UPDATE users SET 
     box_name = :box_name, 
@@ -29,7 +30,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     lock_status = :lock_status, 
     open_time = :open_time,
     locked_since = :locked_since,
-    time_left = :time_left
+    time_left = :time_left,
+    pro_version = :pro_version
     WHERE username = :username";
     
     $stmt = $pdo->prepare($sql);
@@ -42,7 +44,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ':protection_level_password' => $protectionLevelPassword,    
         ':open_time' => $openTime,
         ':locked_since' => $lockedSince,    
-        ':time_left' => $timeLeft    
+        ':time_left' => $timeLeft,
+        ':pro_version' => $proVersion      
     ]);
     
     $sql = "INSERT INTO log_data

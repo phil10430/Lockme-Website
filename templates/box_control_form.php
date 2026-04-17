@@ -15,7 +15,7 @@
 
     <div class="box b">
 
-        <?php if ($lockStatus == 1) { ?>
+        <?php if (($lockStatus == 1) && ($proVersion=="1") ) { ?>
                 
                         <button type="submit"
                                 name="setTimer"

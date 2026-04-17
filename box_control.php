@@ -8,7 +8,6 @@ $boxControlError = "";
 $wishedAction = "";
 $username = $_SESSION["username"];
 
- 
 if (($conStatus == 1) && ($appLoggedIn == 1)  && ($appActive == 1)){
    
     if ($_SERVER["REQUEST_METHOD"] == "POST") {  // Processing form data when form is submitted
@@ -24,13 +23,44 @@ if (($conStatus == 1) && ($appLoggedIn == 1)  && ($appActive == 1)){
         $setTimerIntent = isset($_POST['setTimer']);        
 
 
-         if (empty($password))
+        if (empty($password))
         {
             $password = PLACEHOLDER;
         }
-
-        if ($closeBoxIntent && ($lockStatus==0)) {
-            if (!empty($openTime))
+        if($proVersion=="1"){
+            // pro Version
+            if ($closeBoxIntent && ($lockStatus==0)) {
+                if (!empty($openTime))
+                {
+                    if (validateDate($openTime)) {
+                        $dt = DateTime::createFromFormat("d/m/Y H:i", $openTime, new DateTimeZone('Europe/Berlin'));
+                        $openTimeUnix = $dt->getTimestamp();
+                        $protectionLevelTimer = "1";
+                    } else {
+                        $boxControlError = "Invalid date";
+                    }
+                }
+                
+                if ($password !== PLACEHOLDER)
+                {
+                    if (isValidPassword($password)) {
+                        $protectionLevelPassword = "1";
+                    }else{
+                        $boxControlError = "Invalid password! Password must only contain a-z A-Z 0-9 and have 1 to 10 characters.";
+                    }
+                }
+                
+                if (empty($boxControlError)){
+                    $wishedAction = MSG_CLOSE . MSG_SEPARATOR .
+                        $protectionLevelTimer . MSG_SEPARATOR . $protectionLevelPassword . MSG_SEPARATOR .
+                        $openTimeUnix . MSG_SEPARATOR .
+                        $password ;
+                }
+            } elseif ($closeBoxIntent && ($lockStatus==1)) 
+            {
+                $wishedAction = MSG_OPEN . MSG_SEPARATOR .
+                    $password ;
+            } elseif ($setTimerIntent)
             {
                 if (validateDate($openTime)) {
                     $dt = DateTime::createFromFormat("d/m/Y H:i", $openTime, new DateTimeZone('Europe/Berlin'));
@@ -39,44 +69,50 @@ if (($conStatus == 1) && ($appLoggedIn == 1)  && ($appActive == 1)){
                 } else {
                     $boxControlError = "Invalid date";
                 }
-            }
-            
-            if ($password !== PLACEHOLDER)
-            {
-                if (isValidPassword($password)) {
-                    $protectionLevelPassword = "1";
-                }else{
-                    $boxControlError = "Invalid password! Password must only contain a-z A-Z 0-9 and have 1 to 10 characters.";
+                if (empty($boxControlError)){
+                    $wishedAction = EXTEND_OPEN_TIME . MSG_SEPARATOR .
+                        $protectionLevelTimer . MSG_SEPARATOR .
+                        $openTimeUnix . MSG_SEPARATOR .
+                        $password ;
                 }
             }
-            
-            if (empty($boxControlError)){
-                $wishedAction = MSG_CLOSE . MSG_SEPARATOR .
-                    $protectionLevelTimer . MSG_SEPARATOR . $protectionLevelPassword . MSG_SEPARATOR .
-                    $openTimeUnix . MSG_SEPARATOR .
+        } else {
+            // free Version
+            if ($closeBoxIntent && ($lockStatus==0)) {
+                if (!empty($openTime) && ($password !== PLACEHOLDER))
+                    {
+                         $boxControlError = "Choose between lock by password and timer";
+                    }
+                if (!empty($openTime))
+                {
+                    if (validateDate($openTime)) {
+                        $dt = DateTime::createFromFormat("d/m/Y H:i", $openTime, new DateTimeZone('Europe/Berlin'));
+                        $openTimeUnix = $dt->getTimestamp();
+                        $protectionLevelTimer = "1";
+                    } else {
+                        $boxControlError = "Invalid date";
+                    }
+                } else if ($password !== PLACEHOLDER)
+                {
+                    if (isValidPassword($password)) {
+                        $protectionLevelPassword = "1";
+                    }else{
+                        $boxControlError = "Invalid password! Password must only contain a-z A-Z 0-9 and have 1 to 10 characters.";
+                    }
+                }
+                
+                if (empty($boxControlError)){
+                    $wishedAction = MSG_CLOSE . MSG_SEPARATOR .
+                        $protectionLevelTimer . MSG_SEPARATOR . $protectionLevelPassword . MSG_SEPARATOR .
+                        $openTimeUnix . MSG_SEPARATOR .
+                        $password ;
+                }
+            } elseif ($closeBoxIntent && ($lockStatus==1)) 
+            {
+                $wishedAction = MSG_OPEN . MSG_SEPARATOR .
                     $password ;
-            }
-        } elseif ($closeBoxIntent && ($lockStatus==1)) 
-        {
-            $wishedAction = MSG_OPEN . MSG_SEPARATOR .
-                $password ;
-        } elseif ($setTimerIntent)
-        {
-            if (validateDate($openTime)) {
-                $dt = DateTime::createFromFormat("d/m/Y H:i", $openTime, new DateTimeZone('Europe/Berlin'));
-                $openTimeUnix = $dt->getTimestamp();
-                $protectionLevelTimer = "1";
-            } else {
-                $boxControlError = "Invalid date";
-            }
-            if (empty($boxControlError)){
-                $wishedAction = EXTEND_OPEN_TIME . MSG_SEPARATOR .
-                    $protectionLevelTimer . MSG_SEPARATOR .
-                    $openTimeUnix . MSG_SEPARATOR .
-                    $password ;
-            }
+            } 
         }
-        
      
         $sql = "UPDATE users SET wished_action = :wished_action WHERE username = :username";
         $stmt = $pdo->prepare($sql);
