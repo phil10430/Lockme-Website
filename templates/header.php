@@ -35,3 +35,6 @@
                 window.history.replaceState(null, null, window.location.href);
             }
         </script>
+<?php if (!empty($noindex)): ?>
+  <meta name="robots" content="noindex, nofollow">
+<?php endif; ?>

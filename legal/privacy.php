@@ -1,4 +1,7 @@
-<?php require_once __DIR__ . '/../templates/header.php'; ?>
+<?php 
+$noindex = true;
+require_once __DIR__ . '/../templates/header.php'; 
+?>
 
 <div class="card-legal">
     <div class="card-body">
@@ -9,11 +12,10 @@
 
         <h2>2. Data Controller</h2>
         <p>
-        [Your Company Name]<br>
-        [Street Address]<br>
-        [Postal Code, City]<br>
-        [Country]<br>
-        Email: [Email Address]
+        Philipp Freiburger<br>
+        Heerstrasse 32<br>
+        70563 Stuttgart<br>
+        Germany
         </p>
         <p>
         The Data Controller is the natural or legal person who determines the purposes and means of processing personal data.
@@ -158,7 +160,7 @@
         If you have any questions about this Privacy Policy or data protection, please contact:
         </p>
         <p>
-        Email: [Email Address]
+        eMail: <a href="mailto:info@lockmebox.com">info@lockmebox.com
         </p>
 
     </div>

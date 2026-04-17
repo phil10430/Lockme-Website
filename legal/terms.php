@@ -1,4 +1,7 @@
-<?php require_once __DIR__ . '/../templates/header.php'; ?>
+<?php 
+$noindex = true;
+require_once __DIR__ . '/../templates/header.php'; 
+?>
 
 <div class="card-legal">
     <div class="card-body">
