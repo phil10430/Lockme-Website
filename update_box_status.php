@@ -117,18 +117,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Vergleichen ob sich etwas geändert hat
     $hasChanged = !$last || 
-        $last['firmware_version']          !== $firmwareVersion ||
-        $last['log_openclosecycles']       !== $rtc_logCountOpenCloseCycles_String ||
-        $last['log_switchcycles']          !== $rtc_logCountSwitchCycles_String ||
-        $last['log_ontimesec']             !== $rtc_logOnTimeSec_String ||
-        $last['lock_status']               !== $lockStatus ||
-        $last['open_time']                 !== $openTime ||
-        $last['locked_since']              !== $lockedSince ||
-        $last['time_left']                 !== $timeLeft ||
-        $last['protection_level_timer']    !== $protectionLevelTimer ||
-        $last['protection_level_password'] !== $protectionLevelPassword ||
-        $last['hardware_version']          !== $hardwareVersion;
-
+        strval($last['firmware_version'])          !== strval($firmwareVersion) ||
+        strval($last['lock_status'])               !== strval($lockStatus) ||
+        strval($last['open_time'])                 !== strval($openTime) ||
+        strval($last['protection_level_timer'])    !== strval($protectionLevelTimer) ||
+        strval($last['protection_level_password']) !== strval($protectionLevelPassword) ||
+        strval($last['hardware_version'])          !== strval($hardwareVersion);
     // Nur inserten wenn sich etwas geändert hat
     if ($hasChanged) {
         $sql_history = "INSERT INTO box_data_history
