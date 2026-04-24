@@ -9,8 +9,10 @@ require_once __DIR__ . '/includes/helper_functions.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // get posted variables from APP
     $username = test_input($_POST["username"]);
-    $conStatus = test_input($_POST["conStatus"]);        
+    $boxName = test_input($_POST["boxName"]);     
     $appActive = test_input($_POST["appActive"]);      
+    $proVersion = test_input($_POST["proVersion"]);
+
     
     $query = "SELECT wished_action FROM users WHERE username = :username";
     $stmt = $pdo->prepare($query);
@@ -19,11 +21,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
    
 
-    $sql = "UPDATE users SET con_status = :con_status, app_active = :app_active WHERE username = :username";
+    $sql = "UPDATE users SET 
+    app_active = :app_active,
+    box_name_con = :box_name_con
+    WHERE username = :username";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
         ':app_active' => $appActive,
-        ':con_status' => $conStatus,
+        ':box_name_con' => $boxName,
         ':username' => $username
     ]);
 

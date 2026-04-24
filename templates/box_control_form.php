@@ -14,17 +14,11 @@
     
 
     <div class="box b">
-
-        <?php if (($lockStatus == 1) && ($proVersion=="1") ) { ?>
-                
-                        <button type="submit"
-                                name="setTimer"
-                                class="btn btn-round w-100">
-                            SET TIMER
-                        </button>
-                
-        <?php } ?>
-
+        <button type="submit"
+                name="setTimer"
+                class="btn btn-round w-100">
+            SET TIMER
+        </button>
     </div>
 
 

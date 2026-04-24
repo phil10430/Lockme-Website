@@ -19,6 +19,7 @@ $options = [
 ];
 
 // 🔹 Verbindung aufbauen
+
 try {
     $pdo = new PDO(
         "mysql:host=$db_host;dbname=$db_name;charset=utf8mb4",
@@ -28,8 +29,11 @@ try {
     );
 } catch (PDOException $e) {
     // Benutzerfreundliche Fehlermeldung (keine sensiblen Infos!)
-    die("Database connection failed. Please try again later.");
-    // oder: error_log($e->getMessage()); // Für Logs
+    //die("Database connection failed. Please try again later.");
+   //  error_log($e->getMessage()); // Für Logs
+      http_response_code(500);
+    echo json_encode(["error" => $e->getMessage()]); // <-- temporär für Debug
+    exit;
 }
 
 if (session_status() === PHP_SESSION_NONE) {
