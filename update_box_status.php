@@ -105,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Letzte History-Zeile für diese Box holen
     $sql_check = "SELECT firmware_version, log_openclosecycles, log_switchcycles, log_ontimesec,
-                        lock_status, open_time, locked_since, time_left,
+                        lock_status, open_time,
                         protection_level_timer, protection_level_password, hardware_version
                 FROM box_data_history
                 WHERE box_name = :box_name
@@ -134,8 +134,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             log_ontimesec, 
                             lock_status,
                             open_time,
-                            locked_since,
-                            time_left,
                             protection_level_timer,
                             protection_level_password,
                             hardware_version
@@ -149,8 +147,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             :log_ontimesec,
                             :lock_status,
                             :open_time,
-                            :locked_since,
-                            :time_left,
                             :protection_level_timer,
                             :protection_level_password,
                             :hardware_version
@@ -164,8 +160,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ':log_ontimesec'             => $rtc_logOnTimeSec_String,
             ':lock_status'               => $lockStatus,
             ':open_time'                 => $openTime,
-            ':locked_since'              => $lockedSince,
-            ':time_left'                 => $timeLeft,
             ':protection_level_timer'    => $protectionLevelTimer,
             ':protection_level_password' => $protectionLevelPassword,
             ':hardware_version'          => $hardwareVersion

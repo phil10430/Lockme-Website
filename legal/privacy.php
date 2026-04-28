@@ -108,7 +108,32 @@ require_once __DIR__ . '/../templates/header.php';
         <li>Usage data: stored only as long as necessary for operation and analysis</li>
         </ul>
 
-        <h2>10. Your Rights</h2>
+        <h2>10. Data Deletion</h2>
+        <p>
+        Users have the right to request the deletion of their personal data at any time.
+        </p>
+        <p>
+        To request data deletion, users may contact us at:
+        <br>
+        eMail: <a href="mailto:info@lockmebox.com">info@lockmebox.com </a>
+        </p>
+        <p>
+        We will delete all personal data associated with the request within a reasonable timeframe, unless legal retention obligations require otherwise.
+        </p>
+        <p>
+        The following applies:
+        </p>
+        <ul>
+        <li>Account data will be permanently deleted</li>
+        <li>Device and usage data (e.g. switch cycles) will be deleted or anonymized</li>
+        <li>Order data may be retained as required by applicable tax and commercial laws</li>
+        </ul>
+        <p>
+        Technical logs may be retained for a limited period for security and system integrity purposes.
+        </p>
+
+
+        <h2>11. Your Rights</h2>
         <p>
         Under the GDPR, you have the following rights:
         </p>
@@ -125,32 +150,32 @@ require_once __DIR__ . '/../templates/header.php';
         To exercise your rights, please contact us at the email address provided above.
         </p>
 
-        <h2>11. Right to Lodge a Complaint</h2>
+        <h2>12. Right to Lodge a Complaint</h2>
         <p>
         You have the right to lodge a complaint with a supervisory authority, in particular in the EU Member State of your residence, place of work, or place of the alleged infringement.
         </p>
 
-        <h2>12. Provision of Data</h2>
+        <h2>13. Provision of Data</h2>
         <p>
         Providing personal data may be required for entering into a contract. Failure to provide necessary data may result in the inability to use our services.
         </p>
 
-        <h2>13. Automated Decision-Making</h2>
+        <h2>14. Automated Decision-Making</h2>
         <p>
         We do not use automated decision-making or profiling within the meaning of Art. 22 GDPR.
         </p>
 
-        <h2>14. Security</h2>
+        <h2>15. Security</h2>
         <p>
         We implement appropriate technical and organizational measures (TOMs) to protect personal data against loss, misuse, and unauthorized access.
         </p>
 
-        <h2>15. Cookies and Tracking</h2>
+        <h2>16. Cookies and Tracking</h2>
         <p>
         Our website may use cookies and similar technologies. Non-essential cookies are only used with user consent in accordance with Art. 6(1)(a) GDPR.
         </p>
 
-        <h2>16. Changes to This Privacy Policy</h2>
+        <h2>17. Changes to This Privacy Policy</h2>
         <p>
         We reserve the right to update this Privacy Policy at any time to reflect legal or technical changes.
         </p>
@@ -160,7 +185,7 @@ require_once __DIR__ . '/../templates/header.php';
         If you have any questions about this Privacy Policy or data protection, please contact:
         </p>
         <p>
-        eMail: <a href="mailto:info@lockmebox.com">info@lockmebox.com
+        eMail: <a href="mailto:info@lockmebox.com">info@lockmebox.com </a>
         </p>
 
     </div>
