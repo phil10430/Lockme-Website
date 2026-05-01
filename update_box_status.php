@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $rtc_logCountSwitchCycles_String = test_input($_POST["rtc_logCountSwitchCycles_String"]);   
     $rtc_logOnTimeSec_String = test_input($_POST["rtc_logOnTimeSec_String"]);   
     $hardwareVersion = test_input($_POST["hardwareVersion"]);
-    
+    $emergencyPasswordUsed  = test_input($_POST["emergencyPasswordUsed"]);
 
    /*
     if($proVersion=="1") {
@@ -53,7 +53,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 time_left,
                 protection_level_timer,
                 protection_level_password,
-                hardware_version
+                hardware_version,
+                emergency_password_used
             ) 
     VALUES 
             (
@@ -68,7 +69,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 :time_left,
                 :protection_level_timer,
                 :protection_level_password,
-                :hardware_version
+                :hardware_version,
+                :emergency_password_used
             )
     ON DUPLICATE KEY UPDATE
                 firmware_version          = VALUES(firmware_version),
@@ -81,7 +83,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 time_left                 = VALUES(time_left),
                 protection_level_timer    = VALUES(protection_level_timer),
                 protection_level_password = VALUES(protection_level_password),
-                hardware_version          = VALUES(hardware_version)";
+                hardware_version          = VALUES(hardware_version),
+                emergency_password_used   = VALUES(emergency_password_used)";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
@@ -96,7 +99,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ':time_left'                 => $timeLeft,
         ':protection_level_timer'    => $protectionLevelTimer,
         ':protection_level_password' => $protectionLevelPassword,
-        ':hardware_version'          => $hardwareVersion  
+        ':hardware_version'          => $hardwareVersion,  
+        ':emergency_password_used'   => $emergencyPasswordUsed  
     ]);
 
 
@@ -106,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Letzte History-Zeile für diese Box holen
     $sql_check = "SELECT firmware_version, log_openclosecycles, log_switchcycles, log_ontimesec,
                         lock_status, open_time,
-                        protection_level_timer, protection_level_password, hardware_version
+                        protection_level_timer, protection_level_password, hardware_version, emergency_password_used
                 FROM box_data_history
                 WHERE box_name = :box_name
                 ORDER BY id DESC
@@ -136,7 +140,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             open_time,
                             protection_level_timer,
                             protection_level_password,
-                            hardware_version
+                            hardware_version,
+                            emergency_password_used 
                         ) 
         VALUES 
                         (
@@ -149,7 +154,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             :open_time,
                             :protection_level_timer,
                             :protection_level_password,
-                            :hardware_version
+                            :hardware_version,
+                            :emergency_password_used
                         )";
         $stmt_history = $pdo->prepare($sql_history);
         $stmt_history->execute([
@@ -162,7 +168,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ':open_time'                 => $openTime,
             ':protection_level_timer'    => $protectionLevelTimer,
             ':protection_level_password' => $protectionLevelPassword,
-            ':hardware_version'          => $hardwareVersion
+            ':hardware_version'          => $hardwareVersion,
+            ':emergency_password_used'   => $emergencyPasswordUsed
         ]);
     }
     
