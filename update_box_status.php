@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $rtc_logCountSwitchCycles_String = test_input($_POST["rtc_logCountSwitchCycles_String"]);   
     $rtc_logOnTimeSec_String = test_input($_POST["rtc_logOnTimeSec_String"]);   
     $hardwareVersion = test_input($_POST["hardwareVersion"]);
-    $emergencyPasswordUsed  = test_input($_POST["emergencyPasswordUsed"]);
+    $emergencyPasswordUsedCounter  = test_input($_POST["emergencyPasswordUsedCounter"]);
 
    /*
     if($proVersion=="1") {
@@ -100,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ':protection_level_timer'    => $protectionLevelTimer,
         ':protection_level_password' => $protectionLevelPassword,
         ':hardware_version'          => $hardwareVersion,  
-        ':emergency_password_used'   => $emergencyPasswordUsed  
+        ':emergency_password_used'   => $emergencyPasswordUsedCounter  
     ]);
 
 
@@ -169,7 +169,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ':protection_level_timer'    => $protectionLevelTimer,
             ':protection_level_password' => $protectionLevelPassword,
             ':hardware_version'          => $hardwareVersion,
-            ':emergency_password_used'   => $emergencyPasswordUsed
+            ':emergency_password_used'   => $emergencyPasswordUsedCounter
         ]);
     }
     

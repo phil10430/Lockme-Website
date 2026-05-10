@@ -30,13 +30,16 @@ function refreshData(name){
 
                             // Hintergrundbild tauschen
                             if (json.appLoggedIn==1 && json.boxName!=0 && json.appActive==1) {
+
+                                $("#box-control-form").show();
+                                
                                 if (json.lockStatus == 0) {
                                     $("#bg-image").attr("src", "/assets/images/icon_box_open.png");
                                 } else {
                                     $("#bg-image").attr("src", "/assets/images/icon_box_closed.png");
                                 }
                             } else {
-                                $("#bg-image").attr("src", "/assets/images/icon_box_unclear.png");
+                                $("#bg-image").attr("src", "/assets/images/lmb_start.png");
                             }
 
                             // Status-Nachricht

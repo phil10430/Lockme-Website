@@ -39,7 +39,7 @@ require_once __DIR__ . '/templates/header.php';
     <?php } else { ?>
 
         <div class="card-header">
-            
+            Login to control your LOCKMEBOX!
             <?php 
             // Flash-Message für z. B. Registrierungserfolg
             if (isset($_SESSION['flash_message'])) {
@@ -50,10 +50,12 @@ require_once __DIR__ . '/templates/header.php';
         </div>
         
         <div class="card-body">
-            <?php  include __DIR__ . '/templates/start_screen.php'; ?>
+            <?php  include __DIR__ . '/templates/login_form.php'; ?>
         </div>
 
-       
+        <div class="card-footer">
+            Don't have an account? <a href="register_page.php">Sign up now</a>.
+        </div>
 
     <?php } ?>
 

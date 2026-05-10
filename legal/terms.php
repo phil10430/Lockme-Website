@@ -9,7 +9,7 @@ require_once __DIR__ . '/../templates/header.php';
 
         <h2>1. Scope</h2>
         <p>
-        These Terms of Use govern the access to and use of the device control platform provided by [Your Company Name].
+        These Terms of Use govern the access to and use of the device control platform provided by KinkyStuffMade.
         </p>
         <p>
         These Terms apply exclusively to the use of the platform and do not govern the purchase of products via the webshop.
@@ -17,11 +17,10 @@ require_once __DIR__ . '/../templates/header.php';
 
         <h2>2. Provider</h2>
         <p>
-        [Your Company Name]<br>
-        [Street Address]<br>
-        [Postal Code, City]<br>
-        [Country]<br>
-        Email: [Email Address]
+        Philipp Freiburger<br>
+        Heerstrasse 32<br>
+        70563 Stuttgart<br>
+        Germany
         </p>
 
         <h2>3. Service Description</h2>
@@ -95,7 +94,7 @@ require_once __DIR__ . '/../templates/header.php';
 
         <h2>13. Contact</h2>
         <p>
-        Email: [Email Address]
+        Email: info@lockmebox.com
         </p>
 
     </div>

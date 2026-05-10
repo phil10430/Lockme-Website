@@ -22,6 +22,12 @@ $lockedSince = $row['locked_since'];
 $timeLeft    = $row['time_left'];
 $closeButtonText = "CLOSE";
 
+// DEBUG
+// $lockStatus = 0;
+// $appLoggedIn = 1;
+// $appActive = 1;
+// $boxName = 191919;
+
 if (!empty($openTime)) {
     $openTime = date("y-m-d H:i", strtotime($openTime));
 }
@@ -39,7 +45,7 @@ if (($appLoggedIn==1) && ($boxName!=0) && ($appActive==1)) {
         echo 'src="/assets/images/icon_box_closed.png">';
     }
 } else {
-    echo 'src="/assets/images/icon_box_unclear.png">';
+    echo 'src="/assets/images/lmb_start.png">';
 }
 
 echo '<div class="card-content">';
@@ -63,7 +69,15 @@ echo '<div id="status-message" class="status-message">' . $connectionStatusMessa
 
 // Box-Control-Bereich mit ID
 echo '<div id="box-control-area">';
+
+// IMMER rendern, JS steuert die Sichtbarkeit
+echo '<div id="box-control-form" style="display:none;">';
+    include __DIR__ . '/templates/box_control_form.php';
+echo '</div>';
+
+
 if (($appLoggedIn==1) && ($boxName!=0) && ($appActive==1)) {
+
     if ($lockStatus == 1) {
         echo '<div id="locked-since" class="locked-since">' . $lockedSince . '<br></div>';
     } else {
@@ -87,8 +101,7 @@ if (($appLoggedIn==1) && ($boxName!=0) && ($appActive==1)) {
         echo '<div id="open-time" class="protection-level-timer" style="display:none"></div>';
         echo '<div id="password-symbol" class="protection-level-password" style="display:none"></div>';
     }
-
-    include __DIR__ . '/templates/box_control_form.php';
+  
 }
 echo '</div>'; // box-control-area
 
