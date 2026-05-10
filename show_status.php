@@ -71,40 +71,16 @@ echo '<div id="status-message" class="status-message">' . $connectionStatusMessa
 echo '<div id="box-control-area">';
 
 // IMMER rendern, JS steuert die Sichtbarkeit
-echo '<div id="box-control-form" style="display:none;">';
-    include __DIR__ . '/templates/box_control_form.php';
-echo '</div>';
-
-
-if (($appLoggedIn==1) && ($boxName!=0) && ($appActive==1)) {
-
-    if ($lockStatus == 1) {
-        echo '<div id="locked-since" class="locked-since">' . $lockedSince . '<br></div>';
-    } else {
-        echo '<div id="locked-since" class="locked-since" style="display:none"></div>';
-    }
-
-    if (($protectionLevelTimer==1) && ($protectionLevelPassword==1)) {
-        echo '<div id="time-left" class="time-left">' . $timeLeft . '</div>';
-        echo '<div id="open-time" class="protection-level-timer">' . $openTime . '</div>';
-        echo '<div id="password-symbol" class="protection-level-password"><img class="password-symbol" src="/assets/images/lockme_symbol_password.png"></div>';
-    } elseif ($protectionLevelTimer==1) {
-        echo '<div id="time-left" class="time-left">' . $timeLeft . '</div>';
-        echo '<div id="open-time" class="protection-level-timer">' . $openTime . '</div>';
-        echo '<div id="password-symbol" class="protection-level-password" style="display:none"></div>';
-    } elseif ($protectionLevelPassword==1) {
-        echo '<div id="time-left" class="time-left" style="display:none"></div>';
-        echo '<div id="open-time" class="protection-level-timer" style="display:none"></div>';
-        echo '<div id="password-symbol" class="protection-level-password"><img class="password-symbol" src="/assets/images/lockme_symbol_password.png"></div>';
-    } else {
-        echo '<div id="time-left" class="time-left" style="display:none"></div>';
-        echo '<div id="open-time" class="protection-level-timer" style="display:none"></div>';
-        echo '<div id="password-symbol" class="protection-level-password" style="display:none"></div>';
-    }
-  
-}
+echo '<div id="box-control-area">';
+    echo '<div id="box-control-form" style="display:none;">';
+        include __DIR__ . '/templates/box_control_form.php';
+    echo '</div>';
+    echo '<div id="locked-since" class="locked-since" style="display:none"></div>';
+    echo '<div id="time-left" class="time-left" style="display:none"></div>';
+    echo '<div id="open-time" class="protection-level-timer" style="display:none"></div>';
+    echo '<div id="password-symbol" class="protection-level-password" style="display:none"></div>';
+ 
 echo '</div>'; // box-control-area
-
 echo '</div>'; // card-content
 echo '</div>'; // overlay-card
 
