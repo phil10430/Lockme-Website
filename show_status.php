@@ -77,6 +77,7 @@ if (($appLoggedIn==1) && ($boxName!=0) && ($appActive==1)) {
 } else {
     echo '<div id="box-control-form" style="display:none;">';
 }
+include __DIR__ . '/templates/button_states.php';
 include __DIR__ . '/templates/box_control_form.php';
 echo '</div>';
 

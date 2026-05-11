@@ -13,10 +13,16 @@ function refreshData(name){
                         $("#box-control-form").show();
                         if (json.lockStatus == 0) {
                             $("#bg-image").attr("src", "/assets/images/icon_box_open.png");
-                            $("#openBox").hide(); 
+                            $("#openBox").hide();
                             $("#open-box-pw-btn").hide();
-                        } else  {
+                            $("#close-box-pw-btn").show();
+                            $("#close-box-timer").show();
+                            $("#close-box-pwtimer").show();
+                        } else {
                             $("#bg-image").attr("src", "/assets/images/icon_box_closed.png");
+                            $("#close-box-pw-btn").hide();
+                            $("#close-box-timer").hide();
+                            $("#close-box-pwtimer").hide();
                             if (json.protectionLevelPassword == 1) {
                                 $("#openBox").hide();
                                 $("#open-box-pw-btn").show();
