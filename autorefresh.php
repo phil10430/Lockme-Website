@@ -29,10 +29,11 @@ $jsonOutput = [
     'appActive'         => $userRow['app_active'],
 
     // aus box_data_actual
-    'lockStatus'        => $boxRow['lock_status'],
-    'openTime'          => $boxRow['open_time'],
-    'timeLeft'          => $boxRow['time_left'],
-    'lockedSince'       => $boxRow['locked_since']
+    'lockStatus'                => $boxRow['lock_status'],
+    'protectionLevelPassword'   => $boxRow['protection_level_password'],
+    'openTime'                  => $boxRow['open_time'],
+    'timeLeft'                  => $boxRow['time_left'],
+    'lockedSince'               => $boxRow['locked_since']
 ];
 
 echo json_encode($jsonOutput);

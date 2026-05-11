@@ -29,7 +29,8 @@ if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1))
         {
             if (isset($_POST['closeBoxWithTimer'])) {
 
-                $openTime = test_input($_POST['password']);  // kommt aus #openTimeField
+                $openTime = test_input($_POST['openTime']);  // kommt aus #openTimeField
+         
                 if (validateDate($openTime)) 
                 {
                         $dt = DateTime::createFromFormat("d/m/Y H:i", $openTime, new DateTimeZone('Europe/Berlin'));

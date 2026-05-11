@@ -7,10 +7,9 @@
 
 
             <!--OPEN -->
-            <button type="submit" name="openBox" class="btn btn-round w-100" id="openBox">OPEN</button>
-
+            <button type="submit" name="openBox" class="btn btn-round w-100" id="openBox" style="display:none;">OPEN</button>
             <!--OPEN with PW -->
-            <button type="button" onclick="openOpenDialog()" class="btn btn-round w-100" id="open-box-pw-btn">OPEN</button>
+            <button type="button" onclick="openOpenDialog()" class="btn btn-round w-100" id="open-box-pw-btn" style="display:none;">OPEN PW</button>
             <button type="submit" name="openBoxWithPw" id="openBoxWithPw" style="display:none;"></button>
        
             <!-- Mit Passwort -->

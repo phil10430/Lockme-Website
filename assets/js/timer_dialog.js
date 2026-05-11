@@ -37,9 +37,12 @@ function submitTimerDialog() {
         err.textContent = "Please confirm you understand.";
         return;
     }
-
+    // date kommt als "2026-05-11", umformatieren zu "11/05/2026"
+    var parts = date.split("-");
+    var formattedDate = parts[2] + "/" + parts[1] + "/" + parts[0];
+    
     // Wert ins versteckte Feld setzen und absenden
-    document.getElementById("openTimeField").value = date + " " + time;
-    document.getElementById("setTimer").click();  // versteckter Submit
+    document.getElementById("openTimeField").value = formattedDate + " " + time;
+    document.getElementById("closeBoxWithTimer").click();  // versteckter Submit
     closeTimerDialog();
 }

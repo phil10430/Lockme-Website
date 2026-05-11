@@ -13,17 +13,17 @@ function refreshData(name){
                         $("#box-control-form").show();
                         if (json.lockStatus == 0) {
                             $("#bg-image").attr("src", "/assets/images/icon_box_open.png");
-
-                            $("#btn-open").show(); 
-                     
-
-                        } else {
+                            $("#openBox").hide(); 
+                            $("#open-box-pw-btn").hide();
+                        } else  {
                             $("#bg-image").attr("src", "/assets/images/icon_box_closed.png");
-
-                            $("#btn-open").hide();
-
-
-
+                            if (json.protectionLevelPassword == 1) {
+                                $("#openBox").hide();
+                                $("#open-box-pw-btn").show();
+                            } else {
+                                $("#openBox").show();
+                                $("#open-box-pw-btn").hide();
+                            }
                         }
                     } else {
                         $("#box-control-form").hide();
