@@ -5,7 +5,7 @@ include __DIR__ . '/templates/timer_dialog.php';
 include __DIR__ . '/templates/open_dialog.php'; 
 
 // DEBUG -> coomment out autorefresh in header.php
-define('DEBUG_WEBSITE', true);
+define('DEBUG_WEBSITE', false);
 
 $username = $_SESSION["username"];
 $sql = "SELECT * FROM users WHERE username = :username";
@@ -34,7 +34,7 @@ if (DEBUG_WEBSITE) {
     $lockStatus = 1;
     $appLoggedIn = 1;
     $appActive = 1;
-    $protectionLevelPassword = 1;
+    $protectionLevelPassword = 0;
     $protectionLevelTimer = 0;
     $boxName = 191919;  
     $timeLeft = '5h left';
@@ -47,8 +47,7 @@ if (!empty($openTime)) {
 }
 
 echo '<div class="overlay-card">';
-
-// Hintergrundbild - initialer Zustand aus PHP
+// Hintergrundbild
 echo '<img id="bg-image" class="bg-image" alt="Background" ';
 if (($appLoggedIn==1) && ($boxName!=0) && ($appActive==1)) {
     if ($lockStatus == 0) {
@@ -62,65 +61,53 @@ if (($appLoggedIn==1) && ($boxName!=0) && ($appActive==1)) {
 
 echo '<div class="card-content">';
 
-// Status-Nachricht - initialer Zustand aus PHP
+// Status-Nachricht
 $connectionStatusMessage = "";
 if ($appActive == 1) {
     if ($appLoggedIn == 1) {
         if ($boxName != 0) {
             $connectionStatusMessage = "LMB " . $boxName;
         } else {
-            $connectionStatusMessage = "Connect app to your LOCKMEBOX.";
+            $connectionStatusMessage = "Connect app to your LockMeBox.";
         }
     } else {
         $connectionStatusMessage = "Open app and login.";
     }
 } else {
-    $connectionStatusMessage = "Open app to enable control.";
+    $connectionStatusMessage = "Open app for remote control.";
 }
 echo '<div id="status-message" class="status-message">' . $connectionStatusMessage . '</div>';
 
 echo '<div id="box-control-area">';
 
-// box-control-form - initialer Zustand aus PHP
-if (($appLoggedIn==1) && ($boxName!=0) && ($appActive==1)) {
-    echo '<div id="box-control-form">';
-} else {
-    echo '<div id="box-control-form" style="display:none;">';
-}
+// box-control-form
+$displayForm = (($appLoggedIn==1) && ($boxName!=0) && ($appActive==1)) ? '' : 'display:none;';
+echo '<div id="box-control-form" style="' . $displayForm . '">';
 include __DIR__ . '/templates/button_states.php';
 include __DIR__ . '/templates/box_control_form.php';
 echo '</div>';
 
-// locked-since - initialer Zustand aus PHP
-if (($appLoggedIn==1) && ($boxName!=0) && ($appActive==1) && ($lockStatus==1)) {
-    echo '<div id="locked-text" class="locked-text">' . 'LOCKED' . '<br></div>';
-    echo '<div id="locked-since" class="locked-since">' . $lockedSince . '<br></div>';
-} else {
-    echo '<div id="locked-since" class="locked-since" style="display:none"></div>';
-}
+// locked-text & locked-since
+$displayLocked = (($appLoggedIn==1) && ($boxName!=0) && ($appActive==1) && ($lockStatus==1)) ? '' : 'display:none;';
+echo '<div id="locked-text" class="locked-text" style="' . $displayLocked . '">LOCKED<br></div>';
+echo '<div id="locked-since" class="locked-since" style="' . $displayLocked . '">' . $lockedSince . '<br></div>';
 
-// time-left & open-time - initialer Zustand aus PHP
-if ($protectionLevelTimer==1) {
-    echo '<div id="time-left" class="time-left">' . $timeLeft . '</div>';
-    echo '<div id="open-time" class="end-time">' . $openTime . '</div>';
-    echo '<div id="timer-symbol" class="protection-level-timer"><img class="timer-symbol" src="/assets/images/lockme_symbol_timer.png"></div>';
+// time-left & open-time - nur wenn geschlossen UND timer
+$displayTimer = (($appLoggedIn==1) && ($boxName!=0) && ($appActive==1) && ($lockStatus==1) && ($protectionLevelTimer==1)) ? '' : 'display:none;';
+echo '<div id="time-left" class="time-left" style="' . $displayTimer . '">' . $timeLeft . '</div>';
+echo '<div id="open-time" class="end-time" style="' . $displayTimer . '">' . $openTime . '</div>';
 
-} else {
-    echo '<div id="time-left" class="time-left" style="display:none"></div>';
-    echo '<div id="open-time" class="protection-level-timer" style="display:none"></div>';
-}
+// timer-symbol - nur wenn geschlossen UND timer
+echo '<div id="timer-symbol" class="protection-level-timer" style="' . $displayTimer . '"><img class="timer-symbol" src="/assets/images/lockme_symbol_timer.png"></div>';
 
-// password-symbol - initialer Zustand aus PHP
-if ($protectionLevelPassword==1) {
-    echo '<div id="password-symbol" class="protection-level-password"><img class="password-symbol" src="/assets/images/lockme_symbol_password.png"></div>';
-} else {
-    echo '<div id="password-symbol" class="protection-level-password" style="display:none"></div>';
-}
-
-
+// password-symbol - nur wenn geschlossen UND passwort
+$displayPw = (($lockStatus==1) && ($protectionLevelPassword==1)) ? '' : 'display:none;';
+echo '<div id="password-symbol" class="protection-level-password" style="' . $displayPw . '"><img class="password-symbol" src="/assets/images/lockme_symbol_password.png"></div>';
 
 echo '</div>'; // box-control-area
 echo '</div>'; // card-content
+
+
 echo '</div>'; // overlay-card
 
 echo '<div class="card-footer">';

@@ -227,7 +227,7 @@ p {
     color: var(--primary-color); 
     border:2px solid var(--secondary-color) ;
     border-radius: 25px;
-    min-width: 60px;  /* gleiche Breite optional */
+    min-width: 40px;  /* gleiche Breite optional */
 }
 
 .btn-round:hover, 

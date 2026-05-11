@@ -7,33 +7,81 @@ function refreshData(name){
                 url: 'autorefresh.php',
                 success: function(data){
                     var json = JSON.parse(data);
-
-                    // Hintergrundbild & box-control-form
-                    if (json.appLoggedIn==1 && json.boxName!=0 && json.appActive==1) {
+                  
+                   if (json.appLoggedIn==1 && json.boxName!=0 && json.appActive==1) {
                         $("#box-control-form").show();
+
                         if (json.lockStatus == 0) {
+                            // Box offen
                             $("#bg-image").attr("src", "/assets/images/icon_box_open.png");
-                            $("#openBox").hide();
-                            $("#open-box-pw-btn").hide();
+
+                            // Anzeigen
                             $("#close-box-pw-btn").show();
                             $("#close-box-timer").show();
                             $("#close-box-pwtimer").show();
+                            $("#label-choose-lock").show();
+
+                            // Verstecken
+                            $("#locked-text").hide();
+                            $("#locked-since").hide();
+                            $("#openBox").hide();
+                            $("#open-box-pw-btn").hide();
+                            $("#password-symbol").hide();
+                            $("#time-left").hide();
+                            $("#open-time").hide();
+
                         } else {
+                            // Box geschlossen
                             $("#bg-image").attr("src", "/assets/images/icon_box_closed.png");
+
+                            // Anzeigen
+                            $("#locked-text").show().html("LOCKED");
+                            $("#locked-since").show().html(json.lockedSince + "<br>");
+
+                            // Verstecken
                             $("#close-box-pw-btn").hide();
                             $("#close-box-timer").hide();
                             $("#close-box-pwtimer").hide();
+                            $("#label-choose-lock").hide();
+
+                            // Protection Level
                             if (json.protectionLevelPassword == 1) {
-                                $("#openBox").hide();
+                                $("#password-symbol").show();
                                 $("#open-box-pw-btn").show();
-                            } else {
-                                $("#openBox").show();
+                                $("#timer-symbol").hide();
+                                $("#openBox").hide();
+                                $("#time-left").hide();
+                                $("#open-time").hide();
+
+                            } else if (json.protectionLevelTimer == 1) {
+                                $("#password-symbol").hide();
+                                $("#timer-symbol").show();
                                 $("#open-box-pw-btn").hide();
+                                $("#openBox").show();
+                                $("#time-left").show().text(json.timeLeft);
+                                $("#open-time").show().text(json.openTime);
+
+                            } else {
+                                $("#password-symbol").hide();
+                                $("#timer-symbol").hide();
+                                $("#open-box-pw-btn").hide();
+                                $("#openBox").show();
+                                $("#time-left").hide();
+                                $("#open-time").hide();
                             }
                         }
+
                     } else {
-                        $("#box-control-form").hide();
+                        // Nicht verbunden
                         $("#bg-image").attr("src", "/assets/images/lmb_start.png");
+                        $("#box-control-form").hide();
+                        $("#locked-text").hide();
+                        $("#locked-since").hide();
+                        $("#password-symbol").hide();
+                        $("#timer-symbol").hide();
+                        $("#time-left").hide();
+                        $("#open-time").hide();
+                        $("#label-choose-lock").hide();
                     }
 
                
@@ -43,7 +91,7 @@ function refreshData(name){
                     if (json.appActive == 1) {
                         if (json.appLoggedIn == 1) {
                             if (json.boxName != 0) {
-                                msg = "Box #" + json.boxName;
+                                msg = "LMB " + json.boxName;
                             } else {
                                 msg = "Connect app to your LockMeBox.";
                             }
@@ -51,32 +99,14 @@ function refreshData(name){
                             msg = "Open app and login.";
                         }
                     } else {
-                        msg = "Open app to enable control.";
+                        msg = "Open app for remote control.";
                     }
                     $("#status-message").text(msg);
 
-                    // locked-since
-                    if (json.lockStatus == 1) {
-                        $("#locked-since").show().html(json.lockedSince + "<br>");
-                    } else {
-                        $("#locked-since").hide();
-                    }
+             
 
-                    // time-left & open-time
-                    if (json.protectionLevelTimer == 1) {
-                        $("#time-left").show().text(json.timeLeft);
-                        $("#open-time").show().text(json.openTime);
-                    } else {
-                        $("#time-left").hide();
-                        $("#open-time").hide();
-                    }
+                    
 
-                    // password symbol
-                    if (json.protectionLevelPassword == 1) {
-                        $("#password-symbol").show();
-                    } else {
-                        $("#password-symbol").hide();
-                    }
                 }
             });
         }

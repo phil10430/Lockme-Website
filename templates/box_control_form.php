@@ -3,37 +3,37 @@
     <input type="hidden" id="password" name="password">
     <input type="hidden" id="openTimeField" name="openTime">
 
- <div class="boxcontrol-elements">
+<div class="boxcontrol-elements">
+    <!-- OPEN Row -->
+    <div style="grid-column: 1 / -1; display:flex; justify-content:center;">
+        <button type="submit" name="openBox" class="btn btn-round" id="openBox">OPEN</button>
+        <button type="button" onclick="openOpenDialog()" class="btn btn-round" id="open-box-pw-btn">OPEN</button>
+        <button type="submit" name="openBoxWithPw" id="openBoxWithPw" style="display:none;"></button>
+    </div>
 
-    <!--OPEN -->
-    <button type="submit" name="openBox" class="btn btn-round w-100" id="openBox">OPEN</button>
+    <!-- CLOSE Label -->
+    <div id="label-choose-lock"  style="grid-column: 1 / -1; text-align:center;">
+        <span style="font-size:13px; color:var(--primary-color);">Choose how to lock</span>
+    </div>
 
-    <!--OPEN with PW -->
-    <!-- visible button in php form -->
-    <button type="button" onclick="openOpenDialog()" class="btn btn-round w-100" id="open-box-pw-btn">OPEN PW</button>
-    <!-- versteckter Submit-Button, wird per JS geklickt wenn der User im Dialog auf "Open" drückt, sendet das Form an PHP -->
-    <button type="submit" name="openBoxWithPw" id="openBoxWithPw" style="display:none;"></button>
+    <!-- CLOSE Row 1 -->
+    <div style="grid-column: 1 / -1; display:flex; justify-content:center; gap:10px;">
+        <button type="button" onclick="openPasswordDialog()" class="btn btn-round" id="close-box-pw-btn"style="width:80px;">
+            <img src="/assets/images/lmb_symbol_pw_white.png" style="width:30px; height:24px; object-fit:contain;">
+        </button>
+        <button type="submit" name="closeBoxWithPw" id="closeBoxWithPw" style="display:none;"></button>
 
-    <!-- Mit Passwort -->
-    <button type="button" onclick="openPasswordDialog()" class="btn btn-round w-100" id="close-box-pw-btn">
-        <img src="/assets/images/lmb_symbol_pw_white.png" 
-            style="width:30px; height:24px; object-fit:contain;">
-    </button>
-    <button type="submit" name="closeBoxWithPw" id="closeBoxWithPw" style="display:none;"></button>
+        <button type="button" onclick="openTimerDialog()" class="btn btn-round" id="close-box-timer" style="width:80px;">
+            <img src="/assets/images/lmb_symbol_timer_white.png" style="width:20px; height:24px; object-fit:contain;">
+        </button>
+        <button type="submit" name="closeBoxWithTimer" id="closeBoxWithTimer" style="display:none;"></button>
+    </div>
 
-    <!-- Mit Timer -->
-    <button type="button" onclick="openTimerDialog()" class="btn btn-round w-100" id="close-box-timer">
-         <img src="/assets/images/lmb_symbol_timer_white.png" 
-            style="width:20px; height:24px; object-fit:contain;">
-    </button>
-
-    <button type="submit" name="closeBoxWithTimer" id="closeBoxWithTimer" style="display:none;"></button>
-
-    <!-- Mit Passwort und Timer -->
-    <button type="submit" name="closeBoxPwTimer" class="btn btn-round w-100" id="close-box-pwtimer">
-         <img src="/assets/images/lmb_symbol_timerpw_white.png" 
-            style="width:40px; height:24px; object-fit:contain;">
-    </button>
-
+    <!-- CLOSE Row 2 -->
+    <div style="grid-column: 1 / -1; display:flex; justify-content:center;">
+        <button type="submit" name="closeBoxPwTimer" class="btn btn-round" id="close-box-pwtimer" style="width:80px;">
+            <img src="/assets/images/lmb_symbol_timerpw_white.png" style="width:40px; height:24px; object-fit:contain;">
+        </button>
+    </div>
 </div>
 </form>
