@@ -13,13 +13,24 @@ function refreshData(name){
                         $("#box-control-form").show();
                         if (json.lockStatus == 0) {
                             $("#bg-image").attr("src", "/assets/images/icon_box_open.png");
+
+                            $("#btn-open").show(); 
+                     
+
                         } else {
                             $("#bg-image").attr("src", "/assets/images/icon_box_closed.png");
+
+                            $("#btn-open").hide();
+
+
+
                         }
                     } else {
                         $("#box-control-form").hide();
                         $("#bg-image").attr("src", "/assets/images/lmb_start.png");
                     }
+
+               
 
                     // Status-Nachricht
                     var msg = "";

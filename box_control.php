@@ -8,7 +8,9 @@ $boxControlError = "";
 $wishedAction = "";
 $username = $_SESSION["username"];
 
-if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1)){
+
+if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1))
+{
    
     if ($_SERVER["REQUEST_METHOD"] == "POST") {  // Processing form data when form is submitted
 
@@ -17,32 +19,31 @@ if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1)){
         $openTimeUnix = PLACEHOLDER; // initialize as placeholder
         
 
-        $openTime = test_input($_POST["openTime"]);
-        $password = test_input($_POST["password"]);
-        $closeBoxIntent = isset($_POST['closeBox']);
-        $setTimerIntent = isset($_POST['setTimer']);        
-
-
         if (empty($password))
         {
             $password = PLACEHOLDER;
         }
       
-        // pro Version
-        if ($closeBoxIntent && ($lockStatus==0)) {
-            if (!empty($openTime))
-            {
-                if (validateDate($openTime)) {
-                    $dt = DateTime::createFromFormat("d/m/Y H:i", $openTime, new DateTimeZone('Europe/Berlin'));
-                    $openTimeUnix = $dt->getTimestamp();
-                    $protectionLevelTimer = "1";
+     
+        if ( $lockStatus==0) 
+        {
+            if (isset($_POST['closeBoxWithTimer'])) {
+
+                $openTime = test_input($_POST['password']);  // kommt aus #openTimeField
+                if (validateDate($openTime)) 
+                {
+                        $dt = DateTime::createFromFormat("d/m/Y H:i", $openTime, new DateTimeZone('Europe/Berlin'));
+                        $openTimeUnix = $dt->getTimestamp();
+                        $protectionLevelTimer = "1";
                 } else {
-                    $boxControlError = "Invalid date";
+                        $boxControlError = "Invalid date";
                 }
             }
+                               
             
-            if ($password !== PLACEHOLDER)
+            if (isset($_POST['closeBoxWithPw'])) 
             {
+                $password = test_input($_POST['password']);  // kommt aus #password
                 if (isValidPassword($password)) {
                     $protectionLevelPassword = "1";
                 }else{
@@ -56,27 +57,23 @@ if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1)){
                     $openTimeUnix . MSG_SEPARATOR .
                     $password ;
             }
-        } elseif ($closeBoxIntent && ($lockStatus==1)) 
+        }
+        else
         {
-            $wishedAction = MSG_OPEN . MSG_SEPARATOR .
+            if (isset($_POST['openBox'])) 
+            {
+                $wishedAction = MSG_OPEN . MSG_SEPARATOR .
                 $password ;
-        } elseif ($setTimerIntent)
-        {
-            if (validateDate($openTime)) {
-                $dt = DateTime::createFromFormat("d/m/Y H:i", $openTime, new DateTimeZone('Europe/Berlin'));
-                $openTimeUnix = $dt->getTimestamp();
-                $protectionLevelTimer = "1";
-            } else {
-                $boxControlError = "Invalid date";
-            }
-            if (empty($boxControlError)){
-                $wishedAction = EXTEND_OPEN_TIME . MSG_SEPARATOR .
-                    $protectionLevelTimer . MSG_SEPARATOR .
-                    $openTimeUnix . MSG_SEPARATOR .
-                    $password ;
-            }
-        }   
-    
+            }     
+            if (isset($_POST['openBoxWithPw'])) 
+            {
+                $password = test_input($_POST['password']);
+                $wishedAction = MSG_OPEN . MSG_SEPARATOR .
+                $password ;
+            }      
+        } 
+        
+     
      
         $sql = "UPDATE users SET wished_action = :wished_action WHERE username = :username";
         $stmt = $pdo->prepare($sql);

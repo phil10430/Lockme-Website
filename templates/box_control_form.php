@@ -1,48 +1,28 @@
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-
- <div class="boxcontrol-elements">
-
-    <div class="box a">
-        <div class="input-group date">
-                    <input type="text"
-                        class="form-control clean-input"
-                        id="openTimeField"
-                        name="openTime"
-                    placeholder="Timer">
-        </div>
-    </div>
     
+    <input type="hidden" id="password" name="password">
+    <input type="hidden" id="openTimeField" name="openTime">
 
-    <div class="box b">
-        <button type="submit"
-                name="setTimer"
-                class="btn btn-round w-100">
-            SET TIMER
-        </button>
+    <div class="boxcontrol-elements">
+
+
+            <!--OPEN -->
+            <button type="submit" name="openBox" class="btn btn-round w-100" id="openBox">OPEN</button>
+
+            <!--OPEN with PW -->
+            <button type="button" onclick="openOpenDialog()" class="btn btn-round w-100" id="open-box-pw-btn">OPEN</button>
+            <button type="submit" name="openBoxWithPw" id="openBoxWithPw" style="display:none;"></button>
+       
+            <!-- Mit Passwort -->
+            <button type="button" onclick="openPasswordDialog()" class="btn btn-round w-100">CLOSE PW</button>
+            <button type="submit" name="closeBoxWithPw" id="closeBoxWithPw" style="display:none;"></button>
+
+            <!-- Mit Timer -->
+            <button type="button" onclick="openTimerDialog()" class="btn btn-round w-100">CLOSE TIMER</button>
+            <button type="submit" name="closeBoxWithTimer" id="closeBoxWithTimer" style="display:none;"></button>
+
+            <!-- Mit Passwort und Timer -->
+            <button type="submit" name="closeBoxPwTimer" class="btn btn-round w-100">CLOSE PW+TIMER</button>
+        
     </div>
-
-
-    <div class="box c">
-        <input type="text"
-                            class="form-control clean-input"
-                            id="password"
-                            name="password"
-                            maxlength="10"
-                            placeholder="Password">
-    </div>
-
-
-
-    <div class="box d">
-        <button type="submit"
-                                name="closeBox"
-                                class="btn btn-round w-100">
-                            <?= htmlspecialchars($closeButtonText) ?>
-        </button>
-
-    </div>
-
-
-</div>
-
 </form>
