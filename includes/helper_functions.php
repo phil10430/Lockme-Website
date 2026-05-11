@@ -1,5 +1,4 @@
 <?php
-
 const MSG_OPEN = "O";
 const MSG_CLOSE = "C";
 const EXTEND_OPEN_TIME = "X";

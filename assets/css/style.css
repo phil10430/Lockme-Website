@@ -1,6 +1,8 @@
 :root {
     --primary-color: #ffffff;
-    --hover-color: #ffc0bd;
+    --button-bg-color: #000000;
+    --secondary-color:#717171;
+    --hover-color: #373737;
     --mainbackground-color: black;
 }
 
@@ -93,41 +95,58 @@ p {
     text-align: center;             /* text horizontal zentrieren */
 }
 
+.locked-text{
+    position:absolute;
+    top:110px;
+    left: 50%;       
+    transform: translateX(-50%); 
+    text-align: center;
+    font-size: 2.5rem; 
+}
+
 .locked-since{
     position:absolute;
-    top:150px;
+    top:140px;
     left: 50%;       
     transform: translateX(-50%); 
     text-align: center;
 }
 .time-left{
     position:absolute;
-    top:180px;
+    top:230px;
     left: 50%;       
     transform: translateX(-50%); 
     text-align: center;
 }
-
+.end-time{
+    position:absolute;
+    top:250px;
+    left: 50%;       
+    transform: translateX(-50%); 
+    text-align: center;
+}
 .protection-level-timer{
     position:absolute;
-    top:240px;
+    top:320px;
     left: 50%;       
     transform: translateX(-50%); 
     text-align: center;
 }
 .protection-level-password{
     position:absolute;
-    top:280px;
+    top:320px;
     left: 50%;       
     transform: translateX(-50%); 
     text-align: center;
 }
 
 .password-symbol{
-    width:100px;
+    width:30px;
 }
 
-
+.timer-symbol{
+    width:30px;
+}
 
 
 .login-card {
@@ -204,11 +223,11 @@ p {
 /* buttons */
 
 .btn-round {
-    background-color: var(--primary-color);
-    color: black;
-    border:none;
+    background-color: var(--button-bg-color);
+    color: var(--primary-color); 
+    border:2px solid var(--secondary-color) ;
     border-radius: 25px;
-    min-width: 80px;  /* gleiche Breite optional */
+    min-width: 60px;  /* gleiche Breite optional */
 }
 
 .btn-round:hover, 
@@ -216,20 +235,10 @@ p {
 .btn-round:focus,
 .btn-round:checked {
     background-color: var(--hover-color); /* etwas dunklerer Ton */
-    color: black;              /* Textfarbe beibehalten */
-    border: none;
-    transform: scale(0.98);     /* Butten wird kleiner bei hover */
+    color: var(--primary-color);              /* Textfarbe beibehalten */
 }
 
-.boxcontrol-elements ::before {
-    content: "";
-    position: absolute;  /* verhindert Verschieben */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;         /* hinter dem Inhalt */
-}
+
 
 .boxcontrol-elements {
     margin-top:400px;

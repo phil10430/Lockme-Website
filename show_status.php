@@ -4,6 +4,9 @@ include __DIR__ . '/templates/password_dialog.php';
 include __DIR__ . '/templates/timer_dialog.php';
 include __DIR__ . '/templates/open_dialog.php'; 
 
+// DEBUG -> coomment out autorefresh in header.php
+define('DEBUG_WEBSITE', true);
+
 $username = $_SESSION["username"];
 $sql = "SELECT * FROM users WHERE username = :username";
 $stmt = $pdo->prepare($sql);
@@ -25,12 +28,19 @@ $openTime    = $row['open_time'];
 $lockedSince = $row['locked_since'];
 $timeLeft    = $row['time_left'];
  
-// DEBUG -> coomment out autorefresh in header.php
-/*  $lockStatus = 1;
- $appLoggedIn = 1;
- $appActive = 1;
- $protectionLevelPassword = 1;
- $boxName = 191919;  */
+
+
+if (DEBUG_WEBSITE) {
+    $lockStatus = 1;
+    $appLoggedIn = 1;
+    $appActive = 1;
+    $protectionLevelPassword = 1;
+    $protectionLevelTimer = 0;
+    $boxName = 191919;  
+    $timeLeft = '5h left';
+    $lockedSince ='since 3 day';
+    $openTime  ='2026/05/03 18:10';
+}
 
 if (!empty($openTime)) {
     $openTime = date("y-m-d H:i", strtotime($openTime));
@@ -57,7 +67,7 @@ $connectionStatusMessage = "";
 if ($appActive == 1) {
     if ($appLoggedIn == 1) {
         if ($boxName != 0) {
-            $connectionStatusMessage = "Box #" . $boxName;
+            $connectionStatusMessage = "LMB " . $boxName;
         } else {
             $connectionStatusMessage = "Connect app to your LOCKMEBOX.";
         }
@@ -83,6 +93,7 @@ echo '</div>';
 
 // locked-since - initialer Zustand aus PHP
 if (($appLoggedIn==1) && ($boxName!=0) && ($appActive==1) && ($lockStatus==1)) {
+    echo '<div id="locked-text" class="locked-text">' . 'LOCKED' . '<br></div>';
     echo '<div id="locked-since" class="locked-since">' . $lockedSince . '<br></div>';
 } else {
     echo '<div id="locked-since" class="locked-since" style="display:none"></div>';
@@ -91,7 +102,9 @@ if (($appLoggedIn==1) && ($boxName!=0) && ($appActive==1) && ($lockStatus==1)) {
 // time-left & open-time - initialer Zustand aus PHP
 if ($protectionLevelTimer==1) {
     echo '<div id="time-left" class="time-left">' . $timeLeft . '</div>';
-    echo '<div id="open-time" class="protection-level-timer">' . $openTime . '</div>';
+    echo '<div id="open-time" class="end-time">' . $openTime . '</div>';
+    echo '<div id="timer-symbol" class="protection-level-timer"><img class="timer-symbol" src="/assets/images/lockme_symbol_timer.png"></div>';
+
 } else {
     echo '<div id="time-left" class="time-left" style="display:none"></div>';
     echo '<div id="open-time" class="protection-level-timer" style="display:none"></div>';
@@ -103,6 +116,8 @@ if ($protectionLevelPassword==1) {
 } else {
     echo '<div id="password-symbol" class="protection-level-password" style="display:none"></div>';
 }
+
+
 
 echo '</div>'; // box-control-area
 echo '</div>'; // card-content

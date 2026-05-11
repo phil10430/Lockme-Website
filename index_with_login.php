@@ -39,7 +39,7 @@ require_once __DIR__ . '/templates/header.php';
     <?php } else { ?>
 
         <div class="card-header">
-            Login to control your LOCKMEBOX!
+            Login for remote control.
             <?php 
             // Flash-Message für z. B. Registrierungserfolg
             if (isset($_SESSION['flash_message'])) {
