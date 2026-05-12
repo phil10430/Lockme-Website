@@ -84,8 +84,6 @@ function refreshData(name){
                         $("#label-choose-lock").hide();
                     }
 
-               
-
                     // Status-Nachricht
                     var msg = "";
                     if (json.appActive == 1) {
@@ -102,10 +100,6 @@ function refreshData(name){
                         msg = "Open app for remote control.";
                     }
                     $("#status-message").text(msg);
-
-             
-
-                    
 
                 }
             });

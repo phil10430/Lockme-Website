@@ -51,6 +51,28 @@ if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1))
                     $boxControlError = "Invalid password! Password must only contain a-z A-Z 0-9 and have 1 to 10 characters.";
                 }
             }
+
+            
+            if (isset($_POST['closeBoxWithPasswordTimer'])) 
+            {
+                $openTime = test_input($_POST['openTime']);  // kommt aus #openTimeField
+         
+                if (validateDate($openTime)) 
+                {
+                        $dt = DateTime::createFromFormat("d/m/Y H:i", $openTime, new DateTimeZone('Europe/Berlin'));
+                        $openTimeUnix = $dt->getTimestamp();
+                        $protectionLevelTimer = "1";
+                } else {
+                        $boxControlError = "Invalid date";
+                }
+
+                $password = test_input($_POST['password']);  // kommt aus #password
+                if (isValidPassword($password)) {
+                    $protectionLevelPassword = "1";
+                }else{
+                    $boxControlError = "Invalid password! Password must only contain a-z A-Z 0-9 and have 1 to 10 characters.";
+                }
+            }
             
             if (empty($boxControlError)){
                 $wishedAction = MSG_CLOSE . MSG_SEPARATOR .

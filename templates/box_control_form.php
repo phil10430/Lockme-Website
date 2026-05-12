@@ -31,9 +31,10 @@
 
     <!-- CLOSE Row 2 -->
     <div style="grid-column: 1 / -1; display:flex; justify-content:center;">
-        <button type="submit" name="closeBoxPwTimer" class="btn btn-round" id="close-box-pwtimer" style="width:80px;">
+        <button type="button" onclick="openPasswordTimerDialog()" class="btn btn-round" id="close-box-pwtimer" style="width:80px;">
             <img src="/assets/images/lmb_symbol_timerpw_white.png" style="width:40px; height:24px; object-fit:contain;">
         </button>
+        <button type="submit" name="closeBoxWithPasswordTimer" id="closeBoxWithPasswordTimer" style="display:none;"></button>
     </div>
 </div>
 </form>

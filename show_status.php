@@ -3,6 +3,7 @@ session_start();
 include __DIR__ . '/templates/password_dialog.php';
 include __DIR__ . '/templates/timer_dialog.php';
 include __DIR__ . '/templates/open_dialog.php'; 
+include __DIR__ . '/templates/password_timer_dialog.php'; 
 
 // DEBUG -> coomment out autorefresh in header.php
 define('DEBUG_WEBSITE', false);
@@ -31,7 +32,7 @@ $timeLeft    = $row['time_left'];
 
 
 if (DEBUG_WEBSITE) {
-    $lockStatus = 1;
+    $lockStatus = 0;
     $appLoggedIn = 1;
     $appActive = 1;
     $protectionLevelPassword = 0;

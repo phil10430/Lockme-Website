@@ -1,6 +1,14 @@
 function openTimerDialog() {
     var dialog = document.getElementById("timer-dialog");
     dialog.style.display = "flex";
+    
+     // heutiges Datum setzen
+    var today = new Date().toISOString().split("T")[0];
+    document.getElementById("timer-date").value = today;
+
+    var now = new Date();
+    document.getElementById("timer-time").value =
+    now.toTimeString().slice(0,5);
 }
 
 function closeTimerDialog() {
