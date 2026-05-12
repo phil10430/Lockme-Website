@@ -11,9 +11,9 @@
         <button type="submit" name="openBoxWithPw" id="openBoxWithPw" style="display:none;"></button>
     </div>
 
-    <!-- ADD TIME Row -->
+    <!-- EXTEND TIME Row -->
     <div style="grid-column: 1 / -1; display:flex; justify-content:center;">
-        <button type="button" onclick="openExtendTimeDialog()" class="btn btn-round" id="extend-time-btn"style="width:80px;">
+        <button type="button" name= "extendTime" onclick="lockDialog('extendTime')" class="btn btn-round" id="extend-time-btn" style="width:80px;">
                 <img src="/assets/images/lockme_symbol_add_time_white.png" style="width:30px; height:20px; object-fit:contain;">
         </button>
         <button type="submit" name="extendTime" id="extendTime" style="display:none;"></button>

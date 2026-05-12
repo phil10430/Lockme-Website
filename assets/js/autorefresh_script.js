@@ -28,6 +28,7 @@ function refreshData(name){
                             $("#locked-since").hide();
                             $("#openBox").hide();
                             $("#open-box-pw-btn").hide();
+                            $("#extend-time-btn").hide();
                             $("#password-symbol").hide();
                             $("#time-left").hide();
                             $("#open-time").hide();
@@ -56,6 +57,7 @@ function refreshData(name){
                                 $("#open-box-pw-btn").show();
                                 $("#time-left").show().text(json.timeLeft);
                                 $("#open-time").show().text(json.openTime);
+                                $("#extend-time-btn").show();
                             }else if (json.protectionLevelPassword == 1) {         
                                 $("#protection-level-wrapper").show(); 
                                 $("#password-symbol").show();
@@ -64,6 +66,7 @@ function refreshData(name){
                                 $("#openBox").hide();
                                 $("#time-left").hide();
                                 $("#open-time").hide();
+                                $("#extend-time-btn").hide();
                             }else if (json.protectionLevelTimer == 1) {
                                 $("#protection-level-wrapper").show();
                                 $("#password-symbol").hide();
@@ -72,6 +75,7 @@ function refreshData(name){
                                 $("#openBox").show();
                                 $("#time-left").show().text(json.timeLeft);
                                 $("#open-time").show().text(json.openTime);
+                                $("#extend-time-btn").show();
                             }else {
                                 $("#protection-level-wrapper").hide();
                                 $("#password-symbol").hide();
@@ -80,6 +84,7 @@ function refreshData(name){
                                 $("#openBox").show();
                                 $("#time-left").hide();
                                 $("#open-time").hide();
+                                $("#extend-time-btn").hide();
                             }
                         }
 

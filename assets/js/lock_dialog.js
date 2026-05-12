@@ -1,12 +1,13 @@
 function lockDialog(mode) {
     // mode: 'password', 'timer', 'passwordTimer'
     
-    var showPassword = (mode === 'password' || mode === 'passwordTimer');
-    var showTimer    = (mode === 'timer'    || mode === 'passwordTimer');
-
+    var showPassword        = (mode === 'password' || mode === 'passwordTimer'|| mode === 'extendTime');
+    var showConfirmPassword = (mode === 'password' || mode === 'passwordTimer');
+    var showTimer           = (mode === 'timer'    || mode === 'passwordTimer'|| mode === 'extendTime');
+    
     // Felder ein/ausblenden
     $("#lock-dialog-password-group").toggle(showPassword);
-    $("#lock-dialog-confirm-group").toggle(showPassword);
+    $("#lock-dialog-confirm-group").toggle(showConfirmPassword);
     $("#lock-dialog-date-group").toggle(showTimer);
     $("#lock-dialog-time-group").toggle(showTimer);
 
@@ -14,7 +15,8 @@ function lockDialog(mode) {
     var titles = {
         'password':      'Lock by Password',
         'timer':         'Lock by Timer',
-        'passwordTimer': 'Lock by Password & Timer'
+        'passwordTimer': 'Lock by Password & Timer',
+        'extendTime':   'Extend Timer'
     };
     $("#lock-dialog-title").text(titles[mode]);
 
@@ -43,15 +45,19 @@ function closeLockDialog() {
 
 function submitLockDialog() {
     var mode = $("#lock-dialog").data("mode");
-    var showPassword = (mode === 'password' || mode === 'passwordTimer');
-    var showTimer    = (mode === 'timer'    || mode === 'passwordTimer');
-    var err  = $("#lock-dialog-error");
+    var showPassword        = (mode === 'password' || mode === 'passwordTimer'|| mode === 'extendTime');
+    var showConfirmPassword = (mode === 'password' || mode === 'passwordTimer');
+    var showTimer           = (mode === 'timer'    || mode === 'passwordTimer' || mode === 'extendTime');
+    var err = $("#lock-dialog-error");
+
+    var pw  = $("#lock-dialog-password").val();
+    var pw2 = $("#lock-dialog-confirm").val();
 
     if (showPassword) {
-        var pw  = $("#lock-dialog-password").val();
-        var pw2 = $("#lock-dialog-confirm").val();
         if (pw.length < 1) { err.show().text("Please enter a password."); return; }
-        if (pw !== pw2)    { err.show().text("Passwords do not match.");   return; }
+    }
+    if (showConfirmPassword) {
+        if (pw !== pw2) { err.show().text("Passwords do not match."); return; }
     }
     if (showTimer) {
         var date = $("#lock-dialog-date").val();
@@ -66,9 +72,8 @@ function submitLockDialog() {
         err.show().text("Please confirm you understand."); return;
     }
 
-    // Werte setzen
     if (showPassword) {
-        $("#password").val($("#lock-dialog-password").val());
+        $("#password").val(pw);
     }
     if (showTimer) {
         var parts = $("#lock-dialog-date").val().split("-");
@@ -76,12 +81,13 @@ function submitLockDialog() {
         $("#openTimeField").val(formattedDate + " " + $("#lock-dialog-time").val());
     }
 
-    // richtigen Submit-Button klicken
     var submitButtons = {
         'password':      '#closeBoxWithPw',
         'timer':         '#closeBoxWithTimer',
-        'passwordTimer': '#closeBoxWithPasswordTimer'
+        'passwordTimer': '#closeBoxWithPasswordTimer',
+        'extendTime':   '#extendTime'
     };
+
     $(submitButtons[mode]).click();
-    lock_dialog();
+    closeLockDialog();
 }

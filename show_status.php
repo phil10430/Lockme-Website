@@ -1,9 +1,7 @@
 <?php
 session_start();
-include __DIR__ . '/templates/password_dialog.php';
-include __DIR__ . '/templates/timer_dialog.php';
+
 include __DIR__ . '/templates/open_dialog.php'; 
-include __DIR__ . '/templates/password_timer_dialog.php'; 
 include __DIR__ . '/templates/lock_dialog.php'; 
 
 // DEBUG -> coomment out autorefresh in header.php

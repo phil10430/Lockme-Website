@@ -5,6 +5,7 @@ $displayClosePw      = "none";
 $displayCloseTimer   = "none";
 $displayClosePwTimer = "none";
 $displayLabelChooseLock = "none";
+$displayExtendTime = "none";
 
 if ($appLoggedIn==1 && $boxName!=0 && $appActive==1) {
     
@@ -13,6 +14,9 @@ if ($appLoggedIn==1 && $boxName!=0 && $appActive==1) {
             $displayOpenBoxPw = "block";
         } else {
             $displayOpenBox = "block";
+        }
+        if ($protectionLevelTimer == 1){
+            $displayExtendTime = "block";
         }
     } else {
         $displayClosePw         = "block";
@@ -24,6 +28,7 @@ if ($appLoggedIn==1 && $boxName!=0 && $appActive==1) {
 ?>
 <style>
     #openBox           { display: <?= $displayOpenBox ?>; }
+    #extend-time-btn   { display: <?= $displayExtendTime ?>; }
     #open-box-pw-btn   { display: <?= $displayOpenBoxPw ?>; }
     #close-box-pw-btn  { display: <?= $displayClosePw ?>; }
     #close-box-timer   { display: <?= $displayCloseTimer ?>; }

@@ -17,7 +17,8 @@ if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1))
         $protectionLevelTimer = "0";
         $protectionLevelPassword = "0";
         $openTimeUnix = PLACEHOLDER; // initialize as placeholder
-        
+        $openTime = test_input($_POST['openTime']);
+        $password = test_input($_POST['password']);  // kommt aus #password
 
         if (empty($password))
         {
@@ -28,9 +29,6 @@ if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1))
         if ( $lockStatus==0) 
         {
             if (isset($_POST['closeBoxWithTimer'])) {
-
-                $openTime = test_input($_POST['openTime']);  // kommt aus #openTimeField
-         
                 if (validateDate($openTime)) 
                 {
                         $dt = DateTime::createFromFormat("d/m/Y H:i", $openTime, new DateTimeZone('Europe/Berlin'));
@@ -44,7 +42,6 @@ if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1))
             
             if (isset($_POST['closeBoxWithPw'])) 
             {
-                $password = test_input($_POST['password']);  // kommt aus #password
                 if (isValidPassword($password)) {
                     $protectionLevelPassword = "1";
                 }else{
@@ -55,8 +52,7 @@ if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1))
             
             if (isset($_POST['closeBoxWithPasswordTimer'])) 
             {
-                $openTime = test_input($_POST['openTime']);  // kommt aus #openTimeField
-         
+
                 if (validateDate($openTime)) 
                 {
                         $dt = DateTime::createFromFormat("d/m/Y H:i", $openTime, new DateTimeZone('Europe/Berlin'));
@@ -66,20 +62,22 @@ if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1))
                         $boxControlError = "Invalid date";
                 }
 
-                $password = test_input($_POST['password']);  // kommt aus #password
                 if (isValidPassword($password)) {
                     $protectionLevelPassword = "1";
                 }else{
                     $boxControlError = "Invalid password! Password must only contain a-z A-Z 0-9 and have 1 to 10 characters.";
                 }
             }
-            
+
             if (empty($boxControlError)){
                 $wishedAction = MSG_CLOSE . MSG_SEPARATOR .
                     $protectionLevelTimer . MSG_SEPARATOR . $protectionLevelPassword . MSG_SEPARATOR .
                     $openTimeUnix . MSG_SEPARATOR .
                     $password ;
             }
+
+            
+         
         }
         else
         {
@@ -90,10 +88,30 @@ if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1))
             }     
             if (isset($_POST['openBoxWithPw'])) 
             {
-                $password = test_input($_POST['password']);
                 $wishedAction = MSG_OPEN . MSG_SEPARATOR .
                 $password ;
             }      
+
+            if (isset($_POST['extendTime'])) {
+         
+                   
+                if (validateDate($openTime)) 
+                {
+                  
+                        $dt = DateTime::createFromFormat("d/m/Y H:i", $openTime, new DateTimeZone('Europe/Berlin'));
+                        $openTimeUnix = $dt->getTimestamp();
+                    
+                        $protectionLevelTimer = "1";
+                        $wishedAction = EXTEND_OPEN_TIME . MSG_SEPARATOR .
+                            $protectionLevelTimer . MSG_SEPARATOR .
+                            $openTimeUnix . MSG_SEPARATOR .
+                            $password ;
+
+
+                } else {
+                        $boxControlError = "Invalid date";
+                }
+            }
         } 
         
      
