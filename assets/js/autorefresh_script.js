@@ -7,7 +7,8 @@ function refreshData(name){
                 url: 'autorefresh.php',
                 success: function(data){
                     var json = JSON.parse(data);
-                  
+                    window.protectionLevelPassword = json.protectionLevelPassword;
+                    window.protectionLevelTimer    = json.protectionLevelTimer;
                    if (json.appLoggedIn==1 && json.boxName!=0 && json.appActive==1) {
                         $("#box-control-form").show();
 
@@ -46,9 +47,7 @@ function refreshData(name){
                             $("#close-box-timer").hide();
                             $("#close-box-pwtimer").hide();
                             $("#label-choose-lock").hide();
-                            console.log("protectionLevelPassword:", json.protectionLevelPassword);
-                            console.log("protectionLevelTimer:", json.protectionLevelTimer);
-                            console.log("lockStatus:", json.lockStatus);
+                      
                             // Protection Level
                             if ((json.protectionLevelPassword == 1)  && (json.protectionLevelTimer == 1)) {
                                 $("#protection-level-wrapper").show();

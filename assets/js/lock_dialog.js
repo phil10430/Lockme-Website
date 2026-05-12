@@ -1,9 +1,11 @@
 function lockDialog(mode) {
     // mode: 'password', 'timer', 'passwordTimer'
     
-    var showPassword        = (mode === 'password' || mode === 'passwordTimer'|| mode === 'extendTime');
-    var showConfirmPassword = (mode === 'password' || mode === 'passwordTimer');
-    var showTimer           = (mode === 'timer'    || mode === 'passwordTimer'|| mode === 'extendTime');
+    var showPassword        = (mode === 'password' || mode === 'passwordTimer') ||
+                          (mode === 'extendTime' && window.protectionLevelPassword == 1);
+    var showConfirmPassword = (mode === 'password' || mode === 'passwordTimer') ||
+                            (mode === 'extendTime' && window.protectionLevelPassword == 1);
+    var showTimer           = (mode === 'timer' || mode === 'passwordTimer' || mode === 'extendTime');
     
     // Felder ein/ausblenden
     $("#lock-dialog-password-group").toggle(showPassword);
@@ -45,9 +47,11 @@ function closeLockDialog() {
 
 function submitLockDialog() {
     var mode = $("#lock-dialog").data("mode");
-    var showPassword        = (mode === 'password' || mode === 'passwordTimer'|| mode === 'extendTime');
-    var showConfirmPassword = (mode === 'password' || mode === 'passwordTimer');
-    var showTimer           = (mode === 'timer'    || mode === 'passwordTimer' || mode === 'extendTime');
+    var showPassword        = (mode === 'password' || mode === 'passwordTimer') ||
+                            (mode === 'extendTime' && window.protectionLevelPassword == 1);
+    var showConfirmPassword = (mode === 'password' || mode === 'passwordTimer') ||
+                            (mode === 'extendTime' && window.protectionLevelPassword == 1);
+    var showTimer           = (mode === 'timer' || mode === 'passwordTimer' || mode === 'extendTime');
     var err = $("#lock-dialog-error");
 
     var pw  = $("#lock-dialog-password").val();
