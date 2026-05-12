@@ -19,10 +19,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script> 
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         <script  src="/assets/js/autorefresh_script.js"></script>    
-        <script src="/assets/js/password_dialog.js"></script>
-        <script src="/assets/js/timer_dialog.js"></script>
         <script src="/assets/js/open_dialog.js"></script>
-        <script src="/assets/js/password_timer_dialog.js"></script>
+        <script src="/assets/js/lock_dialog.js"></script>
         
     </head>
 
