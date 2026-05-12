@@ -125,20 +125,17 @@ p {
     transform: translateX(-50%); 
     text-align: center;
 }
-.protection-level-timer{
-    position:absolute;
-    top:320px;
-    left: 50%;       
-    transform: translateX(-50%); 
-    text-align: center;
+.protection-level-wrapper {
+    position: absolute;
+    top: 320px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
 }
-.protection-level-password{
-    position:absolute;
-    top:320px;
-    left: 50%;       
-    transform: translateX(-50%); 
-    text-align: center;
-}
+ 
 
 .password-symbol{
     width:30px;

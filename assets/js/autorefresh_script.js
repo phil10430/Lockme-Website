@@ -13,6 +13,7 @@ function refreshData(name){
 
                         if (json.lockStatus == 0) {
                             // Box offen
+                            
                             $("#bg-image").attr("src", "/assets/images/icon_box_open.png");
 
                             // Anzeigen
@@ -22,6 +23,7 @@ function refreshData(name){
                             $("#label-choose-lock").show();
 
                             // Verstecken
+                            $("#protection-level-wrapper").hide();
                             $("#locked-text").hide();
                             $("#locked-since").hide();
                             $("#openBox").hide();
@@ -43,25 +45,35 @@ function refreshData(name){
                             $("#close-box-timer").hide();
                             $("#close-box-pwtimer").hide();
                             $("#label-choose-lock").hide();
-
+                            console.log("protectionLevelPassword:", json.protectionLevelPassword);
+                            console.log("protectionLevelTimer:", json.protectionLevelTimer);
+                            console.log("lockStatus:", json.lockStatus);
                             // Protection Level
-                            if (json.protectionLevelPassword == 1) {
+                            if ((json.protectionLevelPassword == 1)  && (json.protectionLevelTimer == 1)) {
+                                $("#protection-level-wrapper").show();
+                                $("#password-symbol").show();
+                                $("#timer-symbol").show();
+                                $("#open-box-pw-btn").show();
+                                $("#time-left").show().text(json.timeLeft);
+                                $("#open-time").show().text(json.openTime);
+                            }else if (json.protectionLevelPassword == 1) {         
+                                $("#protection-level-wrapper").show(); 
                                 $("#password-symbol").show();
                                 $("#open-box-pw-btn").show();
                                 $("#timer-symbol").hide();
                                 $("#openBox").hide();
                                 $("#time-left").hide();
                                 $("#open-time").hide();
-
-                            } else if (json.protectionLevelTimer == 1) {
+                            }else if (json.protectionLevelTimer == 1) {
+                                $("#protection-level-wrapper").show();
                                 $("#password-symbol").hide();
                                 $("#timer-symbol").show();
                                 $("#open-box-pw-btn").hide();
                                 $("#openBox").show();
                                 $("#time-left").show().text(json.timeLeft);
                                 $("#open-time").show().text(json.openTime);
-
-                            } else {
+                            }else {
+                                $("#protection-level-wrapper").hide();
                                 $("#password-symbol").hide();
                                 $("#timer-symbol").hide();
                                 $("#open-box-pw-btn").hide();
