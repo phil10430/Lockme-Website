@@ -1,9 +1,13 @@
 <?php
 session_start();
 require "login.php";
-$bodyClass = "landing-page";
-require_once __DIR__ . '/templates/header.php';
 
+/* 🔥 WICHTIG: dynamisch setzen */
+$bodyClass = (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true)
+    ? ""              // logged in → normale App
+    : "landing-page"; // guest → landing page
+
+require_once __DIR__ . '/templates/header.php';
 ?>
 
 <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) { ?>

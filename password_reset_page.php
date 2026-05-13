@@ -77,7 +77,7 @@ require_once __DIR__ . '/password_reset.php';
     </div>
 
     <div class="card-footer">
-        <p>Have an account? <a href="index.php">Login</a></p>
+        <p>Have an account? <a href="lmb_control.php">Login</a></p>
         <p>Don't have an account? <a href="register_page.php">Sign up</a></p>
     </div>
 

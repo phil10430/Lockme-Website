@@ -43,7 +43,7 @@
             <!-- LEFT -->
             <div class="logo">
                 <a href="/">
-                    <img src="/assets/images/lockmebox_site_header.png" alt="Lockmebox Logo">
+                    <img src="/assets/images/logo_white.png" alt="Lockmebox Logo">
                 </a>
             </div>
 
