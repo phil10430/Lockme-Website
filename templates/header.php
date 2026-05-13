@@ -23,10 +23,8 @@
         <script src="/assets/js/lock_dialog.js"></script>
         
     </head>
-
-    <body>
        
-       
+    <body class="<?= $bodyClass ?? '' ?>">   
 
         <script>
             if (window.history.replaceState) {
@@ -40,24 +38,42 @@
     <!-- GLOBAL NAVBAR -->
     <nav class="topbar">
 
-        <!-- LEFT -->
-        <div class="logo">
-            <a href="/">
-                <img src="/assets/images/lockmebox_site_header.png" alt="Lockmebox Logo">
-            </a>
-        </div>
+        <div class="topbar-inner">
 
-        <!-- CENTER -->
-        <div class="top-center">
-            <a href="/faq.php">FAQ</a>
-        </div>
+            <!-- LEFT -->
+            <div class="logo">
+                <a href="/">
+                    <img src="/assets/images/lockmebox_site_header.png" alt="Lockmebox Logo">
+                </a>
+            </div>
 
-        <!-- RIGHT -->
-        <div class="top-right">
+            <!-- CENTER -->
+            <div class="top-center">
+                <a href="/faq.php">FAQ</a>
+            </div>
 
-            <a href="/index_with_login.php" title="Login">
-                 <i class="ti ti-user"></i>
-            </a>
+            <!-- RIGHT -->
+            <div class="top-right">
+
+                <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
+
+                    <a href="/profile_page.php" title="Account">
+                        <i class="ti ti-user"></i>
+                    </a>
+
+                    <a href="/logout.php" title="Logout">
+                        <i class="ti ti-logout"></i>
+                    </a>
+
+                <?php else: ?>
+
+                    <a href="/lmb_control.php" title="Login">
+                        <i class="ti ti-login"></i>
+                    </a>
+
+                <?php endif; ?>
+
+            </div>
 
         </div>
 

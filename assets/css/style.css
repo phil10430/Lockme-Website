@@ -7,6 +7,8 @@
     --button-bg-color: #000000;
     --secondary-color: #717171;
     --hover-color: #373737;
+    --link-color: #ff9100;
+    --link-hover-color: #c9aa83;
     --mainbackground-color: #000000;
 }
 
@@ -27,8 +29,11 @@ body{
     font-size:1.3rem;
     line-height:1.6;
     overflow-x:hidden;
+    padding-top:72px;
 }
-
+body.landing-page{
+    padding-top:0;
+}
 /* TYPOGRAPHY */
 
 h1{
@@ -55,31 +60,48 @@ p{
     margin-bottom:1rem;
 }
 
+a{
+    text-decoration:none;
+    color:var(--link-color);
+    transition:0.2s ease;
+}
+
+a:hover,
+a:focus,
+a:active{
+    text-decoration:none;
+    color:var(--link-hover-color);
+}
+
 /* =========================================================
    GLOBAL NAVBAR
 ========================================================= */
 
 .topbar{
+    position:absolute;
+    top:0;
+    left:0;
+
     width:100%;
-    max-width:1400px;
     height:72px;
 
-    margin:0 auto;
+    display:flex;
+    justify-content:center; /* wichtig */
+    align-items:center;
+
+    z-index:999;
+
+    background:transparent;
+}
+.topbar-inner{
+    width:100%;
+    max-width:1200px;
 
     padding:0 40px;
 
     display:flex;
     align-items:center;
     justify-content:space-between;
-
-    position:sticky;
-    top:0;
-    z-index:999;
-
-    background:rgba(0,0,0,0.88);
-    backdrop-filter:blur(12px);
-
-    border-bottom:1px solid rgba(255,255,255,0.05);
 }
 
 /* LOGO */
@@ -148,10 +170,17 @@ p{
 ========================================================= */
 
 .landing-wrapper{
+    position:relative;
+
     min-height:100vh;
+
     background:
-        linear-gradient(to bottom, rgba(0,0,0,.75), rgba(0,0,0,.92)),
-        url('/assets/images/lmb_product.jpeg') center center/cover no-repeat;
+        linear-gradient(to bottom,
+        rgba(0,0,0,.45),
+        rgba(0,0,0,.85)),
+        url('/assets/images/lmb_product.jpeg')
+        center center / cover no-repeat;
+
     display:flex;
     flex-direction:column;
 }
@@ -160,11 +189,16 @@ p{
 
 .hero{
     flex:1;
+
     display:flex;
     align-items:center;
     justify-content:center;
+
     text-align:center;
-    padding:40px 20px;
+
+    padding:
+        120px 20px
+        40px;
 }
 
 .hero-content{
@@ -389,62 +423,44 @@ p{
    FORM
 ========================================================= */
 
+
 .form-control{
     width:100%;
-    padding:10px 12px;
-    border-radius:8px;
-    border:1px solid var(--primary-color);
-    transition:all 0.2s ease-in-out;
+    padding:14px 16px;
+
+    border-radius:12px;
+    background:transparent; 
+    border:1px solid var(--secondary-color);
+
     color:var(--primary-color);
+
+    font-size:15px;
+    font-family:inherit;
+
+    outline:none;
+
+    transition:all 0.25s ease;
+
+    backdrop-filter: blur(8px);
 }
 
+/* FOCUS STATE */
 .form-control:focus{
-    border-color:#b59a98;
-    box-shadow:0 0 4px rgba(106,90,249,0.3);
-    outline:none;
-}
-
-/* ALERTS */
-
-.alert-danger,
-.alert-success{
-    background:transparent;
+    background:transparent; 
+    border-color:var(--secondary-color);
     color:var(--primary-color);
-    border:none;
-    padding:5px;
-    border-radius:10px;
-    text-align:center;
 }
 
-/* CLEAN INPUT */
-
-.form-control.clean-input{
-    background:transparent;
-    border:none;
-    border-bottom:2px solid var(--primary-color);
-    border-radius:0;
-    padding:4px;
-    outline:none;
-    box-shadow:none;
-    width:100%;
+/* PLACEHOLDER */
+.form-control::placeholder{
+    color:var(--secondary-color);
 }
 
-.form-control.clean-input:focus{
-    border-bottom-color:#c3c3c3;
-    color:var(--primary-color);
-    background:transparent;
+/* TEXTAREA */
+textarea.form-control{
+    resize:none;
+    min-height:140px;
 }
-
-.form-control.clean-input:not(:placeholder-shown){
-    border-bottom-color:#c3c3c3;
-    background:transparent;
-}
-
-.clean-input::placeholder{
-    color:#8f7373;
-    opacity:1;
-}
-
 /* =========================================================
    BOX CONTROL
 ========================================================= */
@@ -538,3 +554,73 @@ footer{
         width:90%;
     }
 }
+
+
+.faq-wrapper{
+    min-height:80vh;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    padding:120px 20px;
+}
+
+.faq-container{
+    width:100%;
+    max-width:800px;
+}
+
+.faq-container h1{
+    text-align:center;
+    margin-bottom:10px;
+}
+
+.faq-subtitle{
+    text-align:center;
+    color:var(--secondary-color);
+    margin-bottom:40px;
+}
+
+/* ITEM */
+
+.faq-item{
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    padding:15px 0;
+}
+
+/* QUESTION */
+
+.faq-question{
+    width:100%;
+    background:none;
+    border:none;
+    color:var(--primary-color);
+    font-size:18px;
+    text-align:left;
+    cursor:pointer;
+    padding:10px 0;
+    transition:0.3s;
+}
+
+.faq-question:hover{
+    opacity:0.7;
+}
+
+/* ANSWER */
+
+.faq-answer{
+    max-height:0;
+    overflow:hidden;
+    color:var(--secondary-color);
+    font-size:15px;
+    line-height:1.6;
+    transition:max-height 0.3s ease;
+}
+
+/* OPEN STATE */
+
+.faq-item.active .faq-answer{
+    max-height:200px;
+    margin-top:10px;
+}
+
+

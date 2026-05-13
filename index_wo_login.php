@@ -32,15 +32,11 @@ require_once __DIR__ . '/templates/header.php';
             </script>
         </div>
 
-        <div class="card-footer">
-            <a href="profile_page.php" class="btn btn-round">Account</a>
-            <a href="logout.php" class="btn btn-round">SIGN OUT</a>
-        </div>
 
     <?php } else { ?>
 
         <div class="card-header">
-            Login for remote control.
+            
             <?php 
             // Flash-Message für z. B. Registrierungserfolg
             if (isset($_SESSION['flash_message'])) {
@@ -51,12 +47,10 @@ require_once __DIR__ . '/templates/header.php';
         </div>
         
         <div class="card-body">
-            <?php  include __DIR__ . '/templates/login_form.php'; ?>
+            <?php  include __DIR__ . '/templates/start_screen.php'; ?>
         </div>
 
-        <div class="card-footer">
-            Don't have an account? <a href="register_page.php">Sign up now</a>.
-        </div>
+       
 
     <?php } ?>
 
