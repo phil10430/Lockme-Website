@@ -43,6 +43,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     } elseif ($password !== $confirm_password) {
         $errors['confirm_password'] = "Passwords do not match.";
     }
+    if (!isset($_POST['accept_terms'])) {
+        $errors['terms'] = 'Please accept the Terms of Service.';
+    }
 
     // ✅ Wenn keine Fehler → neuen User anlegen
     if (empty($errors)) {
