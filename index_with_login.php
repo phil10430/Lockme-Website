@@ -33,6 +33,7 @@ require_once __DIR__ . '/templates/header.php';
         </div>
 
         <div class="card-footer">
+            <a href="profile_page.php" class="btn btn-round">Account</a>
             <a href="logout.php" class="btn btn-round">SIGN OUT</a>
         </div>
 
