@@ -25,7 +25,7 @@
 
     <!-- CLOSE Label -->
     <div id="label-choose-lock"  style="grid-column: 1 / -1; text-align:center;">
-        <span style="font-size:13px; color:var(--primary-color);">Choose how to lock</span>
+        <span class="choose-lock-text">Choose how to lock</span>
     </div>
 
     <!-- CLOSE Row 1 -->

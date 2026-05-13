@@ -163,6 +163,11 @@ p {
     width: 50%;
 }
 
+.choose-lock-text {
+    font-size: 13px;
+    color:var(--secondary-color);
+}
+
 
 
 /* Inputs */
@@ -240,7 +245,7 @@ p {
 
 
 .boxcontrol-elements {
-    margin-top:400px;
+    margin-top:380px;
     margin-left:20px;
     display: grid;
     grid-template-columns: 140px 100px; /* zwei Spalten, je 150px */
