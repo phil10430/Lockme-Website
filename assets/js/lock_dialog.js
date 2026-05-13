@@ -1,11 +1,11 @@
 function lockDialog(mode) {
     // mode: 'password', 'timer', 'passwordTimer'
     
-    var showPassword        = (mode === 'password' || mode === 'passwordTimer') ||
-                          (mode === 'extendTime' && window.protectionLevelPassword == 1);
-    var showConfirmPassword = (mode === 'password' || mode === 'passwordTimer') ||
-                            (mode === 'extendTime' && window.protectionLevelPassword == 1);
-    var showTimer           = (mode === 'timer' || mode === 'passwordTimer' || mode === 'extendTime');
+    var showPassword        =   (mode === 'password' || mode === 'passwordTimer') ||
+                                (mode === 'extendTime' && window.protectionLevelPassword == 1);
+    var showConfirmPassword =   (mode === 'password' || mode === 'passwordTimer') ||
+                                (mode === 'extendTime' && window.protectionLevelPassword == 1);
+    var showTimer           =   (mode === 'timer' || mode === 'passwordTimer' || mode === 'extendTime');
     
     // Felder ein/ausblenden
     $("#lock-dialog-password-group").toggle(showPassword);
@@ -20,7 +20,21 @@ function lockDialog(mode) {
         'passwordTimer': 'Lock by Password & Timer',
         'extendTime':   'Extend Timer'
     };
+
+
     $("#lock-dialog-title").text(titles[mode]);
+
+
+
+
+    var checkboxLabels = {
+    'password':      'I understand that losing the password will permanently prevent access to the box.',
+    'timer':         'I confirm that I entered the correct date and time. There is no unlock option before that.',
+    'passwordTimer': 'I confirm that I entered the correct password, date and time. There is no unlock option without password before that.',
+    'extendTime':    'I confirm that I entered the correct date and time. There is no unlock option before that.'
+    };
+    $("#lock-dialog-checkbox-label").text(checkboxLabels[mode]);
+
 
     // Mode speichern für Submit
     $("#lock-dialog").data("mode", mode);
@@ -43,6 +57,12 @@ function closeLockDialog() {
     $("#lock-dialog-date").val("");
     $("#lock-dialog-time").val("");
     $("#lock-dialog-checkbox").prop("checked", false);
+}
+function togglePassword(inputId, icon) {
+    var input = document.getElementById(inputId);
+    var isPassword = input.type === "password";
+    input.type = isPassword ? "text" : "password";
+    $(icon).find("i").toggleClass("ti-eye ti-eye-off");
 }
 
 function submitLockDialog() {
