@@ -25,11 +25,7 @@
     </head>
 
     <body>
-        <header class="site-header">
-            <a href="/index.php" class="logo">
-                <img src="/assets/images/lockmebox_site_header.png" alt="Site Logo" height="40">
-            </a>
-        </header>
+       
        
 
         <script>
@@ -37,6 +33,36 @@
                 window.history.replaceState(null, null, window.location.href);
             }
         </script>
+
+
+
+
+    <!-- GLOBAL NAVBAR -->
+    <nav class="topbar">
+
+        <!-- LEFT -->
+        <div class="logo">
+            <a href="/">
+                <img src="/assets/images/lockmebox_site_header.png" alt="Lockmebox Logo">
+            </a>
+        </div>
+
+        <!-- CENTER -->
+        <div class="top-center">
+            <a href="/faq.php">FAQ</a>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="top-right">
+
+            <a href="/index_with_login.php" title="Login">
+                 <i class="ti ti-user"></i>
+            </a>
+
+        </div>
+
+    </nav>
+
 <?php if (!empty($noindex)): ?>
   <meta name="robots" content="noindex, nofollow">
 <?php endif; ?>
