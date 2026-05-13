@@ -93,6 +93,7 @@ p {
     left: 50%;                      /* linke Kante in der Mitte des Containers */
     transform: translateX(-50%);    /* um die eigene Breite nach links verschieben */
     text-align: center;             /* text horizontal zentrieren */
+    color:var(--secondary-color);
 }
 
 .locked-text{
@@ -124,6 +125,7 @@ p {
     left: 50%;       
     transform: translateX(-50%); 
     text-align: center;
+    color:var(--secondary-color);
 }
 .protection-level-wrapper {
     position: absolute;
@@ -142,7 +144,7 @@ p {
 }
 
 .timer-symbol{
-    width:30px;
+    width:20px;
 }
 
 

@@ -6,8 +6,12 @@
 <div class="boxcontrol-elements">
     <!-- OPEN Row -->
     <div style="grid-column: 1 / -1; display:flex; justify-content:center;">
+        <?php // OPEN without password: name "openBox" ist post key der im php geprüft wird ?>
         <button type="submit" name="openBox" class="btn btn-round" id="openBox">OPEN</button>
-        <button type="button" onclick="openOpenDialog()" class="btn btn-round" id="open-box-pw-btn">OPEN</button>
+         <?php // OPEN with password: öffnet Dialog, wird im JS über id="open-box-pw-btn" referenziert ?>
+        <button type="button" onclick="openOpenDialog()" class="btn btn-round" id="open-box-pw-btn" style="width:80px;">OPEN</button>
+         <?php //  Versteckter submit button: wird per JS geklickt $("#openBoxWithPw").click()?>
+         <?php //  name="openBoxWithPw" ist der POST-Key, id="openBoxWithPw" ist der JS-Selektor ?>
         <button type="submit" name="openBoxWithPw" id="openBoxWithPw" style="display:none;"></button>
     </div>
 

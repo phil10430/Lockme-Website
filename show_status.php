@@ -107,8 +107,8 @@ echo '<div id="open-time" class="end-time" style="' . $displayTimer . '">' . $op
 
 // Wrapper
 echo '<div id="protection-level-wrapper" class="protection-level-wrapper" style="' . $displayWrapper . '">';
-echo '<div id="timer-symbol" style="' . $displayTimer . '"><img class="timer-symbol" src="/assets/images/lockme_symbol_timer.png"></div>';
 echo '<div id="password-symbol" style="' . $displayPw . '"><img class="password-symbol" src="/assets/images/lockme_symbol_password.png"></div>';
+echo '<div id="timer-symbol" style="' . $displayTimer . '"><img class="timer-symbol" src="/assets/images/lockme_symbol_timer.png"></div>';
 echo '</div>';
 
 echo '</div>';
