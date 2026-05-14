@@ -47,13 +47,7 @@ $proVersion = $row['pro_version'];
             <?php else: ?>
 
                 <div class="pro-status">
-
-                    <span>FREE PLAN</span>
-
-                    <a href="/get_pro.php" class="btn-modern">
-                        Upgrade
-                    </a>
-
+                    <span>FREE</span>
                 </div>
 
             <?php endif; ?>

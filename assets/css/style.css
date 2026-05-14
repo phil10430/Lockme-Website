@@ -706,9 +706,6 @@ footer{
 .pro-mini-card p{
     font-size:14px;
     line-height:1.6;
-
-    color:var(--secondary-color);
-
     margin-bottom:24px;
 }
 
@@ -720,9 +717,43 @@ footer{
 
 
 
+/* FEATURES */
 
+.pro-features{
+    margin:22px 0 26px;
+}
 
+.pro-feature{
+    display:flex;
+    align-items:center;
 
+    gap:12px;
+
+    padding:10px 0;
+
+    text-align:left;
+
+    color:#fff;
+
+    font-size:14px;
+}
+
+.pro-icon{
+    width:22px;
+
+    flex-shrink:0;
+
+    text-align:center;
+
+    font-size:16px;
+}
+
+.pro-note{
+    font-size:12px;
+    line-height:1.5;
+    margin-top:18px;
+    text-align:center;
+}
 
 
 /* =========================

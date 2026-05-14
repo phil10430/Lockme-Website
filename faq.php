@@ -45,10 +45,17 @@ require_once __DIR__ . '/templates/header.php';
             </div>
         </div>
 
-          <div class="faq-item">
+        <div class="faq-item">
             <button class="faq-question">What happens when your LockMeBox is locked and the battery is empty?</button>
             <div class="faq-answer">
                 Your LockMeBox will stay locked until you recharge it.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">Why should I get LockMeBox Pro?</button>
+            <div class="faq-answer">
+                LockMeBox Pro offers you remote control via web dashbord. It comes also with advanced control features e.g. extend timer or lock with timer and password simultaneously.
             </div>
         </div>
 

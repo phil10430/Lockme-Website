@@ -11,9 +11,10 @@ $username_err = $password_err = $login_err = "";
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Eingaben holen & trimmen
-    $username = trim($_POST["username"] ?? '');
-    $password = trim($_POST["password"] ?? '');
-
+    $username   = trim($_POST["username"] ?? '');
+    $password   = trim($_POST["password"] ?? '');
+    $proVersion = trim($_POST["proVersion"] ?? '');
+    
     // Validierung
     if (empty($username) || empty($password)) {
         echo "username or password is empty.";
@@ -30,14 +31,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             // Passwort prüfen
             if (password_verify($password, $user['password'])) {
                 // Loginstatus updaten
-                $stmt = $pdo->prepare("UPDATE users SET app_logged_in = 1 WHERE username = :username");
-                $stmt->execute([':username' => $username]);
+                $stmt = $pdo->prepare("
+                    UPDATE users
+                    SET app_logged_in = 1,
+                        pro_version = :pro_version
+                    WHERE username = :username
+                ");
+
+                $stmt->execute([
+                    ':username' => $username,
+                    ':pro_version' => $proVersion
+                ]);
 
                 // Session setzen (optional)
                 $_SESSION["loggedin"] = true;
                 $_SESSION["id"] = $user["id"];
                 $_SESSION["username"] = $user["username"];
-
                 echo "logged_in"; // Android: public void onResponse(String response)
             } else {
                 echo "Invalid password.";

@@ -3,21 +3,35 @@
     <div class="pro-mini-card">
 
         <div class="pro-badge">
-           LockMeBox PRO
+            GO PRO
         </div>
 
-        <h2>Unlock Pro</h2>
+        <h2>Unlock Pro Features</h2>
 
-        <p>
-            You currently do not have a Pro subscription for LockMeBox.
-            Upgrade now to unlock premium features and advanced protection.
-        </p>
+        <div class="pro-features">
 
-        <a href="https://play.google.com/store/apps/details?id=com.kinkystuffmade.lockmebox&hl=de"
+            <div class="pro-feature">
+                <span class="pro-icon">⚡</span>
+                <span>Remote control via web dashboard</span>
+            </div>
+
+            <div class="pro-feature">
+                <span class="pro-icon">🔒</span>
+                <span>Advanced control features</span>
+            </div>
+
+    
+        </div>
+
+        <a href="https://play.google.com/store/apps/details?id=com.kinkystuffmade.lockmebox&utm_source=emea_Med"
            target="_blank"
            class="btn-modern">
-            Get Pro
+            Start free 7 day trial
         </a>
+
+        <p class="pro-note">
+             Subscription can only be purchased in the app.
+        </p>
 
     </div>
 
