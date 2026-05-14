@@ -1,127 +1,327 @@
-<?php require_once __DIR__ . '/includes/config.php'; ?>
-<?php require "profile.php"; ?>
-<?php require_once __DIR__ . '/templates/header.php'; ?>
+<?php
+session_start();
 
-<div class="card">
-    <div class="card-header">
-        Account — <?php echo htmlspecialchars($username); ?>
-    </div>
-    <div class="card-body">
+require_once __DIR__ . '/includes/config.php';
+require "profile.php";
 
-        <?php // Info ?>
-        <p style="font-size:12px; color:var(--primary-color); opacity:0.5; margin-bottom:24px;">
-            Member since <?php echo date("d.m.Y", strtotime($user['created_at'])); ?>
-        </p>
+$bodyClass = "";
 
-        <?php // Passwort ändern ?>
-        <p style="font-size:13px; color:var(--primary-color); margin-bottom:12px; letter-spacing:1px;">CHANGE PASSWORD</p>
+require_once __DIR__ . '/templates/header.php';
 
-        <?php if (!empty($errors['password'])): ?>
-            <div class="alert alert-danger" style="font-size:13px;">⚠️ <?php echo $errors['password']; ?></div>
-        <?php endif; ?>
-        <?php if (!empty($success['password'])): ?>
-            <div class="alert alert-success" style="font-size:13px;">✓ <?php echo $success['password']; ?></div>
-        <?php endif; ?>
 
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <div class="form-group" style="margin-bottom:20px; position:relative;">
-                <input type="password" name="current_password" id="current-pw"
-                    class="form-control clean-input" placeholder="Current Password"
-                    style="padding-right:28px;" required>
-                <span onclick="togglePassword('current-pw', this)"
-                    style="position:absolute; right:4px; top:50%; transform:translateY(-50%); cursor:pointer; color:var(--primary-color); opacity:0.5;">
-                    <i class="ti ti-eye" style="font-size:16px;"></i>
-                </span>
+$username = $_SESSION["username"];
+$sql = "SELECT * FROM users WHERE username = :username";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([':username' => $username]);
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+$proVersion = $row['pro_version'];
+?>
+
+<div class="settings-wrapper">
+
+    <div class="settings-container">
+
+        <!-- HEADER -->
+
+        <div class="settings-hero">
+
+            <div>
+                <h1>
+                    <?php echo htmlspecialchars($username); ?>
+                </h1>
+
+                <p>
+                    Member since
+                    <?php echo date("d.m.Y", strtotime($user['created_at'])); ?>
+                </p>
             </div>
-            <div class="form-group" style="margin-bottom:20px; position:relative;">
-                <input type="password" name="new_password" id="new-pw"
-                    class="form-control clean-input" placeholder="New Password"
-                    style="padding-right:28px;" required>
-                <span onclick="togglePassword('new-pw', this)"
-                    style="position:absolute; right:4px; top:50%; transform:translateY(-50%); cursor:pointer; color:var(--primary-color); opacity:0.5;">
-                    <i class="ti ti-eye" style="font-size:16px;"></i>
-                </span>
+
+            <!-- PRO STATUS -->
+
+            <?php if ($proVersion): ?>
+
+                <div class="pro-status active">
+                    <span>PRO</span>
+                </div>
+
+            <?php else: ?>
+
+                <div class="pro-status">
+
+                    <span>FREE PLAN</span>
+
+                    <a href="/get_pro.php" class="btn-modern">
+                        Upgrade
+                    </a>
+
+                </div>
+
+            <?php endif; ?>
+
+        </div>
+
+        <!-- SECURITY -->
+
+        <div class="settings-card">
+
+            <div class="settings-card-header">
+                Security
             </div>
-            <div class="form-group" style="margin-bottom:20px; position:relative;">
-                <input type="password" name="confirm_new_password" id="confirm-new-pw"
-                    class="form-control clean-input" placeholder="Confirm New Password"
-                    style="padding-right:28px;" required>
-                <span onclick="togglePassword('confirm-new-pw', this)"
-                    style="position:absolute; right:4px; top:50%; transform:translateY(-50%); cursor:pointer; color:var(--primary-color); opacity:0.5;">
-                    <i class="ti ti-eye" style="font-size:16px;"></i>
-                </span>
-            </div>
-            <div class="form-group" style="margin-bottom:32px;">
-                <button type="submit" class="btn btn-round" name="changePassword">Update Password</button>
-            </div>
-        </form>
 
-        <hr style="border-color:rgba(255,255,255,0.1); margin-bottom:24px;">
+            <div class="settings-card-body">
 
-        <?php // E-Mail ändern ?>
-        <p style="font-size:13px; color:var(--primary-color); margin-bottom:12px; letter-spacing:1px;">CHANGE E-MAIL</p>
-        <p style="font-size:12px; color:var(--primary-color); opacity:0.5; margin-bottom:12px;">
-            Current: <?php echo htmlspecialchars($user['email']); ?>
-        </p>
+                <button
+                    class="btn-modern"
+                    onclick="document.getElementById('passwordDialog').showModal()">
 
-        <?php if (!empty($errors['email'])): ?>
-            <div class="alert alert-danger" style="font-size:13px;">⚠️ <?php echo $errors['email']; ?></div>
-        <?php endif; ?>
-        <?php if (!empty($success['email'])): ?>
-            <div class="alert alert-success" style="font-size:13px;">✓ <?php echo $success['email']; ?></div>
-        <?php endif; ?>
+                    Change Password
 
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <div class="form-group" style="margin-bottom:20px;">
-                <input type="email" name="new_email"
-                    class="form-control clean-input" placeholder="New E-Mail" required>
-            </div>
-            <div class="form-group" style="margin-bottom:20px; position:relative;">
-                <input type="password" name="email_password" id="email-pw"
-                    class="form-control clean-input" placeholder="Confirm with Password"
-                    style="padding-right:28px;" required>
-                <span onclick="togglePassword('email-pw', this)"
-                    style="position:absolute; right:4px; top:50%; transform:translateY(-50%); cursor:pointer; color:var(--primary-color); opacity:0.5;">
-                    <i class="ti ti-eye" style="font-size:16px;"></i>
-                </span>
-            </div>
-            <div class="form-group" style="margin-bottom:32px;">
-                <button type="submit" class="btn btn-round" name="changeEmail">Update E-Mail</button>
-            </div>
-        </form>
-
-        <hr style="border-color:rgba(255,255,255,0.1); margin-bottom:24px;">
-
-        <?php // Account löschen ?>
-        <p style="font-size:13px; color:#FF6B6B; margin-bottom:12px; letter-spacing:1px;">DELETE ACCOUNT</p>
-
-        <?php if (!empty($errors['delete'])): ?>
-            <div class="alert alert-danger" style="font-size:13px;">⚠️ <?php echo $errors['delete']; ?></div>
-        <?php endif; ?>
-
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <div class="form-group" style="margin-bottom:20px; position:relative;">
-                <input type="password" name="delete_password" id="delete-pw"
-                    class="form-control clean-input" placeholder="Confirm with Password"
-                    style="padding-right:28px;" required>
-                <span onclick="togglePassword('delete-pw', this)"
-                    style="position:absolute; right:4px; top:50%; transform:translateY(-50%); cursor:pointer; color:var(--primary-color); opacity:0.5;">
-                    <i class="ti ti-eye" style="font-size:16px;"></i>
-                </span>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-round" name="deleteAccount"
-                    onclick="return confirm('Are you sure? This cannot be undone.');"
-                    style="border-color:#FF6B6B; color:#FF6B6B;">
-                    Delete Account
                 </button>
+
             </div>
-        </form>
+
+        </div>
+
+        <!-- EMAIL -->
+
+        <div class="settings-card">
+
+            <div class="settings-card-header">
+                E-Mail
+            </div>
+
+            <div class="settings-card-body">
+
+                <p class="settings-muted">
+                    <?php echo htmlspecialchars($user['email']); ?>
+                </p>
+
+                <button
+                    class="btn-modern"
+                    onclick="document.getElementById('emailDialog').showModal()">
+
+                    Change E-Mail
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- DANGER ZONE -->
+
+        <div class="settings-card danger-zone">
+
+            <div class="settings-card-header">
+                Danger Zone
+            </div>
+
+            <div class="settings-card-body">
+
+                <button
+                    class="btn-danger-modern"
+                    onclick="document.getElementById('deleteDialog').showModal()">
+
+                    Delete Account
+
+                </button>
+
+            </div>
+
+        </div>
 
     </div>
-    <div class="card-footer">
-        <a href="index.php" class="btn btn-round">Back</a>
-    </div>
+
 </div>
+
+<!-- =========================
+     PASSWORD DIALOG
+========================= -->
+
+<dialog id="passwordDialog" class="modern-dialog">
+
+    <h3>Change Password</h3>
+
+    <?php if (!empty($errors['password'])): ?>
+        <div class="alert alert-danger">
+            <?php echo $errors['password']; ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if (!empty($success['password'])): ?>
+        <div class="alert alert-success">
+            <?php echo $success['password']; ?>
+        </div>
+    <?php endif; ?>
+
+    <form method="post">
+
+        <div class="input-group">
+            <input type="password"
+                   name="current_password"
+                   placeholder=" "
+                   required>
+            <label>Current Password</label>
+        </div>
+
+        <div class="input-group">
+            <input type="password"
+                   name="new_password"
+                   placeholder=" "
+                   required>
+            <label>New Password</label>
+        </div>
+
+        <div class="input-group">
+            <input type="password"
+                   name="confirm_new_password"
+                   placeholder=" "
+                   required>
+            <label>Confirm Password</label>
+        </div>
+
+        <div class="dialog-actions">
+
+            <button
+                type="button"
+                class="btn-modern"
+                onclick="document.getElementById('passwordDialog').close()">
+
+                Cancel
+
+            </button>
+
+            <button
+                type="submit"
+                name="changePassword"
+                class="btn-modern">
+
+                Save
+
+            </button>
+
+        </div>
+
+    </form>
+
+</dialog>
+
+<!-- =========================
+     EMAIL DIALOG
+========================= -->
+
+<dialog id="emailDialog" class="modern-dialog">
+
+    <h3>Change E-Mail</h3>
+
+    <?php if (!empty($errors['email'])): ?>
+        <div class="alert alert-danger">
+            <?php echo $errors['email']; ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if (!empty($success['email'])): ?>
+        <div class="alert alert-success">
+            <?php echo $success['email']; ?>
+        </div>
+    <?php endif; ?>
+
+    <form method="post">
+
+        <div class="input-group">
+            <input type="email"
+                   name="new_email"
+                   placeholder=" "
+                   required>
+            <label>New E-Mail</label>
+        </div>
+
+        <div class="input-group">
+            <input type="password"
+                   name="email_password"
+                   placeholder=" "
+                   required>
+            <label>Confirm Password</label>
+        </div>
+
+        <div class="dialog-actions">
+
+            <button
+                type="button"
+                class="btn-modern"
+                onclick="document.getElementById('emailDialog').close()">
+
+                Cancel
+
+            </button>
+
+            <button
+                type="submit"
+                name="changeEmail"
+                class="btn-modern">
+
+                Save
+
+            </button>
+
+        </div>
+
+    </form>
+
+</dialog>
+
+<!-- =========================
+     DELETE DIALOG
+========================= -->
+
+<dialog id="deleteDialog" class="modern-dialog">
+
+    <h3>Delete Account?</h3>
+
+    <p class="settings-muted">
+        This action cannot be undone.
+    </p>
+
+    <?php if (!empty($errors['delete'])): ?>
+        <div class="alert alert-danger">
+            <?php echo $errors['delete']; ?>
+        </div>
+    <?php endif; ?>
+
+    <form method="post">
+
+        <div class="input-group">
+            <input type="password"
+                   name="delete_password"
+                   placeholder=" "
+                   required>
+            <label>Confirm Password</label>
+        </div>
+
+        <div class="dialog-actions">
+
+            <button
+                type="button"
+                class="btn-modern"
+                onclick="document.getElementById('deleteDialog').close()">
+
+                Cancel
+
+            </button>
+
+            <button
+                type="submit"
+                name="deleteAccount"
+                class="btn-danger-modern">
+
+                Delete
+
+            </button>
+
+        </div>
+
+    </form>
+
+</dialog>
 
 <?php require_once __DIR__ . '/templates/footer.php'; ?>

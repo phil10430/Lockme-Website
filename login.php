@@ -39,9 +39,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['submitLogin'])) {
                 } elseif (password_verify($password, $user['password'])) {
                     // Passwort korrekt → Login erfolgreich
                     $_SESSION["loggedin"] = true;
-                    $_SESSION["id"] = $user["id"];
+                    $_SESSION["id"] =       $user["id"];
                     $_SESSION["username"] = $user["username"];
-
                     // Optional: Loginstatus in DB setzen
                     $update = $pdo->prepare("UPDATE users SET appLoggedIn = 1 WHERE id = :id");
                     $update->execute([':id' => $user['id']]);
