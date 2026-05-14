@@ -40,7 +40,7 @@
                 </div>
 
                 <div style="text-align:right; margin-bottom:24px;">
-                    <a href="forgot_password_page.php" class="forgot-link" style="font-size:12px; opacity:0.6;">Forgot password?</a>
+                    <a href="forgot_password_page.php" class="forgot-link">Forgot password?</a>
                 </div>
 
                 <button type="submit" class="btn btn-round w-100" name="submitLogin">LOGIN</button>
