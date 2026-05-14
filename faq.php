@@ -45,6 +45,13 @@ require_once __DIR__ . '/templates/header.php';
             </div>
         </div>
 
+          <div class="faq-item">
+            <button class="faq-question">What happens when your LockMeBox is locked and the battery is empty?</button>
+            <div class="faq-answer">
+                Your LockMeBox will stay locked until you recharge it.
+            </div>
+        </div>
+
     </div>
 
 </div>

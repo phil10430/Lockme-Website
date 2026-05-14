@@ -46,7 +46,11 @@ if (!empty($openTime)) {
     $openTime = date("y-m-d H:i", strtotime($openTime));
 }
 
+if ($proVersion == "1") {
+
+
 echo '<div class="overlay-card">';
+
 // Hintergrundbild
 echo '<img id="bg-image" class="bg-image" alt="Background" ';
 if (($appLoggedIn==1) && ($boxName!=0) && ($appActive==1)) {
@@ -120,9 +124,17 @@ echo '</div>'; // card-content
 
 echo '</div>'; // overlay-card
 
-echo '<div class="card-footer">';
-if ($proVersion == "1") {
-    echo "LockMeBox Pro";
+  
+} else {
+
+echo '<div class="overlay-card">'; // Hintergrundbild 
+echo '<img id="bg-image" class="bg-image" alt="Background" src="/assets/images/lmb_start.png">';
+include __DIR__ . '/templates/get_pro_form.php'; 
+echo '</div>'; // overlay-card
+
 }
+
+echo '<div class="card-footer">';
+
 echo '</div>';
 ?>
