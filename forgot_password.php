@@ -44,27 +44,32 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         ]);
 
         // Mail senden
-        $FromName  = "lockmebox.com";
+       $mlink = "https://lockmebox.com/password_reset_page.php?token=$token";
+
+        ob_start();
+        include "templates/email_forgot_password.php";
+        $msg = ob_get_clean();
+        // Mail Config
+        $FromName  = "LockMeBox";
         $FromEmail = "noreply@lockmebox.com";
-        $ReplyTo   = "noreply@lockmebox.com";
+        $ReplyTo   = "support@lockmebox.com";
 
-        $headers  = "MIME-Version: 1.0\n";
-        $headers .= "Content-type: text/html; charset=utf-8\n";
-        $headers .= "From: $FromName <$FromEmail>\n";
-        $headers .= "Reply-To: $ReplyTo\n";
+        $headers  = "MIME-Version: 1.0\r\n";
+        $headers .= "Content-type: text/html; charset=UTF-8\r\n";
+        $headers .= "From: $FromName <$FromEmail>\r\n";
+        $headers .= "Reply-To: $ReplyTo\r\n";
+        $headers .= "X-Mailer: PHP/" . phpversion() . "\r\n";
 
-        $subject = "Your password reset link";
-        $mlink   = "https://lockmebox.com/password_reset_page.php?token=$token";
+        $subject = "Reset your password";
 
-        $msg = "
-            <html>
-            <body>
-                Reset your password with this <a href='$mlink'>link</a>.
-            </body>
-            </html>
-        ";
-
-        @mail($user['email'], $subject, $msg, $headers, '-f'.$FromEmail);
+        // Mail senden
+        mail(
+            $user['email'],
+            $subject,
+            $msg,
+            $headers,
+            '-f' . $FromEmail
+        );
     }
 
     // Immer gleiche Meldung für Sicherheit

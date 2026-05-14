@@ -68,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $subject = "Confirm your registration";
 
-       $headers  = "MIME-Version: 1.0\r\n";
+        $headers  = "MIME-Version: 1.0\r\n";
         $headers .= "Content-type: text/html; charset=UTF-8\r\n";
         $headers .= "From: LockMeBox <noreply@lockmebox.com>\r\n";
         $headers .= "Reply-To: support@lockmebox.com\r\n";
