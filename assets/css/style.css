@@ -123,6 +123,8 @@ a:active{
     position:absolute;
     left:50%;
     transform:translateX(-50%);
+    display: flex;
+    gap:28px; /* Abstand zwischen Items */
 }
 
 .top-center a{
@@ -197,12 +199,26 @@ a:active{
     text-align:center;
 
     padding:
-        120px 20px
+        0px 20px
         40px;
 }
 
 .hero-content{
     max-width:850px;
+}
+.hero-subtitle{
+    font-size:18px;
+    color:var(--primary-color);
+    opacity:0.85;
+    margin-bottom:12px;
+}
+
+.hero-text{
+    font-size:15px;
+    line-height:1.8;
+    color:var(--secondary-color);
+    max-width:520px;
+    margin:0 auto 40px;
 }
 
 .hero h1{

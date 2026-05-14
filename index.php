@@ -45,35 +45,35 @@ require_once __DIR__ . '/templates/header.php';
 <div class="landing-wrapper">
 
 
-    <!-- HERO -->
+
     <section class="hero">
 
-        <div class="hero-content">
+    <div class="hero-content">
 
-            <h1>LockMeBox</h1>
+        <h1>LockMeBox</h1>
 
-            <p>
-                The solution for modern key holding. <br> 
-                Developed, designed and hand made in Germany exactly to your needs. <br> 
-                No matter if you are locked up in your chastity belt or if you are wearing a lockable collar. <br> 
-                In each case you or your key-holder need to store your keys.<br> 
-                You can then choose whether to lock the box with a timer or a password.
-            </p>
+        <p class="hero-subtitle">
+            Key holding made easy.
+        </p>
 
-            <div class="hero-buttons">
+        <p class="hero-text">
+            Password or timer-based locking for modern play.
+            Designed by kinksters, for kinksters.
+        </p>
 
-                <a href="https://kinkystuffmade.com/product/lockmebox" target="_blank">
+        <div class="hero-buttons">
+
+             <a href="https://kinkystuffmade.com/product/lockmebox" target="_blank">
                     <span class="btn-modern">Shop Now</span>
-                </a>
+            </a>
 
-                <a href="https://play.google.com/store/apps/details?id=com.kinkystuffmade.lockmebox&hl=de" target="_blank">
+            <a href="https://play.google.com/store/apps/details?id=com.kinkystuffmade.lockmebox&hl=de" target="_blank">
                     <span class="btn-modern">Get App</span>
-                </a>
-
-
-            </div>
+            </a>
 
         </div>
+
+    </div>
 
     </section>
 

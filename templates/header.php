@@ -49,6 +49,7 @@
 
             <!-- CENTER -->
             <div class="top-center">
+                <a href="/index.php">CONTROL</a>
                 <a href="/faq.php">FAQ</a>
             </div>
 
