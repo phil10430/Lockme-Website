@@ -58,11 +58,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         ");
         $stmt->execute([$username, $email, $hash, $token]);
 
-        // 🔹 E-Mail mit Bestätigungslink senden
-        $verify_link = "https://lockmebox.com/verify_email.php?token=$token";
+      $verify_link = "https://lockmebox.com/verify_email.php?token=$token";
+
+        $username_safe = htmlspecialchars($username);
+
+        ob_start();
+        include "templates/email_verify.php";
+        $message = ob_get_clean();
+
         $subject = "Confirm your registration";
-        $message = "Hello $username,\n\nPlease verify your email by clicking this link:\n$verify_link";
-        $headers = "From: noreply@lockmebox.com\r\n";
+
+       $headers  = "MIME-Version: 1.0\r\n";
+        $headers .= "Content-type: text/html; charset=UTF-8\r\n";
+        $headers .= "From: LockMeBox <noreply@lockmebox.com>\r\n";
+        $headers .= "Reply-To: support@lockmebox.com\r\n";
 
        if (mail($email, $subject, $message, $headers)) {
         $_SESSION['flash_message'] = "Registration successful! Please check your email.";
