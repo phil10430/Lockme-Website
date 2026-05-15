@@ -1,7 +1,8 @@
 <?php if (!empty($login_err)): ?>
-<div class="alert alert-danger" style="margin-bottom:16px; font-size:13px;">
-    ⚠️ <?php echo $login_err; ?>
-</div>
+    <div class="auth-message auth-error">
+        <span class="auth-message-icon">⚠</span>
+        <span><?= htmlspecialchars($login_err) ?></span>
+    </div>
 <?php endif; ?>
 
 <div class="overlay-card">

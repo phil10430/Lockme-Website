@@ -13,8 +13,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Eingaben holen & trimmen
     $username   = trim($_POST["username"] ?? '');
     $password   = trim($_POST["password"] ?? '');
-    $proVersion = trim($_POST["proVersion"] ?? '');
-    
+    $purchaseToken = trim($_POST["purchaseToken"] ?? '');
+    $subscriptionPlatform = trim($_POST["subscriptionPlatform"] ?? '');
+    $productId = trim($_POST["productId"] ?? '');
+
+    // $proVersion = trim($_POST["proVersion"] ?? '');
+    // besser sichere variante +ber validierung vom purchaseToken
+    if (!empty($purchaseToken)) {
+        $proVersion = 1;
+    } else {
+        $proVersion = 0;
+    }
+
+
     // Validierung
     if (empty($username) || empty($password)) {
         echo "username or password is empty.";
@@ -34,13 +45,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $stmt = $pdo->prepare("
                     UPDATE users
                     SET app_logged_in = 1,
-                        pro_version = :pro_version
+                        pro_version = :pro_version,
+                        pro_version_purchase_token = :token,
+                        pro_version_subscription_platform = :platform,
+                        pro_version_product_id = :product
                     WHERE username = :username
                 ");
 
                 $stmt->execute([
                     ':username' => $username,
-                    ':pro_version' => $proVersion
+                    ':pro_version' => $proVersion,
+                    ':token' => $purchaseToken,
+                    ':platform' => $subscriptionPlatform,
+                    ':product' => $productId
                 ]);
 
                 // Session setzen (optional)

@@ -7,8 +7,8 @@
     --button-bg-color: #000000;
     --secondary-color: #717171;
     --hover-color: #373737;
-    --link-color: #ffad65;
-    --link-hover-color: #ffcda2;
+    --link-color: #c2c2c2;
+    --link-hover-color: #9b9b9b;
     --mainbackground-color: #000000;
 }
 
@@ -1109,4 +1109,39 @@ footer{
     .dialog-actions button{
         width:100%;
     }
+}
+
+/* =========================
+   AUTH-MESSAGES
+========================= */
+
+.auth-message{
+    display:flex;
+    align-items:center;
+
+    gap:10px;
+
+    padding:14px 16px;
+
+    border-radius:14px;
+
+    font-size:14px;
+
+    margin-bottom:18px;
+}
+
+.auth-error{
+    background:rgba(255, 80, 80, 0.10);
+
+    border:1px solid rgba(255, 80, 80, 0.18);
+
+    color:#ffb3b3;
+
+    backdrop-filter:blur(8px);
+}
+
+.auth-message-icon{
+    font-size:15px;
+
+    opacity:0.9;
 }
