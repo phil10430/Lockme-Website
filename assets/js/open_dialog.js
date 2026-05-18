@@ -1,3 +1,4 @@
+ /*--------------- after code change in js -> cmd+shift+R --------------*/
 function openOpenDialog() {
     document.getElementById("open-dialog").style.display = "flex";
 }

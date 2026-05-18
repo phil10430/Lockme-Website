@@ -13,7 +13,7 @@
         <?php include __DIR__ . '/templates/register_form.php'; ?>
     </div>
     <div class="card-footer">
-        Already have an account? <a href="lmb_control.php">Login here</a>
+        Already have an account? <a href="control_center.php">Login here</a>
     </div>
 </div>
 

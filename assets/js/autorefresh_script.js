@@ -1,3 +1,4 @@
+ /*--------------- after code change in js -> cmd+shift+R --------------*/
 function refreshData(name){
     $(document).ready(function(){
         function getData(){

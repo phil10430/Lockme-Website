@@ -43,7 +43,7 @@ if (DEBUG_WEBSITE) {
 }
 
 if (!empty($openTime)) {
-    $openTime = date("y-m-d H:i", strtotime($openTime));
+    $openTime = date("Y-m-d H:i", strtotime($openTime));
 }
 
 if ($proVersion == "1") {

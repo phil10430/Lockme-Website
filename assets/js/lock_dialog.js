@@ -1,17 +1,23 @@
+ /*--------------- after code change in js -> cmd+shift+R --------------*/
 function lockDialog(mode) {
-    // mode: 'password', 'timer', 'passwordTimer'
-    
+
+   // Reset: alle Felder auf definierten Ausgangszustand
+
+    $("#lock-dialog-password-group").hide();
+    $("#lock-dialog-confirm-group").hide();
+    $("#lock-dialog-date-group").hide();
+    $("#lock-dialog-time-group").hide();
+
     var showPassword        =   (mode === 'password' || mode === 'passwordTimer') ||
                                 (mode === 'extendTime' && window.protectionLevelPassword == 1);
-    var showConfirmPassword =   (mode === 'password' || mode === 'passwordTimer') ||
-                                (mode === 'extendTime' && window.protectionLevelPassword == 1);
+    var showConfirmPassword =   (mode === 'password' || mode === 'passwordTimer');
     var showTimer           =   (mode === 'timer' || mode === 'passwordTimer' || mode === 'extendTime');
     
     // Felder ein/ausblenden
-    $("#lock-dialog-password-group").toggle(showPassword);
-    $("#lock-dialog-confirm-group").toggle(showConfirmPassword);
-    $("#lock-dialog-date-group").toggle(showTimer);
-    $("#lock-dialog-time-group").toggle(showTimer);
+    if (showPassword)        $("#lock-dialog-password-group").show();
+    if (showConfirmPassword) $("#lock-dialog-confirm-group").show();
+    if (showTimer)           $("#lock-dialog-date-group").show();
+    if (showTimer)           $("#lock-dialog-time-group").show();
 
     // Titel anpassen
     var titles = {
@@ -21,17 +27,22 @@ function lockDialog(mode) {
         'extendTime':   'Extend Timer'
     };
 
+     // Titel anpassen
+    var btnSubmitName = {
+        'password':      'LOCK',
+        'timer':         'LOCK',
+        'passwordTimer': 'LOCK',
+        'extendTime':   'EXTEND TIMER'
+    };
 
     $("#lock-dialog-title").text(titles[mode]);
-
-
-
+    $("#lock-dialog-btn-submit").text(btnSubmitName[mode]);
 
     var checkboxLabels = {
     'password':      'I understand that losing the password will permanently prevent access to the box.',
     'timer':         'I confirm that I entered the correct date and time. There is no unlock option before that.',
     'passwordTimer': 'I confirm that I entered the correct password, date and time. There is no unlock option without password before that.',
-    'extendTime':    'I confirm that I entered the correct date and time. There is no unlock option before that.'
+    'extendTime':    'I confirm that I entered the correct date and time. There is no unlock option without password before that.'
     };
     $("#lock-dialog-checkbox-label").text(checkboxLabels[mode]);
 
@@ -69,8 +80,7 @@ function submitLockDialog() {
     var mode = $("#lock-dialog").data("mode");
     var showPassword        = (mode === 'password' || mode === 'passwordTimer') ||
                             (mode === 'extendTime' && window.protectionLevelPassword == 1);
-    var showConfirmPassword = (mode === 'password' || mode === 'passwordTimer') ||
-                            (mode === 'extendTime' && window.protectionLevelPassword == 1);
+    var showConfirmPassword = (mode === 'password' || mode === 'passwordTimer');
     var showTimer           = (mode === 'timer' || mode === 'passwordTimer' || mode === 'extendTime');
     var err = $("#lock-dialog-error");
 

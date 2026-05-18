@@ -75,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
        if (mail($email, $subject, $message, $headers)) {
         $_SESSION['flash_message'] = "Registration successful! Please check your email.";
-        header("Location: index.php");
+        header("Location: control_center.php");
         exit;
        }
 

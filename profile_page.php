@@ -107,7 +107,7 @@ $proVersion = $row['pro_version'];
         <div class="settings-card danger-zone">
 
             <div class="settings-card-header">
-                Danger Zone
+                Account
             </div>
 
             <div class="settings-card-body">

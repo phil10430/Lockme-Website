@@ -12,7 +12,7 @@
                 style="width:100%; padding:12px; margin-bottom:12px; border-radius:12px; border:1px solid rgba(255,255,255,0.25); background:rgba(255,255,255,0.12); color:var(--primary-color); box-sizing:border-box;">
         </div>
 
-         <div id="lock-dialog-password-group">
+        <div id="lock-dialog-password-group">
     <div style="position:relative; margin-bottom:12px;">
         <input type="password" id="lock-dialog-password" placeholder="Password"
             style="width:100%; padding:12px; padding-right:40px; border-radius:12px; border:1px solid rgba(255,255,255,0.25); background:rgba(255,255,255,0.12); color:var(--primary-color); box-sizing:border-box;">
@@ -22,6 +22,7 @@
         </span>
     </div>
 </div>
+
 <div id="lock-dialog-confirm-group">
     <div style="position:relative; margin-bottom:12px;">
         <input type="password" id="lock-dialog-confirm" placeholder="Confirm Password"
@@ -42,7 +43,7 @@
 
         <div style="display:flex; justify-content:center; gap:10px; margin-top:6px;">
             <button type="button" onclick="closeLockDialog()" class="btn btn-round">Cancel</button>
-            <button type="button" onclick="submitLockDialog()" class="btn btn-round" style="font-weight:bold;">Lock</button>
+            <button type="button" id="lock-dialog-btn-submit" onclick="submitLockDialog()" class="btn btn-round" style="font-weight:bold;">Lock</button>
         </div>
     </div>
 </div>

@@ -67,7 +67,7 @@
 
                 <?php else: ?>
 
-                    <a href="/lmb_control.php" title="Login">
+                    <a href="/control_center.php" title="Login">
                         <i class="ti ti-login"></i>
                     </a>
 

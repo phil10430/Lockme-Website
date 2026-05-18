@@ -21,20 +21,19 @@ if (isset($_GET['token'])) {
         $_SESSION['flash_message'] = "✅ Email successfully verified! You can now log in.";
 
         // Direkt weiterleiten zur Startseite
-        header("Location: index.php");
+        header("Location: control_center.php");
         exit;
     } else {
         // Token ungültig oder bereits genutzt
         $_SESSION['flash_message'] = "❌ Invalid or expired verification link.";
 
-        // Auch hier zurück zu index.php leiten
-        header("Location: index.php");
+        header("Location: control_center.php");
         exit;
     }
 } else {
     // Kein Token übergeben → einfach zurückleiten
     $_SESSION['flash_message'] = "❌ No verification token provided.";
-    header("Location: index.php");
+    header("Location: control_center.php");
     exit;
 }
 ?>

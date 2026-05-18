@@ -6,7 +6,7 @@
             GO PRO
         </div>
 
-        <h2>Unlock Pro Features</h2>
+        <h2>Unlock all Pro Features</h2>
 
         <div class="pro-features">
 
@@ -26,7 +26,7 @@
         <a href="https://play.google.com/store/apps/details?id=com.kinkystuffmade.lockmebox&utm_source=emea_Med"
            target="_blank"
            class="btn-modern">
-            Start free 7 day trial
+            GO PRO
         </a>
 
         <p class="pro-note">

@@ -55,7 +55,7 @@
     <a href="https://lockmebox.com" target="_blank" style="text-decoration:none;">
 
         <img 
-            src="https://lockmebox.com/assets/images/lmb_logo_text.png"
+            src="https://lockmebox.com/assets/images/lmb_logo_text_black_bg.png"
             alt="LockMeBox"
             style="
                 width:120px;

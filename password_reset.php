@@ -54,7 +54,7 @@ if (isset($_POST['sub_set'])) {
         $stmt = $pdo->prepare($sql);
         $stmt->execute([':token' => $token]);
 
-        $success = "<div class='alert alert-success'>Your password has been updated successfully. Login <a href='lmb_control.php'>here</a>.</div>";
+        $success = "<div class='alert alert-success'>Your password has been updated successfully. Login <a href='control_center.php'>here</a>.</div>";
         $hide = 1;
     }
 }
