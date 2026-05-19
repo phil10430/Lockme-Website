@@ -1,3 +1,9 @@
+<?php
+$packageName = "com.kinkystuffmade.lockmebox";
+$appScheme   = "lockmebox://open";
+?>
+
+
 <div class="card-content pro-overlay-content">
 
     <div class="pro-mini-card">
@@ -23,7 +29,7 @@
     
         </div>
 
-        <a href="https://play.google.com/store/apps/details?id=com.kinkystuffmade.lockmebox&utm_source=emea_Med"
+        <a href="#" onclick="openApp(); return false;"
            target="_blank"
            class="btn-modern">
             GO PRO
@@ -36,3 +42,4 @@
     </div>
 
 </div>
+

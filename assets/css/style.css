@@ -248,6 +248,18 @@ a:active{
 .hero-buttons a{
     text-decoration:none;
 }
+.btn-modern-ghost {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.5);
+    color: var(--primary-color);
+    opacity: 0.7;
+    /* gleiche padding/border-radius wie btn-modern */
+}
+
+.btn-modern-ghost:hover {
+    opacity: 1;
+    border-color: var(--primary-color);
+}
 
 /* =========================================================
    BUTTONS
