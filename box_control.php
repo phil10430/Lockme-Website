@@ -19,6 +19,7 @@ if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1))
         $openTimeUnix = PLACEHOLDER; // initialize as placeholder
         $openTime = test_input($_POST['openTime']);
         $password = test_input($_POST['password']);  // kommt aus #password
+        $openTimeRandom = test_input($_POST['openTimeRandom']);
 
         if (empty($password))
         {
@@ -67,6 +68,12 @@ if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1))
                 }else{
                     $boxControlError = "Invalid password! Password must only contain a-z A-Z 0-9 and have 1 to 10 characters.";
                 }
+            }
+
+            if (isset($_POST['closeBoxWithRandomTimer'])) 
+            {
+                $openTimeUnix   = intval($openTimeRandom);
+                $protectionLevelTimer = "1";
             }
 
             if (empty($boxControlError)){

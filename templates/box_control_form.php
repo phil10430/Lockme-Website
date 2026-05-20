@@ -2,6 +2,7 @@
     
     <input type="hidden" id="password" name="password">
     <input type="hidden" id="openTimeField" name="openTime">
+    <input type="hidden" id="openTimeRandomField" name="openTimeRandom">
 
 <div class="boxcontrol-elements">
     <!-- OPEN Row -->
@@ -18,7 +19,7 @@
     <!-- EXTEND TIME Row -->
     <div style="grid-column: 1 / -1; display:flex; justify-content:center;">
         <button type="button" name= "extendTime" onclick="lockDialog('extendTime')" class="btn btn-round" id="extend-time-btn" style="width:80px;">
-                <img src="/assets/images/lockme_symbol_add_time_white.png" style="width:30px; height:20px; object-fit:contain;">
+                <img src="/assets/images/lmb_symbol_add_time_white.png" style="width:30px; height:20px; object-fit:contain;">
         </button>
         <button type="submit" name="extendTime" id="extendTime" style="display:none;"></button>
     </div>
@@ -42,11 +43,20 @@
     </div>
 
     <!-- CLOSE Row 2 -->
-    <div style="grid-column: 1 / -1; display:flex; justify-content:center;">
+    <div style="grid-column: 1 / -1; display:flex; justify-content:center;  gap:10px;">
+
         <button type="button" onclick="lockDialog('passwordTimer')" class="btn btn-round" id="close-box-pwtimer" style="width:80px;">
-            <img src="/assets/images/lmb_symbol_timerpw_white.png" style="width:40px; height:24px; object-fit:contain;">
+            <img src="/assets/images/lmb_symbol_timerpw_white.png" style="width:45px; height:30px; object-fit:contain;">
         </button>
         <button type="submit" name="closeBoxWithPasswordTimer" id="closeBoxWithPasswordTimer" style="display:none;"></button>
+
+
+         <button type="button" onclick="openRandomTimerDialog()" class="btn btn-round" id="close-box-randtimer" style="width:80px;">
+            <img src="/assets/images/lmb_symbol_timer_rand_white.png" style="width:40px; height:24px; object-fit:contain;">
+        </button>
+
+        <button type="submit" name="closeBoxWithRandomTimer" id="closeBoxWithRandomTimer" style="display:none;"></button>
+
     </div>
 </div>
 </form>

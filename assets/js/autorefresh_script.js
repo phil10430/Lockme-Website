@@ -22,6 +22,7 @@ function refreshData(name){
                             $("#close-box-pw-btn").show();
                             $("#close-box-timer").show();
                             $("#close-box-pwtimer").show();
+                            $("#close-box-randtimer").show();
                             $("#label-choose-lock").show();
 
                             // Verstecken
@@ -47,6 +48,7 @@ function refreshData(name){
                             $("#close-box-pw-btn").hide();
                             $("#close-box-timer").hide();
                             $("#close-box-pwtimer").hide();
+                            $("#close-box-randtimer").hide();
                             $("#label-choose-lock").hide();
                       
                             // Protection Level

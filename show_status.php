@@ -3,6 +3,7 @@ session_start();
 
 include __DIR__ . '/templates/open_dialog.php'; 
 include __DIR__ . '/templates/lock_dialog.php'; 
+include __DIR__ . '/templates/lock_dialog_random_time.php'; 
 
 // DEBUG -> coomment out autorefresh in header.php
 define('DEBUG_WEBSITE', false);
