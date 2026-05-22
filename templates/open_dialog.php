@@ -2,7 +2,7 @@
     <div style="background:rgba(255,255,255,0.15); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.25); border-radius:16px; padding:24px; width:320px;">
 
         <!-- Titel -->
-        <p style="text-align:center; color:var(--primary-color); font-size:18px; margin-bottom:18px;">Open by Password</p>
+        <p style="text-align:center; color:var(--primary-color); font-size:18px; margin-bottom:18px;">Open your LockMeBox</p>
 
         <!-- Password -->
         <input type="password" id="open-password"

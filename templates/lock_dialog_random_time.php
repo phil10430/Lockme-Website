@@ -3,7 +3,7 @@
 
         <!-- Titel -->
         <p style="text-align:center; color:var(--primary-color); font-size:15px; margin-bottom:18px;">
-            Lock with Random Time
+            Lock by Random Timer
         </p>
 
         <!-- Minimum Time -->

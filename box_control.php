@@ -21,9 +21,12 @@ if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1))
         $password = test_input($_POST['password']);  // kommt aus #password
         $openTimeRandom = test_input($_POST['openTimeRandom']);
 
+        // Password Check
         if (empty($password))
         {
             $password = PLACEHOLDER;
+        } elseif (!isValidPassword($password)){
+            $boxControlError = "Invalid password! Password must only contain a-z A-Z 0-9 and have 1 to 10 characters.";
         }
       
      
@@ -43,11 +46,7 @@ if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1))
             
             if (isset($_POST['closeBoxWithPw'])) 
             {
-                if (isValidPassword($password)) {
                     $protectionLevelPassword = "1";
-                }else{
-                    $boxControlError = "Invalid password! Password must only contain a-z A-Z 0-9 and have 1 to 10 characters.";
-                }
             }
 
             
@@ -63,11 +62,8 @@ if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1))
                         $boxControlError = "Invalid date";
                 }
 
-                if (isValidPassword($password)) {
-                    $protectionLevelPassword = "1";
-                }else{
-                    $boxControlError = "Invalid password! Password must only contain a-z A-Z 0-9 and have 1 to 10 characters.";
-                }
+                $protectionLevelPassword = "1";
+             
             }
 
             if (isset($_POST['closeBoxWithRandomTimer'])) 
@@ -91,12 +87,11 @@ if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1))
             if (isset($_POST['openBox'])) 
             {
                 $wishedAction = MSG_OPEN . MSG_SEPARATOR .
-                $password ;
+                PLACEHOLDER ;
             }     
             if (isset($_POST['openBoxWithPw'])) 
-            {
-                $wishedAction = MSG_OPEN . MSG_SEPARATOR .
-                $password ;
+            {    
+              $wishedAction = MSG_OPEN . MSG_SEPARATOR . $password ;     
             }      
 
             if (isset($_POST['extendTime'])) {
