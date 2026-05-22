@@ -48,9 +48,9 @@
         <p id="rt-error" style="display:none; color:#FF6B6B; font-size:12px; margin-bottom:10px;"></p>
 
         <!-- Buttons -->
-        <div style="display:flex; justify-content:center; gap:10px; margin-top:6px;">
-            <button type="button" onclick="closeRandomTimerDialog()" class="btn btn-round">Cancel</button>
-            <button type="button" onclick="submitRandomTimerDialog()" class="btn btn-round" style="font-weight:bold;">Lock</button>
+        <div style="display:flex; justify-content:center; gap:12px; margin-top:22px;">
+            <button type="button" onclick="closeRandomTimerDialog()" class="btn-dialog">Cancel</button>
+            <button type="button" onclick="submitRandomTimerDialog()" class="btn-dialog btn-dialog-primary">Lock</button>
         </div>
 
     </div>

@@ -13,9 +13,9 @@
         <p id="open-error" style="display:none; color:#FF6B6B; font-size:12px; margin-bottom:10px;"></p>
 
         <!-- Buttons -->
-        <div style="display:flex; justify-content:center; gap:10px; margin-top:6px;">
-            <button onclick="closeOpenDialog()" class="btn btn-round">Cancel</button>
-            <button onclick="submitOpenDialog()" class="btn btn-round" style="font-weight:bold;">Open</button>
+       <div style="display:flex; gap:12px; margin-top:22px;">
+            <button type="button" onclick="closeOpenDialog()" class="btn-dialog">Cancel</button>
+            <button type="button" onclick="submitOpenDialog()" class="btn-dialog btn-dialog-primary">Open</button>
         </div>
     </div>
 </div>

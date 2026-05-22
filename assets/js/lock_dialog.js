@@ -29,10 +29,10 @@ function lockDialog(mode) {
 
      // Titel anpassen
     var btnSubmitName = {
-        'password':      'LOCK',
-        'timer':         'LOCK',
-        'passwordTimer': 'LOCK',
-        'extendTime':   'EXTEND TIMER'
+        'password':      'Lock',
+        'timer':         'Lock',
+        'passwordTimer': 'Lock',
+        'extendTime':   'Extend Timer'
     };
 
     $("#lock-dialog-title").text(titles[mode]);

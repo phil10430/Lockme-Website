@@ -7,43 +7,45 @@
             <input type="date" id="lock-dialog-date"
                 style="width:100%; padding:12px; margin-bottom:12px; border-radius:12px; border:1px solid rgba(255,255,255,0.25); background:rgba(255,255,255,0.12); color:var(--primary-color); box-sizing:border-box;">
         </div>
+
         <div id="lock-dialog-time-group">
             <input type="time" id="lock-dialog-time"
                 style="width:100%; padding:12px; margin-bottom:12px; border-radius:12px; border:1px solid rgba(255,255,255,0.25); background:rgba(255,255,255,0.12); color:var(--primary-color); box-sizing:border-box;">
         </div>
 
         <div id="lock-dialog-password-group">
-    <div style="position:relative; margin-bottom:12px;">
-        <input type="password" id="lock-dialog-password" placeholder="Password"
-            style="width:100%; padding:12px; padding-right:40px; border-radius:12px; border:1px solid rgba(255,255,255,0.25); background:rgba(255,255,255,0.12); color:var(--primary-color); box-sizing:border-box;">
-        <span onclick="togglePassword('lock-dialog-password', this)" 
-            style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; color:var(--primary-color); opacity:0.6;">
-            <i class="ti ti-eye" style="font-size:18px;"></i>
-        </span>
-    </div>
-</div>
+            <div style="position:relative; margin-bottom:12px;">
+                <input type="password" id="lock-dialog-password" placeholder="Password"
+                    style="width:100%; padding:12px; padding-right:40px; border-radius:12px; border:1px solid rgba(255,255,255,0.25); background:rgba(255,255,255,0.12); color:var(--primary-color); box-sizing:border-box;">
+                <span onclick="togglePassword('lock-dialog-password', this)"
+                    style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; color:var(--primary-color); opacity:0.6;">
+                    <i class="ti ti-eye" style="font-size:18px;"></i>
+                </span>
+            </div>
+        </div>
 
-<div id="lock-dialog-confirm-group">
-    <div style="position:relative; margin-bottom:12px;">
-        <input type="password" id="lock-dialog-confirm" placeholder="Confirm Password"
-            style="width:100%; padding:12px; padding-right:40px; border-radius:12px; border:1px solid rgba(255,255,255,0.25); background:rgba(255,255,255,0.12); color:var(--primary-color); box-sizing:border-box;">
-        <span onclick="togglePassword('lock-dialog-confirm', this)"
-            style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; color:var(--primary-color); opacity:0.6;">
-            <i class="ti ti-eye" style="font-size:18px;"></i>
-        </span>
-    </div>
-</div>
+        <div id="lock-dialog-confirm-group">
+            <div style="position:relative; margin-bottom:12px;">
+                <input type="password" id="lock-dialog-confirm" placeholder="Confirm Password"
+                    style="width:100%; padding:12px; padding-right:40px; border-radius:12px; border:1px solid rgba(255,255,255,0.25); background:rgba(255,255,255,0.12); color:var(--primary-color); box-sizing:border-box;">
+                <span onclick="togglePassword('lock-dialog-confirm', this)"
+                    style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; color:var(--primary-color); opacity:0.6;">
+                    <i class="ti ti-eye" style="font-size:18px;"></i>
+                </span>
+            </div>
+        </div>
 
         <label style="color:var(--primary-color); font-size:13px; display:flex; gap:8px; margin-bottom:12px;">
             <input type="checkbox" id="lock-dialog-checkbox">
-                <span id="lock-dialog-checkbox-label">I confirm that I understand. There is no unlock option before that.</span>
+            <span id="lock-dialog-checkbox-label">I confirm that I understand. There is no unlock option before that.</span>
         </label>
 
         <p id="lock-dialog-error" style="display:none; color:#FF6B6B; font-size:12px; margin-bottom:10px;"></p>
 
-        <div style="display:flex; justify-content:center; gap:10px; margin-top:6px;">
-            <button type="button" onclick="closeLockDialog()" class="btn btn-round">Cancel</button>
-            <button type="button" id="lock-dialog-btn-submit" onclick="submitLockDialog()" class="btn btn-round" style="font-weight:bold;">Lock</button>
+        <div style="display:flex; gap:12px; margin-top:22px;">
+            <button type="button" onclick="closeLockDialog()" class="btn-dialog">Cancel</button>
+            <button type="button" id="lock-dialog-btn-submit" onclick="submitLockDialog()" class="btn-dialog btn-dialog-primary">Lock</button>
         </div>
+
     </div>
 </div>

@@ -287,22 +287,65 @@ a:active{
 
 /* OLD ROUND BUTTONS */
 
-.btn-round{
-    background-color:var(--button-bg-color);
-    color:var(--primary-color);
-    border:2px solid var(--secondary-color);
-    border-radius:25px;
-    min-width:40px;
+.btn-round {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  background: rgba(255, 255, 255, 0.10);
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  position: relative;
+  overflow: hidden;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
-.btn-round:hover,
-.btn-round:active,
-.btn-round:focus,
-.btn-round:checked{
-    background-color:var(--hover-color);
-    color:var(--primary-color);
+/* Ripple on hover */
+.btn-round:hover {
+  background: rgba(255, 255, 255, 0.17);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
+/* Ripple on press */
+.btn-round:active {
+  background: rgba(255, 255, 255, 0.22);
+  transform: scale(0.95);
+}
+
+/* Flash-overlay (entspricht dem Android Ripple) */
+.btn-round::after {
+  content: '';
+  display: block;
+  position: absolute;
+  inset: 0;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.20);
+  opacity: 0;
+  transition: opacity 0.25s;
+  pointer-events: none;
+}
+
+.btn-round:active::after {
+  opacity: 1;
+  transition: none;
+}
+
+/* Breite Varianten */
+.btn-round[style*="width:80px"]  { width: 80px  !important; }
+.btn-round[style*="width:120px"] { width: 120px !important; }
+
+.btn-round img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+}
 /* =========================================================
    CARD
 ========================================================= */
@@ -1065,6 +1108,61 @@ footer{
     transform:translateY(-1px);
 }
 
+.btn-dialog {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 52px;
+  padding: 0 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: #2A2A2A;
+  color: var(--primary-color);
+  font-size: 15px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  position: relative;
+  overflow: hidden;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.btn-dialog:active {
+  transform: scale(0.97);
+  background: #3a3a3a;
+}
+
+/* Confirm / Primary Button */
+.btn-dialog-primary {
+  background: #E53935;
+  border-color: transparent;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.btn-dialog-primary:active {
+  background: #c62828;
+}
+
+/* Ripple */
+.btn-dialog::after,
+.btn-dialog-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.15);
+  opacity: 0;
+  transition: opacity 0.25s;
+  pointer-events: none;
+}
+
+.btn-dialog:active::after {
+  opacity: 1;
+  transition: none;
+}
 /* =========================
    ALERTS
 ========================= */
