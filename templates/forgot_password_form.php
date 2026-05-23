@@ -18,8 +18,8 @@
                 </div>
 
                 <div class="form-group">
-                    <button type="submit" class="btn btn-round w-100">
-                        SEND LINK
+                    <button type="submit" class="btn btn-modern w-100">
+                        Send Link
                     </button>
                 </div>
 

@@ -44,7 +44,7 @@
                     <a href="forgot_password_page.php" class="forgot-link">Forgot password?</a>
                 </div>
 
-                <button type="submit" class="btn btn-round w-100" name="submitLogin">LOGIN</button>
+                <button type="submit" class="btn btn-modern w-100" name="submitLogin">Sign In</button>
 
             </form>
         </div>

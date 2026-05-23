@@ -248,18 +248,7 @@ a:active{
 .hero-buttons a{
     text-decoration:none;
 }
-.btn-modern-ghost {
-    background: transparent;
-    border: 1px solid rgba(255,255,255,0.5);
-    color: var(--primary-color);
-    opacity: 0.7;
-    /* gleiche padding/border-radius wie btn-modern */
-}
 
-.btn-modern-ghost:hover {
-    opacity: 1;
-    border-color: var(--primary-color);
-}
 
 /* =========================================================
    BUTTONS
@@ -271,8 +260,7 @@ a:active{
     background:transparent;
     color:#fff;
     font-size:14px;
-    letter-spacing:2px;
-    text-transform:uppercase;
+    letter-spacing:2px; 
     border-radius:50px;
     transition:.3s ease;
     cursor:pointer;
@@ -288,6 +276,7 @@ a:active{
 /* OLD ROUND BUTTONS */
 
 .btn-round {
+  color:#fff;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -308,6 +297,7 @@ a:active{
 
 /* Ripple on hover */
 .btn-round:hover {
+  color:#fff;
   background: rgba(255, 255, 255, 0.17);
   border-color: rgba(255, 255, 255, 0.25);
 }
@@ -1104,9 +1094,12 @@ footer{
 
 .btn-danger-modern:hover{
     opacity:0.85;
-
     transform:translateY(-1px);
 }
+
+/* =========================
+   DIALOG BUTTON
+========================= */
 
 .btn-dialog {
   display: inline-flex;
@@ -1122,7 +1115,7 @@ footer{
   font-size: 15px;
   font-weight: 400;
   cursor: pointer;
-  transition: background 0.15s, transform 0.1s;
+  transition: background 0.15s, transform 0.1s, opacity 0.2s;
   position: relative;
   overflow: hidden;
   outline: none;
@@ -1130,12 +1123,22 @@ footer{
   user-select: none;
 }
 
+/* HOVER */
+.btn-dialog:hover {
+  background: #343434;
+  transform: translateY(-1px);
+}
+
+/* ACTIVE */
 .btn-dialog:active {
   transform: scale(0.97);
   background: #3a3a3a;
 }
 
-/* Confirm / Primary Button */
+/* =========================
+   PRIMARY BUTTON
+========================= */
+
 .btn-dialog-primary {
   background: #E53935;
   border-color: transparent;
@@ -1143,11 +1146,21 @@ footer{
   font-weight: 700;
 }
 
+/* HOVER */
+.btn-dialog-primary:hover {
+  background: #ef5350;
+  transform: translateY(-1px);
+}
+
+/* ACTIVE */
 .btn-dialog-primary:active {
   background: #c62828;
 }
 
-/* Ripple */
+/* =========================
+   RIPPLE
+========================= */
+
 .btn-dialog::after,
 .btn-dialog-primary::after {
   content: '';
@@ -1159,7 +1172,8 @@ footer{
   pointer-events: none;
 }
 
-.btn-dialog:active::after {
+.btn-dialog:active::after,
+.btn-dialog-primary:active::after {
   opacity: 1;
   transition: none;
 }

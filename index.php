@@ -75,7 +75,7 @@ require_once __DIR__ . '/templates/header.php';
          <div class="hero-buttons">
 
              <a href="https://lockmebox.com/control_center.php" style="margin-top:12px;">
-                    <span class="btn-modern btn-modern-ghost">LOGIN</span>
+                    <span class="btn-modern">Sign In</span>
             </a>
 
 

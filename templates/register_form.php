@@ -50,7 +50,7 @@
     </div>
 
     <div class="form-group">
-        <button type="submit" class="btn btn-round w-100" name="submitRegister">REGISTER</button>
+        <button type="submit" class="btn btn-modern w-100" name="submitRegister">Register</button>
     </div>
 
 </form>
