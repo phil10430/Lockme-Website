@@ -29,7 +29,8 @@ if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1))
             $boxControlError = "Invalid password! Password must only contain a-z A-Z 0-9 and have 1 to 10 characters.";
         }
       
-     
+        $closeBoxIntent = false;
+
         if ( $lockStatus==0) 
         {
             if (isset($_POST['closeBoxWithTimer'])) {
@@ -38,6 +39,7 @@ if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1))
                         $dt = DateTime::createFromFormat("d/m/Y H:i", $openTime, new DateTimeZone('Europe/Berlin'));
                         $openTimeUnix = $dt->getTimestamp();
                         $protectionLevelTimer = "1";
+                        $closeBoxIntent = true;
                 } else {
                         $boxControlError = "Invalid date";
                 }
@@ -47,6 +49,7 @@ if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1))
             if (isset($_POST['closeBoxWithPw'])) 
             {
                     $protectionLevelPassword = "1";
+                    $closeBoxIntent = true;
             }
 
             
@@ -58,6 +61,7 @@ if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1))
                         $dt = DateTime::createFromFormat("d/m/Y H:i", $openTime, new DateTimeZone('Europe/Berlin'));
                         $openTimeUnix = $dt->getTimestamp();
                         $protectionLevelTimer = "1";
+                        $closeBoxIntent = true;
                 } else {
                         $boxControlError = "Invalid date";
                 }
@@ -70,9 +74,10 @@ if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1))
             {
                 $openTimeUnix   = intval($openTimeRandom);
                 $protectionLevelTimer = "1";
+                $closeBoxIntent = true;
             }
 
-            if (empty($boxControlError)){
+            if ( empty($boxControlError) && $closeBoxIntent ){
                 $wishedAction = MSG_CLOSE . MSG_SEPARATOR .
                     $protectionLevelTimer . MSG_SEPARATOR . $protectionLevelPassword . MSG_SEPARATOR .
                     $openTimeUnix . MSG_SEPARATOR .

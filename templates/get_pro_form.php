@@ -28,7 +28,7 @@ $appScheme   = "lockmebox://open";
 
             <div class="pro-feature">
                 <span class="pro-icon"><i class="ti ti-check"></i></span>
-                <span>Extend Timer</span>
+                <span>Extend Timer while Locked</span>
             </div>
 
             <div class="pro-feature">

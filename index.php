@@ -57,7 +57,7 @@ require_once __DIR__ . '/templates/header.php';
         </p>
 
         <p class="hero-text">
-            Password or timer-based locking for modern play.
+            Password or timer-based locking for modern play.<br>
             Designed by kinksters, for kinksters.
         </p>
 
