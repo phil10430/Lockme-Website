@@ -63,20 +63,17 @@ require_once __DIR__ . '/templates/header.php';
 
         <div class="hero-buttons">
 
-             <a href="https://kinkystuffmade.com/product/lockmebox" target="_blank">
+            <a href="https://kinkystuffmade.com/product/lockmebox" target="_blank">
                     <span class="btn-modern">Shop Now</span>
             </a>
-
-            <a href="https://play.google.com/store/apps/details?id=com.kinkystuffmade.lockmebox&hl=de" target="_blank">
-                    <span class="btn-modern">Get App</span>
+            <a href="https://lockmebox.com/control_center.php">
+                    <span class="btn-modern">Sign In</span>
             </a>
 
         </div>
          <div class="hero-buttons">
 
-             <a href="https://lockmebox.com/control_center.php" style="margin-top:12px;">
-                    <span class="btn-modern">Sign In</span>
-            </a>
+           
 
 
         </div>

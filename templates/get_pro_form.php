@@ -51,9 +51,9 @@ $appScheme   = "lockmebox://open";
 
         </div>
 
-        <a href="#" onclick="openApp(); return false;" target="_blank" class="btn-modern">
-            Get Pro in your App
-        </a>
+      <a href="https://kinkystuffmade.com/product/lockmebox-pro-licence/" target="_blank" class="btn-modern">
+        Get Pro
+    </a>
  
        <!-- <p class="pro-note">
             Subscription can only be purchased in the app.

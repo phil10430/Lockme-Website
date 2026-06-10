@@ -8,40 +8,25 @@ require_once __DIR__ . '/templates/header.php';
 
     <div class="faq-container">
 
-        <h1>FAQ</h1>
-        <p class="faq-subtitle">Frequently asked questions about LockMeBox</p>
-
         <div class="faq-item">
             <button class="faq-question">How does locking work?</button>
             <div class="faq-answer">
-                Connect your Android Phone to the LockMeBox via Bluetooth. You can lock a box with a password or for a specific time or condition.
+                Connect your Phone to the LockMeBox via Bluetooth within the LockMeBox-App. You can lock it via password or via timer.
             </div>
         </div>
 
         <div class="faq-item">
-            <button class="faq-question">Can I control LockMeBox from another phone?</button>
+            <button class="faq-question">Can I control LockMeBox from a distant phone?</button>
             <div class="faq-answer">
                 No, you can only control LockMeBox with the phone which is connected via Bluetooth.
             </div>
         </div>
-        <div class="faq-item">
-            <button class="faq-question">Will there be remote control possible?</button>
-            <div class="faq-answer">
-                Yes, we are planning to release a Pro-Version for a small subscription fee, to allow for remote control.
-            </div>
-        </div>
+
 
         <div class="faq-item">
             <button class="faq-question">Is there a way to open the box when you loose your password?</button>
             <div class="faq-answer">
-                No. There is no recovery.
-            </div>
-        </div>
-
-        <div class="faq-item">
-            <button class="faq-question">Can I use LockMeBox on Iphone?</button>
-            <div class="faq-answer">
-                No, but we are planning to release an IOS version soon.
+                No, there is no recovery.
             </div>
         </div>
 
@@ -59,6 +44,43 @@ require_once __DIR__ . '/templates/header.php';
             </div>
         </div>
 
+        <div class="faq-item">
+            <button class="faq-question">LockMeBox Pro: How does remote control work?</button>
+            <div class="faq-answer">
+                    Create an account on lockmebox.com. 
+                    Sign in on your smartphone and connect to your LockMeBox.
+                    The person who controls remotely has to sign in with the same account on lockmebox.com.
+            </div>
+        </div>
+
+          <div class="faq-item">
+            <button class="faq-question">LockMeBox Pro: The web dashboard still shows Free although I have subscribed to Pro ?</button>
+            <div class="faq-answer">
+                    Sign out in your LockMeBox app. Ensure Pro is active in your App. Sign in in your app again. 
+                    Ensure you are signed in your app and the web dashboard with the same account.
+                    Now the web dashboard should be updated to Pro.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question">LockMeBox Pro: What is the renewal cost for the Pro 1-year license after the first year?</button>
+            <div class="faq-answer">
+                To cover ongoing server maintenance and remote web control features, we reserve the right to apply up to a 10% price increase upon renewal. 
+                This ensures your dedicated server features remain fast, secure, and 100% reliable.
+            </div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">LockMeBox Pro: Does the box still work with the basic (non-Pro) app for Bluetooth timer and password locking if I choose not to renew the Pro license?</button>
+            <div class="faq-answer">
+               Yes.
+            </div>
+        </div>
+         <div class="faq-item">
+            <button class="faq-question">LockMeBox Pro: Are the Remote Web Control, Extend Timer, and Random Timer features exclusive to the Pro version?</button>
+            <div class="faq-answer">
+                Yes.
+            </div>
+        </div>
     </div>
 
 </div>

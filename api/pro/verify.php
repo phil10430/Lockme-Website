@@ -20,38 +20,42 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $headers = getallheaders();
 $auth    = $headers['Authorization'] ?? '';
-if ($auth !== 'Bearer ' . API_SECRET_KEY) {
+if ($auth !== 'Bearer ' . APP_SECRET_KEY) {
     http_response_code(401);
     echo json_encode(['error' => 'Unauthorized']);
     exit;
 }
 
-$data     = json_decode(file_get_contents('php://input'), true);
-$code     = strtoupper(trim($data['code']     ?? ''));
-$order_id = $data['order_id'] ?? null;
-$duration = $data['duration'] ?? 365;
-$email    = $data['email']    ?? null;
-
-if (!$code || !$order_id || !$email) {
+$data = json_decode(file_get_contents('php://input'), true);
+$code = strtoupper(trim($data['code'] ?? ''));
+    
+if (!$code) {
     http_response_code(400);
-    echo json_encode(['error' => 'Missing fields']);
+    echo json_encode(['error' => 'Missing code']);
     exit;
 }
 
 try {
     $stmt = $pdo->prepare("
-        INSERT INTO pro_codes (code, order_id, duration, email)
-        VALUES (:code, :order_id, :duration, :email)
+        SELECT used, expires_at
+        FROM pro_codes
+        WHERE code = :code AND used = 1
     ");
-    $stmt->execute([
-        'code'     => $code,
-        'order_id' => $order_id,
-        'duration' => $duration,
-        'email'    => $email
-    ]);
+    $stmt->execute(['code' => $code]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$row) {
+        echo json_encode(['active' => false]);
+        exit;
+    }
+
+    $active = strtotime($row['expires_at']) > time();
 
     http_response_code(200);
-    echo json_encode(['success' => true]);
+    echo json_encode([
+        'active'     => $active,
+        'expires_at' => $row['expires_at']
+    ]);
 
 } catch (PDOException $e) {
     http_response_code(500);
