@@ -96,7 +96,49 @@ require_once __DIR__ . '/../templates/header.php';
         <p>
         Email: info@lockmebox.com
         </p>
+        <h2>14. Subscriptions and Auto-Renewal (iOS App)</h2>
+        <p>
+        If you choose to subscribe to our Pro service via the iOS app, the following terms apply:
+        </p>
+        <ul>
+        <li><strong>Subscription Details:</strong> The subscription renews automatically at the end of each billing period (yearly) unless canceled before the renewal date.</li>
+        <li><strong>Free Trial:</strong> We offer a 14-day free trial. If you do not cancel before the trial ends, your subscription will automatically renew and you will be charged the subscription price.</li>
+        <li><strong>Price:</strong> The current subscription price is displayed before you complete your purchase.</li>
+        </ul>
 
+        <h2>15. Cancellation and Management (iOS App)</h2>
+        <p>
+        You can manage and cancel your subscription at any time:
+        </p>
+        <ul>
+        <li><strong>iOS:</strong> Open Settings → [Your Name] → Subscriptions → Select the subscription → Tap "Cancel Subscription"</li>
+        </ul>
+        <p>
+        Cancellation takes effect at the end of your current billing period. You will retain access until the renewal date.
+        </p>
+
+        <h2>16. License Purchase (Web)</h2>
+        <p>
+        If you purchase a license via our website, the following terms apply:
+        </p>
+        <ul>
+        <li><strong>License Duration:</strong> You receive a one-year license for the Pro service.</li>
+        <li><strong>No Auto-Renewal:</strong> Your license does NOT automatically renew. You will need to manually renew your license after the one-year period if you wish to continue using the Pro service.</li>
+        <li><strong>License Expiration:</strong> Once your license expires, your account will revert to the free plan.</li>
+        </ul>
+
+        <h2>17. Refund Policy</h2>
+        <p>
+        <strong>iOS App:</strong> Refunds are handled in accordance with Apple's App Store refund policy. For requests regarding App Store purchases, please contact Apple directly at: support.apple.com/contact
+        </p>
+        <p>
+        <strong>Web License:</strong> We do not offer refunds for web-based license purchases. For refund requests, please contact us at info@lockmebox.com
+        </p>
+
+        <h2>18. Changes to Terms</h2>
+        <p>
+        We may change the subscription or license terms with prior notice. Continued use of our service after notification constitutes acceptance of the new terms.
+        </p>
     </div>
 </div
 
