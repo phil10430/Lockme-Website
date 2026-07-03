@@ -16,14 +16,6 @@ require_once __DIR__ . '/templates/header.php';
         </div>
 
         <div class="faq-item">
-            <button class="faq-question">Can I control LockMeBox from a distant phone?</button>
-            <div class="faq-answer">
-                No, you can only control LockMeBox with the phone which is connected via Bluetooth.
-            </div>
-        </div>
-
-
-        <div class="faq-item">
             <button class="faq-question">Is there a way to open the box when you loose your password?</button>
             <div class="faq-answer">
                 No, there is no recovery.
@@ -41,6 +33,13 @@ require_once __DIR__ . '/templates/header.php';
             <button class="faq-question">Why should I get LockMeBox Pro?</button>
             <div class="faq-answer">
                 LockMeBox Pro offers you remote control via web dashbord. It comes also with advanced control features e.g. extend timer or lock with timer and password simultaneously.
+            </div>
+        </div>
+
+         <div class="faq-item">
+            <button class="faq-question">Can I control LockMeBox remotely?</button>
+            <div class="faq-answer">
+                Yes, if you have an active pro subscription you can only control LockMeBox from anywhere via our web dashboard.
             </div>
         </div>
 
