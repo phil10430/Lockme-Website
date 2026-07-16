@@ -180,7 +180,7 @@ a:active{
         linear-gradient(to bottom,
         rgba(0,0,0,.45),
         rgba(0,0,0,.85)),
-        url('/assets/images/lmb_product.jpeg')
+        url('https://kinkystuffmade.com/wp-content/uploads/2026/02/DSC01644-scaled.jpeg')
         center center / cover no-repeat;
 
     display:flex;
@@ -1273,4 +1273,33 @@ width:50%;
     font-size:15px;
 
     opacity:0.9;
+}
+
+/* =========================
+   LOCKED-USERS-COUNTER on Landing page
+========================= */
+
+
+.hero-live-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,0,0,0.05);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    margin-top: 12px;
+}
+.hero-live-indicator::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: #e63946;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
 }

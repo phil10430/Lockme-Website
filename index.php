@@ -7,6 +7,19 @@ $bodyClass = (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true)
     ? ""              // logged in → normale App
     : "landing-page"; // guest → landing page
 
+// Anzahl aktuell gesperrter Boxen ermitteln (nur für Landingpage relevant)
+$lockedCount = 0;
+if ($bodyClass === "landing-page") {
+    try {
+        $sql = "SELECT COUNT(*) FROM box_data_actual WHERE lock_status = 1";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        $lockedCount = (int) $stmt->fetchColumn();
+    } catch (PDOException $e) {
+        $lockedCount = 0; // Fallback, falls DB-Fehler
+    }
+}
+
 require_once __DIR__ . '/templates/header.php';
 ?>
 
@@ -14,29 +27,29 @@ require_once __DIR__ . '/templates/header.php';
 
 <div class="card">
 
-    <div class="card-header">
+<div class="card-header">
 
-        <?php
-        if (isset($_SESSION['flash_message'])) {
-            echo "<div class='alert'>{$_SESSION['flash_message']}</div>";
-            unset($_SESSION['flash_message']);
+<?php
+if (isset($_SESSION['flash_message'])) {
+echo "<div class='alert'>{$_SESSION['flash_message']}</div>";
+unset($_SESSION['flash_message']);
         }
-        ?>
+?>
 
         Hello <?php echo htmlspecialchars($_SESSION["username"]); ?>
 
-    </div>
+</div>
 
-    <div class="card-body">
-        <?php
-        require "show_status.php";
-        require "box_control.php";
-        ?>
+<div class="card-body">
+<?php
+require "show_status.php";
+require "box_control.php";
+?>
 
-        <script>
-        refreshData("<?php echo $_SESSION["username"]; ?>");
-        </script>
-    </div>
+<script>
+refreshData("<?php echo $_SESSION["username"]; ?>");
+</script>
+</div>
 
 </div>
 
@@ -46,41 +59,46 @@ require_once __DIR__ . '/templates/header.php';
 
 
 
-    <section class="hero">
+<section class="hero">
 
-    <div class="hero-content">
+<div class="hero-content">
 
-        <h1>LockMeBox</h1>
+<h1>LockMeBox</h1>
 
-        <p class="hero-subtitle">
+<p class="hero-subtitle">
             Key holding made easy.
-        </p>
+</p>
 
-        <p class="hero-text">
+<p class="hero-text">
             Password or timer-based locking for modern play.<br>
             Designed by kinksters, for kinksters.
-        </p>
+</p>
 
-        <div class="hero-buttons">
+<?php if ($lockedCount > 0): ?>
+<p class="hero-live-indicator">
+    🔒 <?php echo $lockedCount; ?> sub<?php echo $lockedCount === 1 ? '' : 's'; ?> are currently locked. Be the next one.
+</p>
+<?php endif; ?>
 
-            <a href="https://kinkystuffmade.com/product/lockmebox" target="_blank">
-                    <span class="btn-modern">Shop Now</span>
-            </a>
-            <a href="https://lockmebox.com/control_center.php">
-                    <span class="btn-modern">Sign In</span>
-            </a>
+<div class="hero-buttons">
 
-        </div>
-         <div class="hero-buttons">
+<a href="https://kinkystuffmade.com/product/lockmebox" target="_blank">
+<span class="btn-modern">Shop Now</span>
+</a>
+<a href="https://lockmebox.com/control_center.php">
+<span class="btn-modern">Sign In</span>
+</a>
 
-           
+</div>
+<div class="hero-buttons">
 
 
-        </div>
 
-    </div>
+</div>
 
-    </section>
+</div>
+
+</section>
 
 </div>
 

@@ -15,7 +15,7 @@ $appScheme   = "lockmebox://open";
                 </div>
                 <div class="pro-feature-text">
                     <span class="pro-feature-title">Remote control via Web Dashboard</span>
-                    <span class="pro-feature-sub">Manage your device from any browser — no phone needed.</span>
+                    <span class="pro-feature-sub">Manage your device from any browser.</span>
                 </div>
             </div>
 
@@ -51,13 +51,10 @@ $appScheme   = "lockmebox://open";
 
         </div>
 
-      <a href="https://kinkystuffmade.com/product/lockmebox-pro-licence/" target="_blank" class="btn-modern">
-        Get Pro
-    </a>
  
-       <!-- <p class="pro-note">
-            Subscription can only be purchased in the app.
+       <p class="pro-note">
+            Subscribe to Pro in your LockMeBox-App
         </p>
-        -->
+    
     </div>
 </div>
