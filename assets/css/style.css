@@ -1303,3 +1303,56 @@ width:50%;
     50% { opacity: 0.3; }
     100% { opacity: 1; }
 }
+
+
+/* =========================
+   Registered Boxes in profile page
+========================= */
+.box-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.box-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    background: #2a2a2e;
+    border: 1px solid #3a3a3e;
+    border-radius: 10px;
+    transition: background 0.15s ease;
+}
+
+.box-item:hover {
+    background: #333338;
+}
+
+.box-id {
+    font-weight: 600;
+    font-size: 15px;
+    color: #ffffff;
+}
+
+.box-remove-btn {
+    background: none;
+    border: none;
+    color: #f87171;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background 0.15s ease;
+}
+
+.box-remove-btn:hover {
+    background: #4a1f1f;
+}
+
+.box-empty {
+    color: #9ca3af;
+    font-size: 14px;
+    padding: 10px 0;
+}

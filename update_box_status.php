@@ -24,20 +24,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $emergencyPasswordUsedCounter  = test_input($_POST["emergencyPasswordUsedCounter"]);
 
    /*
-    if($proVersion=="1") {
-        $sql = "UPDATE users SET 
-        box_name_con = :box_name, 
-        pro_version = :pro_version
-        WHERE username = :username";
-        
-        $stmt = $pdo->prepare($sql);
+ 
+    $sql = "UPDATE user_boxes SET 
+    box_name_con = :box_name, 
+    pro_version = :pro_version
+    WHERE username = :username";
+    
+    $stmt = $pdo->prepare($sql);
 
-        $stmt->execute([
-            ':username' => $username,
-            ':box_name_con' => $boxName,       
-            ':pro_version' => $proVersion      
-        ]);
-    }
+    $stmt->execute([
+        ':username' => $username,
+        ':box_name_con' => $boxName,       
+        ':pro_version' => $proVersion      
+    ]);
+
 */
 
     $sql = "INSERT INTO box_data_actual
@@ -172,7 +172,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ':emergency_password_used'   => $emergencyPasswordUsedCounter
         ]);
     }
+
+
+    $userId  = $_SESSION["id"];
+
+    $sql = "INSERT IGNORE INTO user_boxes (user_id, box_id, registered_at) 
+            VALUES (:user_id, :box_id, NOW())";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        ':user_id' => $userId,
+        ':box_id'  => $boxName,
+    ]);
     
+
 }
 else {
     echo "No data posted with HTTP POST.";

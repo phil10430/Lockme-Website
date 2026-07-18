@@ -15,6 +15,14 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute([':username' => $username]);
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
 $proVersion = $row['pro_version'];
+
+// Registrierte Boxen abrufen
+$sql = "SELECT box_id, registered_at FROM user_boxes 
+        WHERE user_id = :user_id 
+        ORDER BY registered_at DESC";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([':user_id' => $row['id']]);
+$registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <div class="settings-wrapper">
@@ -53,6 +61,37 @@ $proVersion = $row['pro_version'];
             <?php endif; ?>
 
         </div>
+
+     <!-- REGISTERED BOXES -->
+        <div class="settings-card">
+
+            <div class="settings-card-header">
+                Linked Boxes
+            </div>
+
+            <div class="settings-card-body">
+
+                <?php if (empty($registeredBoxes)): ?>
+                    <p class="box-empty">No boxes registered yet.</p>
+                <?php else: ?>
+                    <div class="box-list">
+                        <?php foreach ($registeredBoxes as $box): ?>
+                            <div class="box-item" id="box-<?= htmlspecialchars($box['box_id']) ?>">
+                                <span class="box-id">LockMeBox <?= htmlspecialchars($box['box_id']) ?></span>
+                                <button
+                                    class="box-remove-btn"
+                                    onclick="removeBox('<?= htmlspecialchars($box['box_id']) ?>')">
+                                    Remove
+                                </button>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+
+            </div>
+
+        </div>
+
 
         <!-- SECURITY -->
 
