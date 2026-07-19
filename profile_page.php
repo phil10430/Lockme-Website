@@ -62,7 +62,8 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         </div>
 
-     <!-- REGISTERED BOXES -->
+  
+        <!-- REGISTERED BOXES -->
         <div class="settings-card">
 
             <div class="settings-card-header">
@@ -76,14 +77,15 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php else: ?>
                     <div class="box-list">
                         <?php foreach ($registeredBoxes as $box): ?>
-                            <div class="box-item" id="box-<?= htmlspecialchars($box['box_id']) ?>">
-                                <span class="box-id">LockMeBox <?= htmlspecialchars($box['box_id']) ?></span>
-                                <button
-                                    class="box-remove-btn"
-                                    onclick="removeBox('<?= htmlspecialchars($box['box_id']) ?>')">
-                                    Remove
-                                </button>
-                            </div>
+                         <div class="box-item" id="box-<?= htmlspecialchars($box['box_id']) ?>">
+                            <span class="box-id">LockMeBox <?= htmlspecialchars($box['box_id']) ?></span>
+                            <button
+                                type="button"
+                                class="box-remove-btn"
+                                onclick="removeBox('<?= htmlspecialchars($box['box_id']) ?>')">
+                                Remove
+                            </button>
+                        </div>
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
@@ -91,7 +93,6 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
         </div>
-
 
         <!-- SECURITY -->
 
@@ -354,6 +355,41 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
     </form>
+
+</dialog>
+
+ 
+<!-- =========================
+     REMOVE BOX CONFIRM DIALOG
+========================= -->
+
+<dialog id="removeBoxDialog" class="modern-dialog">
+
+    <h3>Remove Box</h3>
+
+    <p>Are you sure you want to remove box <strong id="removeBoxName"></strong>?</p>
+
+    <div class="dialog-actions">
+
+        <button
+            type="button"
+            class="btn-modern"
+            onclick="document.getElementById('removeBoxDialog').close()">
+
+            Cancel
+
+        </button>
+
+        <button
+            type="button"
+            class="btn-danger-modern"
+            id="confirmRemoveBtn">
+
+            Remove
+
+        </button>
+
+    </div>
 
 </dialog>
 

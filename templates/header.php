@@ -25,7 +25,7 @@
         <script src="/assets/js/lock_dialog.js"></script>
         <script src="/assets/js/open_app_script.js"></script>
         <script src="/assets/js/lock_dialog_random_time.js"></script>
-        
+        <script src="/assets/js/remove_box_script.js"></script>
     </head>
        
     <body class="<?= $bodyClass ?? '' ?>">   
