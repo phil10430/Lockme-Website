@@ -116,5 +116,26 @@ $stmt = $pdo->prepare("SELECT box_id FROM user_boxes WHERE user_id = ? ORDER BY 
 $stmt->execute([$user_id]);
 $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Load box history for all registered boxes
+$boxHistory = [];
 
+if (!empty($registeredBoxes)) {
+    $boxIds = array_column($registeredBoxes, 'box_id');
+    $placeholders = implode(',', array_fill(0, count($boxIds), '?'));
+
+    $stmt = $pdo->prepare("
+        SELECT box_name, lock_status, open_time, created_at, 
+               protection_level_timer, protection_level_password
+        FROM box_data_history
+        WHERE box_name IN ($placeholders)
+        ORDER BY created_at DESC
+    ");
+    $stmt->execute($boxIds);
+    $historyRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Group by box_name
+    foreach ($historyRows as $row) {
+        $boxHistory[$row['box_name']][] = $row;
+    }
+}
 ?>

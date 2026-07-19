@@ -77,12 +77,12 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php else: ?>
                     <div class="box-list">
                         <?php foreach ($registeredBoxes as $box): ?>
-                         <div class="box-item" id="box-<?= htmlspecialchars($box['box_id']) ?>">
+                         <div class="box-item" id="box-<?= htmlspecialchars($box['box_id']) ?>" onclick="openHistoryDialog('<?= htmlspecialchars($box['box_id']) ?>')">
                             <span class="box-id">LockMeBox <?= htmlspecialchars($box['box_id']) ?></span>
                             <button
                                 type="button"
                                 class="box-remove-btn"
-                                onclick="removeBox('<?= htmlspecialchars($box['box_id']) ?>')">
+                                onclick="event.stopPropagation(); removeBox('<?= htmlspecialchars($box['box_id']) ?>')">
                                 Remove
                             </button>
                         </div>
@@ -389,6 +389,29 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         </button>
 
+    </div>
+
+</dialog>
+
+<!-- =========================
+     BOX HISTORY DIALOG
+========================= -->
+
+<dialog id="historyDialog" class="modern-dialog history-dialog">
+
+    <h3>History – <span id="historyBoxName"></span></h3>
+
+    <div id="historyContent" class="history-timeline">
+        <!-- wird per JS befüllt -->
+    </div>
+
+    <div class="dialog-actions">
+        <button
+            type="button"
+            class="btn-modern"
+            onclick="document.getElementById('historyDialog').close()">
+            Close
+        </button>
     </div>
 
 </dialog>

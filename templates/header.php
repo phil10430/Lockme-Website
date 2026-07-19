@@ -25,6 +25,9 @@
         <script src="/assets/js/lock_dialog.js"></script>
         <script src="/assets/js/open_app_script.js"></script>
         <script src="/assets/js/lock_dialog_random_time.js"></script>
+        <script>
+    const boxHistoryData = <?php echo json_encode($boxHistory, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+</script>
         <script src="/assets/js/remove_box_script.js"></script>
     </head>
        
