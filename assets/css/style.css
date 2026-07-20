@@ -1480,3 +1480,42 @@ width:50%;
     padding: 3px 10px;
     border-radius: 20px;
 }
+
+
+
+.history-month-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.history-month-label {
+    width: 120px;
+    flex-shrink: 0;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.history-month-bar {
+    position: relative;
+    flex: 1;
+    height: 20px;
+    background: #eee;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.history-segment {
+    position: absolute;
+    top: 0;
+    height: 100%;
+}
+
+.segment-open {
+    background: #4caf50;
+}
+
+.segment-closed {
+    background: #e53935;
+}

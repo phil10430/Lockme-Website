@@ -174,7 +174,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
 
-    $userId  = $_SESSION["id"];
+  $userId = $_SESSION["id"];
+
+    // Only allow boxName values that are exactly 6 digits
+    if (!preg_match('/^\d{6}$/', $boxName)) {
+        // invalid input -> abort, no insert
+        http_response_code(400);
+        exit('Invalid box ID: exactly 6 digits are required.');
+    }
 
     $sql = "INSERT IGNORE INTO user_boxes (user_id, box_id, registered_at) 
             VALUES (:user_id, :box_id, NOW())";
@@ -184,8 +191,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ':user_id' => $userId,
         ':box_id'  => $boxName,
     ]);
-    
 
+    // Optional: check whether the insert actually happened
+    if ($stmt->rowCount() === 0) {
+        // Either the box is already registered, or this user already had it
+        echo "This box is already registered.";
+    } else {
+        echo "Box successfully registered.";
+    }
+    
 }
 else {
     echo "No data posted with HTTP POST.";
