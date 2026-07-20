@@ -401,6 +401,8 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <h3>History – <span id="historyBoxName"></span></h3>
 
+    <div id="historySummary"></div>
+
     <div id="historyContent" class="history-timeline">
         <!-- wird per JS befüllt -->
     </div>
@@ -415,5 +417,6 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
 </dialog>
+
 
 <?php require_once __DIR__ . '/templates/footer.php'; ?>

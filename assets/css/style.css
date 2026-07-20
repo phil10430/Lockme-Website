@@ -1449,3 +1449,34 @@ width:50%;
     text-align: center;
     padding: 20px 0;
 }
+
+
+.history-summary-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #1e3a8a;
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+}
+
+.history-summary-label {
+    font-size: 13px;
+    color: #bfdbfe;
+}
+
+.history-summary-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.history-summary-live {
+    font-size: 11px;
+    font-weight: 600;
+    color: #4ade80;
+    background: rgba(74, 222, 128, 0.15);
+    padding: 3px 10px;
+    border-radius: 20px;
+}
