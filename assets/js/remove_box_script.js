@@ -38,25 +38,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function calculateLockedDuration(entries) {
-    // Chronologisch aufsteigend sortieren (entries kommen DESC aus PHP)
     const sorted = [...entries].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
     let totalMs = 0;
     let lockStart = null;
+    let lockingEntry = null; // the entry that started the current lock, if any
 
     for (const entry of sorted) {
         if (entry.lock_status == 1) {
-            // Box wurde geschlossen -> Startzeit merken
             lockStart = new Date(entry.created_at.replace(' ', 'T'));
+            lockingEntry = entry;
         } else if (entry.lock_status == 0 && lockStart) {
-            // Box wurde geöffnet -> Dauer seit lockStart addieren
             const openedAt = new Date(entry.created_at.replace(' ', 'T'));
             totalMs += (openedAt - lockStart);
             lockStart = null;
+            lockingEntry = null;
         }
     }
 
-    // Falls die Box aktuell noch verschlossen ist (letzter Eintrag = closed, kein passendes open danach)
     if (lockStart) {
         totalMs += (new Date() - lockStart);
     }
@@ -65,16 +64,43 @@ function calculateLockedDuration(entries) {
     const days = Math.floor(totalHours / 24);
     const hours = Math.floor(totalHours % 24);
 
-    return { days, hours, isCurrentlyLocked: lockStart !== null };
+    return {
+        days,
+        hours,
+        isCurrentlyLocked: lockStart !== null,
+        lockingEntry // null if not currently locked
+    };
 }
 
+function formatOpenTime(openTime) {
+    if (!openTime) return '';
+    const d = new Date(openTime.replace(' ', 'T'));
+    return d.toLocaleDateString('de-DE') + ' ' + d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+}
+
+function buildCurrentStatusHtml(duration) {
+    if (!duration.isCurrentlyLocked) return '';
+
+    const entry = duration.lockingEntry;
+
+    let liveText = 'Currently locked';
+
+    if (entry) {
+        if (entry.protection_level_timer == 1 && entry.open_time) {
+            liveText += ' ⏱ until ' + formatOpenTime(entry.open_time);
+        } else if (entry.protection_level_password == 1) {
+            liveText += ' by password 🔑';
+        }
+    }
+
+    return '<span class="history-summary-live">' + liveText + '</span>';
+}
 
 function openHistoryDialog(boxId) {
     const entries = boxHistoryData[boxId] || [];
     const container = document.getElementById('historyContent');
     document.getElementById('historyBoxName').textContent = 'LockMeBox ' + boxId;
 
-    // Total locked duration
     const duration = calculateLockedDuration(entries);
     const summaryEl = document.getElementById('historySummary');
 
@@ -88,14 +114,16 @@ function openHistoryDialog(boxId) {
     summaryEl.innerHTML =
         '<div class="history-summary-box">' +
             '<span class="history-summary-label">Total time locked</span>' +
-            '<span class="history-summary-value">' + duration.days + 'd ' + duration.hours + 'h</span>' +
-            (duration.isCurrentlyLocked ? '<span class="history-summary-live">Currently locked</span>' : '') +
+            '<span class="history-summary-value">' + duration.days + 'd ' +  '</span>' +
+            buildCurrentStatusHtml(duration) +
         '</div>';
 
     container.innerHTML = renderMonthlyBars(entries);
 
     document.getElementById('historyDialog').showModal();
 }
+
+
 
 // Build continuous status intervals (open/closed) from the raw log entries
 function buildStatusSegments(entries) {
@@ -172,7 +200,6 @@ function renderMonthlyBars(entries) {
     const splitSegments = splitSegmentsByMonth(segments);
     const monthMap = groupSegmentsByMonth(splitSegments);
 
-    // Newest month first
     const monthKeys = Array.from(monthMap.keys()).sort().reverse();
 
     return monthKeys.map(function (monthKey) {
@@ -180,10 +207,16 @@ function renderMonthlyBars(entries) {
         const monthLabel = monthData.monthStart.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
         const monthDurationMs = monthData.nextMonthStart - monthData.monthStart;
 
+        let lockedMsInMonth = 0;
+
         const segmentsHtml = monthData.segments.map(function (seg) {
             const leftPct = ((seg.start - monthData.monthStart) / monthDurationMs) * 100;
             const widthPct = ((seg.end - seg.start) / monthDurationMs) * 100;
             const statusClass = seg.status === 'closed' ? 'segment-closed' : 'segment-open';
+
+            if (seg.status === 'closed') {
+                lockedMsInMonth += (seg.end - seg.start);
+            }
 
             const title = seg.start.toLocaleDateString('de-DE') + ' ' +
                 seg.start.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) +
@@ -196,9 +229,50 @@ function renderMonthlyBars(entries) {
                 'title="' + title + '"></div>';
         }).join('');
 
-        return '<div class="history-month-row">' +
-            '<span class="history-month-label">' + monthLabel + '</span>' +
-            '<div class="history-month-bar">' + segmentsHtml + '</div>' +
-        '</div>';
+      const lockedDays = Math.round(lockedMsInMonth / (1000 * 60 * 60 * 24));
+
+return '<div class="history-month-row">' +
+    '<span class="history-month-label">' + monthLabel + '</span>' +
+    '<div class="history-month-bar">' + segmentsHtml + '</div>' +
+    '<div class="history-days-column">' + lockedDays + 'd locked</div>' +
+'</div>';
     }).join('');
 }
+
+function getCurrentStatus(entries) {
+    if (!entries || entries.length === 0) {
+        return { text: 'No data', className: 'box-status-none' };
+    }
+
+    const duration = calculateLockedDuration(entries);
+
+    if (!duration.isCurrentlyLocked) {
+        return { text: '🔓 Open', className: 'box-status-open' };
+    }
+
+    const entry = duration.lockingEntry;
+    let text = '🔒 Locked';
+
+    if (entry) {
+        if (entry.protection_level_timer == 1 && entry.open_time) {
+            text += ' ⏱ until ' + formatOpenTime(entry.open_time);
+        } else if (entry.protection_level_password == 1) {
+            text += ' by password 🔑';
+        }
+    }
+
+    return { text, className: 'box-status-locked' };
+}
+
+function renderBoxStatuses() {
+    Object.keys(boxHistoryData).forEach(function (boxId) {
+        const el = document.getElementById('box-status-' + boxId);
+        if (!el) return;
+
+        const status = getCurrentStatus(boxHistoryData[boxId]);
+        el.textContent = status.text;
+        el.className = 'box-status ' + status.className;
+    });
+}
+
+document.addEventListener('DOMContentLoaded', renderBoxStatuses);

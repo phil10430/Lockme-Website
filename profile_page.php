@@ -72,20 +72,23 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             <div class="settings-card-body">
 
-                <?php if (empty($registeredBoxes)): ?>
+               <?php if (empty($registeredBoxes)): ?>
                     <p class="box-empty">No boxes registered yet.</p>
                 <?php else: ?>
                     <div class="box-list">
                         <?php foreach ($registeredBoxes as $box): ?>
-                         <div class="box-item" id="box-<?= htmlspecialchars($box['box_id']) ?>" onclick="openHistoryDialog('<?= htmlspecialchars($box['box_id']) ?>')">
-                            <span class="box-id">LockMeBox <?= htmlspecialchars($box['box_id']) ?></span>
-                            <button
-                                type="button"
-                                class="box-remove-btn"
-                                onclick="event.stopPropagation(); removeBox('<?= htmlspecialchars($box['box_id']) ?>')">
-                                Remove
-                            </button>
-                        </div>
+                            <div class="box-item" id="box-<?= htmlspecialchars($box['box_id']) ?>" onclick="openHistoryDialog('<?= htmlspecialchars($box['box_id']) ?>')">
+                                <div class="box-item-main">
+                                    <span class="box-id">LockMeBox <?= htmlspecialchars($box['box_id']) ?></span>
+                                    <span class="box-status" id="box-status-<?= htmlspecialchars($box['box_id']) ?>"></span>
+                                </div>
+                                <button
+                                    type="button"
+                                    class="box-remove-btn"
+                                    onclick="event.stopPropagation(); removeBox('<?= htmlspecialchars($box['box_id']) ?>')">
+                                    Remove
+                                </button>
+                            </div>
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>

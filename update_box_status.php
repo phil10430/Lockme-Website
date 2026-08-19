@@ -7,8 +7,6 @@ require_once __DIR__ . '/includes/helper_functions.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // get posted variables from APP
-//    $username = test_input($_POST["username"]); 
     $boxName = test_input($_POST["boxName"]);  
     $protectionLevelTimer = test_input($_POST["protectionLevelTimer"]);
     $protectionLevelPassword = test_input($_POST["protectionLevelPassword"]);
@@ -23,22 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $hardwareVersion = test_input($_POST["hardwareVersion"]);
     $emergencyPasswordUsedCounter  = test_input($_POST["emergencyPasswordUsedCounter"]);
 
-   /*
- 
-    $sql = "UPDATE user_boxes SET 
-    box_name_con = :box_name, 
-    pro_version = :pro_version
-    WHERE username = :username";
-    
-    $stmt = $pdo->prepare($sql);
-
-    $stmt->execute([
-        ':username' => $username,
-        ':box_name_con' => $boxName,       
-        ':pro_version' => $proVersion      
-    ]);
-
-*/
+    $userId = $_SESSION["id"];
 
     $sql = "INSERT INTO box_data_actual
             (
@@ -105,85 +88,107 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
 
-
-
-    // Letzte History-Zeile für diese Box holen
-    $sql_check = "SELECT firmware_version, log_openclosecycles, log_switchcycles, log_ontimesec,
-                        lock_status, open_time,
-                        protection_level_timer, protection_level_password, hardware_version, emergency_password_used
-                FROM box_data_history
-                WHERE box_name = :box_name
-                ORDER BY id DESC
-                LIMIT 1";
-    $stmt_check = $pdo->prepare($sql_check);
-    $stmt_check->execute([':box_name' => $boxName]);
-    $last = $stmt_check->fetch(PDO::FETCH_ASSOC);
-
-    // Vergleichen ob sich etwas geändert hat
-    $hasChanged = !$last || 
-        strval($last['firmware_version'])          !== strval($firmwareVersion) ||
-        strval($last['lock_status'])               !== strval($lockStatus) ||
-        strval($last['open_time'])                 !== strval($openTime) ||
-        strval($last['protection_level_timer'])    !== strval($protectionLevelTimer) ||
-        strval($last['protection_level_password']) !== strval($protectionLevelPassword) ||
-        strval($last['hardware_version'])          !== strval($hardwareVersion);
-    // Nur inserten wenn sich etwas geändert hat
-    if ($hasChanged) {
-        $sql_history = "INSERT INTO box_data_history
-                        (
-                            box_name, 
-                            firmware_version, 
-                            log_openclosecycles, 
-                            log_switchcycles, 
-                            log_ontimesec, 
-                            lock_status,
-                            open_time,
-                            protection_level_timer,
-                            protection_level_password,
-                            hardware_version,
-                            emergency_password_used 
-                        ) 
-        VALUES 
-                        (
-                            :box_name, 
-                            :firmware_version,
-                            :log_openclosecycles, 
-                            :log_switchcycles,
-                            :log_ontimesec,
-                            :lock_status,
-                            :open_time,
-                            :protection_level_timer,
-                            :protection_level_password,
-                            :hardware_version,
-                            :emergency_password_used
-                        )";
-        $stmt_history = $pdo->prepare($sql_history);
-        $stmt_history->execute([
-            ':box_name'                  => $boxName,
-            ':firmware_version'          => $firmwareVersion,
-            ':log_openclosecycles'       => $rtc_logCountOpenCloseCycles_String,
-            ':log_switchcycles'          => $rtc_logCountSwitchCycles_String,
-            ':log_ontimesec'             => $rtc_logOnTimeSec_String,
-            ':lock_status'               => $lockStatus,
-            ':open_time'                 => $openTime,
-            ':protection_level_timer'    => $protectionLevelTimer,
-            ':protection_level_password' => $protectionLevelPassword,
-            ':hardware_version'          => $hardwareVersion,
-            ':emergency_password_used'   => $emergencyPasswordUsedCounter
-        ]);
-    }
-
-
-  $userId = $_SESSION["id"];
-
-    // Only allow boxName values that are exactly 6 digits
+ // ============================================
+    // Validierung ZUERST — vor jeglicher DB-Interaktion
+    // Nur 6-stellige numerische Box-IDs sind gültig
+    // ============================================
     if (!preg_match('/^\d{6}$/', $boxName)) {
-        // invalid input -> abort, no insert
         http_response_code(400);
         exit('Invalid box ID: exactly 6 digits are required.');
     }
 
-    $sql = "INSERT IGNORE INTO user_boxes (user_id, box_id, registered_at) 
+    // ============================================
+    // History-Insert mit Race-Condition-Schutz
+    // (Transaction + FOR UPDATE Lock)
+    // ============================================
+    $pdo->beginTransaction();
+
+    try {
+        // Letzte History-Zeile für diese Box holen (mit Lock)
+        $sql_check = "SELECT firmware_version, log_openclosecycles, log_switchcycles, log_ontimesec,
+                            lock_status, open_time,
+                            protection_level_timer, protection_level_password, hardware_version, emergency_password_used
+                    FROM box_data_history
+                    WHERE box_name = :box_name
+                    ORDER BY id DESC
+                    LIMIT 1
+                    FOR UPDATE";
+        $stmt_check = $pdo->prepare($sql_check);
+        $stmt_check->execute([':box_name' => $boxName]);
+        $last = $stmt_check->fetch(PDO::FETCH_ASSOC);
+
+        // Normalisierte Vergleichsfunktion (NULL und '' gelten als gleich)
+        $normalize = fn($v) => $v === null ? '' : strval($v);
+
+        // Vergleichen ob sich etwas geändert hat
+        $hasChanged = !$last ||
+            $normalize($last['firmware_version'])          !== $normalize($firmwareVersion) ||
+            $normalize($last['lock_status'])                !== $normalize($lockStatus) ||
+            $normalize($last['open_time'])                  !== $normalize($openTime) ||
+            $normalize($last['protection_level_timer'])     !== $normalize($protectionLevelTimer) ||
+            $normalize($last['protection_level_password'])  !== $normalize($protectionLevelPassword) ||
+            $normalize($last['hardware_version'])            !== $normalize($hardwareVersion);
+
+        // Nur inserten wenn sich etwas geändert hat
+        if ($hasChanged) {
+            $sql_history = "INSERT INTO box_data_history
+                            (
+                                box_name,
+                                firmware_version,
+                                log_openclosecycles,
+                                log_switchcycles,
+                                log_ontimesec,
+                                lock_status,
+                                open_time,
+                                protection_level_timer,
+                                protection_level_password,
+                                hardware_version,
+                                emergency_password_used
+                            )
+            VALUES
+                            (
+                                :box_name,
+                                :firmware_version,
+                                :log_openclosecycles,
+                                :log_switchcycles,
+                                :log_ontimesec,
+                                :lock_status,
+                                :open_time,
+                                :protection_level_timer,
+                                :protection_level_password,
+                                :hardware_version,
+                                :emergency_password_used
+                            )";
+            $stmt_history = $pdo->prepare($sql_history);
+            $stmt_history->execute([
+                ':box_name'                  => $boxName,
+                ':firmware_version'          => $firmwareVersion,
+                ':log_openclosecycles'       => $rtc_logCountOpenCloseCycles_String,
+                ':log_switchcycles'          => $rtc_logCountSwitchCycles_String,
+                ':log_ontimesec'             => $rtc_logOnTimeSec_String,
+                ':lock_status'               => $lockStatus,
+                ':open_time'                 => $openTime,
+                ':protection_level_timer'    => $protectionLevelTimer,
+                ':protection_level_password' => $protectionLevelPassword,
+                ':hardware_version'          => $hardwareVersion,
+                ':emergency_password_used'   => $emergencyPasswordUsedCounter
+            ]);
+        }
+
+        $pdo->commit();
+
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        http_response_code(500);
+        exit('Error writing history: ' . $e->getMessage());
+    }
+
+    // ============================================
+    // Box-Registrierung (user_boxes)
+    // box_name ist hier bereits als gültig 6-stellig
+    // validiert (siehe oben)
+    // ============================================
+    $sql = "INSERT IGNORE INTO user_boxes (user_id, box_id, registered_at)
             VALUES (:user_id, :box_id, NOW())";
 
     $stmt = $pdo->prepare($sql);
@@ -199,7 +204,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         echo "Box successfully registered.";
     }
-    
+
+
 }
 else {
     echo "No data posted with HTTP POST.";

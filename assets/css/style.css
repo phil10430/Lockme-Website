@@ -1333,10 +1333,34 @@ width:50%;
 .box-item:active {
     transform: translateX(0);
 }
+
+.box-item-main {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
 .box-id {
     font-weight: 600;
     font-size: 15px;
     color: #ffffff;
+}
+
+.box-status {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.box-status-open {
+    color: #4ade80;
+}
+
+.box-status-locked {
+    color: #f87171;
+}
+
+.box-status-none {
+    color: #9ca3af;
 }
 
 .box-remove-btn {
@@ -1480,27 +1504,25 @@ width:50%;
     padding: 3px 10px;
     border-radius: 20px;
 }
-
-
-
 .history-month-row {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+    font-size: 1rem;
 }
 
 .history-month-label {
-    width: 120px;
+    width: 130px;
     flex-shrink: 0;
-    font-size: 0.85rem;
-    color: #555;
+    font-size: 1rem;
+    color: #fff;
 }
 
 .history-month-bar {
     position: relative;
     flex: 1;
-    height: 20px;
+    height: 22px;
     background: #eee;
     border-radius: 4px;
     overflow: hidden;
@@ -1518,4 +1540,18 @@ width:50%;
 
 .segment-closed {
     background: #e53935;
+}
+
+.history-days-column {
+    width: 110px;
+    flex-shrink: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+}
+.history-summary-detail {
+    display: block;
+    font-size: 0.85rem;
+    color: #e53935;
+    margin-top: 2px;
 }

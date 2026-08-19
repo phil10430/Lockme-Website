@@ -19,6 +19,29 @@ function lockDialog(mode) {
     if (showTimer)           $("#lock-dialog-date-group").show();
     if (showTimer)           $("#lock-dialog-time-group").show();
 
+    // Hinweis-Element erzeugen (falls noch nicht vorhanden) und verstecken
+    if (showPassword) {
+        var $hint = $("#lock-dialog-password-hint");
+        if ($hint.length === 0) {
+            $hint = $('<small id="lock-dialog-password-hint" class="form-text text-danger"></small>');
+            $("#lock-dialog-password-group").append($hint);
+        }
+        $hint.hide();
+
+        // Nur prüfen und ggf. Hinweis anzeigen – keine Wert-Manipulation
+        $("#lock-dialog-password")
+            .off("input.pwValidation")
+            .on("input.pwValidation", function () {
+                var val = $(this).val();
+                var pwPattern = /^[a-zA-Z0-9]{0,10}$/;
+                if (val.length > 0 && !pwPattern.test(val)) {
+                    $hint.text("Only letters (a-z, A-Z) and numbers (0-9), max. 10 characters.").show();
+                } else {
+                    $hint.hide();
+                }
+            });
+    }
+
     // Titel anpassen
     var titles = {
         'password':      'Lock by Password',
@@ -68,6 +91,7 @@ function closeLockDialog() {
     $("#lock-dialog-date").val("");
     $("#lock-dialog-time").val("");
     $("#lock-dialog-checkbox").prop("checked", false);
+    $("#lock-dialog-password-hint").hide();
 }
 function togglePassword(inputId, icon) {
     var input = document.getElementById(inputId);
@@ -89,6 +113,12 @@ function submitLockDialog() {
 
     if (showPassword) {
         if (pw.length < 1) { err.show().text("Please enter a password."); return; }
+
+        var pwPattern = /^[a-zA-Z0-9]{1,10}$/;
+        if (!pwPattern.test(pw)) {
+            err.show().text("Password must only contain letters (a-z, A-Z) and numbers (0-9), max. 10 characters.");
+            return;
+        }
     }
     if (showConfirmPassword) {
         if (pw !== pw2) { err.show().text("Passwords do not match."); return; }
