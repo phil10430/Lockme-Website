@@ -14,6 +14,11 @@ $db_pass = 'mq<cI(E5RRnwya-gBL^?h1HyXx3(l5';   // DB-Passwort
 define('API_SECRET_KEY', 'o06194lEmvJBKWLPlV5zYMyIkkZXgC');  // WooCommerce → generate_code
 define('APP_SECRET_KEY', 'zVLwe26JrSrMc7pmsrfmozROBTU4ae');  // App → redeem
 
+
+define('SMTP_HOST', 'smtp.hostinger.com');
+define('SMTP_USER', 'noreply@lockmebox.com');
+define('SMTP_PASS', ']vK}AC?at!Wu9.)V<x;n&Mnf+EhUMQ');
+
 // 🔹 Optionale Einstellungen (Fehleranzeige, Zeichensatz)
 $options = [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, // Fehler als Exception werfen
