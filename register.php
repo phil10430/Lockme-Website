@@ -155,8 +155,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $mail->send();
 
             // ✅ Erfolg
-            $_SESSION['flash_message'] =
-                "Registration successful! Please check your email.";
+            $_SESSION['flash_message'] = "Registration successful! Please check your email, including your spam folder.";
 
             header("Location: control_center.php");
             exit;

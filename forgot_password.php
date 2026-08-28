@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username_input = test_input($_POST["username"] ?? '');
 
     // Neutrale Meldung immer gleich
-    $flash_msg = "✔️ If the email exists, a reset link has been sent.";
+    $flash_msg = "✔️ If the email exists, a reset link has been sent. Please check also your spam folder.";
 
     // Abgelaufene Tokens löschen
     $sql = "DELETE FROM pass_reset WHERE expires_at <= NOW()";

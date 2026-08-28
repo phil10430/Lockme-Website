@@ -62,13 +62,6 @@ require_once __DIR__ . '/templates/header.php';
         </div>
 
         <div class="faq-item">
-            <button class="faq-question">LockMeBox Pro: What is the renewal cost for the Pro 1-year license after the first year?</button>
-            <div class="faq-answer">
-                To cover ongoing server maintenance and remote web control features, we reserve the right to apply up to a 10% price increase upon renewal. 
-                This ensures your dedicated server features remain fast, secure, and 100% reliable.
-            </div>
-        </div>
-        <div class="faq-item">
             <button class="faq-question">LockMeBox Pro: Does the box still work with the basic (non-Pro) app for Bluetooth timer and password locking if I choose not to renew the Pro license?</button>
             <div class="faq-answer">
                Yes.
