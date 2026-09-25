@@ -321,12 +321,19 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 <label class="toggle-row">
                     <span>Show my box status publicly</span>
+
                     <input
                         type="checkbox"
                         id="publicStatusToggle"
                         <?= $user['public_status'] ? 'checked' : '' ?>
-                        onchange="togglePublicStatus(this.checked)">
+                        onchange="togglePublicStatus(this.checked)"
+                    >
                 </label>
+
+                <p class="toggle-explanation">
+                    When enabled, you’ll be listed on the
+                    <a href="/puplic_user_status.php">Locked Users Page</a>, where others can see your current locked status.
+                </p>
 
             </div>
 
