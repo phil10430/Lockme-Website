@@ -87,7 +87,7 @@ function buildCurrentStatusHtml(duration) {
 
     if (entry) {
         if (entry.protection_level_timer == 1 && entry.open_time) {
-            liveText += ' ⏱ until ' + formatOpenTime(entry.open_time);
+            liveText += ' until ' + formatOpenTime(entry.open_time);
         } else if (entry.protection_level_password == 1) {
             liveText += ' by password 🔑';
         }
@@ -255,9 +255,9 @@ function getCurrentStatus(entries) {
 
     if (entry) {
         if (entry.protection_level_timer == 1 && entry.open_time) {
-            text += ' ⏱ until ' + formatOpenTime(entry.open_time);
+            text += ' until ' + formatOpenTime(entry.open_time);
         } else if (entry.protection_level_password == 1) {
-            text += ' by password 🔑';
+            text += ' by password ';
         }
     }
 

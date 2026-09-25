@@ -42,6 +42,98 @@ if (isset($_POST['removeBox'])) {
     exit;
 }
 
+// Save box details (AJAX handler - must run before any HTML output)
+if (isset($_POST['saveBoxDetails'])) {
+    header('Content-Type: application/json');
+
+    $boxId      = trim($_POST['boxId'] ?? '');
+    $nameTop    = trim($_POST['name_top'] ?? '');
+    $nameSub    = trim($_POST['name_sub'] ?? '');
+    $boxContent = trim($_POST['box_content'] ?? '');
+    $targetDate = trim($_POST['target_open_date'] ?? '');
+
+    if (!preg_match('/^\d+$/', $boxId)) {
+        echo json_encode(['success' => false, 'message' => 'Invalid box ID.']);
+        exit;
+    }
+
+    if ($nameTop === '') {
+        echo json_encode(['success' => false, 'message' => 'Name is required.']);
+        exit;
+    }
+
+    // Ownership check: this box must actually belong to the logged-in user
+    $stmt = $pdo->prepare("SELECT 1 FROM user_boxes WHERE user_id = ? AND box_id = ?");
+    $stmt->execute([$user_id, $boxId]);
+    if (!$stmt->fetch()) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'message' => 'Box not found.']);
+        exit;
+    }
+
+    // datetime-local sends "YYYY-MM-DDTHH:MM" - normalise or nullify
+    $targetDateSql = null;
+    if ($targetDate !== '') {
+        $ts = strtotime($targetDate);
+        if ($ts === false) {
+            echo json_encode(['success' => false, 'message' => 'Invalid date.']);
+            exit;
+        }
+        $targetDateSql = date('Y-m-d H:i:s', $ts);
+    }
+
+    try {
+        $stmt = $pdo->prepare("
+            INSERT INTO user_details (user_id, box_id, name_top, name_sub, box_content, target_open_date)
+            VALUES (:user_id, :box_id, :name_top, :name_sub, :box_content, :target_open_date)
+            ON DUPLICATE KEY UPDATE
+                name_top = VALUES(name_top),
+                name_sub = VALUES(name_sub),
+                box_content = VALUES(box_content),
+                target_open_date = VALUES(target_open_date)
+        ");
+        $stmt->execute([
+            ':user_id'          => $user_id,
+            ':box_id'           => $boxId,
+            ':name_top'         => $nameTop,
+            ':name_sub'         => $nameSub ?: null,
+            ':box_content'      => $boxContent ?: null,
+            ':target_open_date' => $targetDateSql,
+        ]);
+
+        echo json_encode(['success' => true]);
+    } catch (PDOException $e) {
+        error_log($e->getMessage());
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'An error occurred.']);
+    }
+    exit;
+}
+
+
+// Toggle public status (AJAX handler - must run before any HTML output)
+if (isset($_POST['togglePublicStatus'])) {
+    header('Content-Type: application/json');
+
+    $newStatus = (isset($_POST['public_status']) && $_POST['public_status'] === '1') ? 1 : 0;
+
+    try {
+        $stmt = $pdo->prepare("UPDATE users SET public_status = :status WHERE id = :user_id");
+        $stmt->execute([
+            ':status'  => $newStatus,
+            ':user_id' => $user_id,
+        ]);
+
+        echo json_encode(['success' => true, 'public_status' => $newStatus]);
+    } catch (PDOException $e) {
+        error_log($e->getMessage());
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'An error occurred.']);
+    }
+    exit;
+}
+
+
 // Load user data
 $stmt = $pdo->prepare("SELECT username, email, created_at FROM users WHERE id = ?");
 $stmt->execute([$user_id]);
@@ -137,5 +229,74 @@ if (!empty($registeredBoxes)) {
     foreach ($historyRows as $row) {
         $boxHistory[$row['box_name']][] = $row;
     }
+}
+
+// Load per-box details (name_top, name_sub, box_content, target_open_date)
+$boxDetails = [];
+
+if (!empty($registeredBoxes)) {
+    $boxIds = array_column($registeredBoxes, 'box_id');
+    $placeholders = implode(',', array_fill(0, count($boxIds), '?'));
+
+    $stmt = $pdo->prepare("
+        SELECT box_id, name_top, name_sub, box_content, target_open_date
+        FROM user_details
+        WHERE box_id IN ($placeholders)
+    ");
+    $stmt->execute($boxIds);
+    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $d) {
+        $boxDetails[$d['box_id']] = $d;
+    }
+}
+// Load per-box details (name_top, name_sub, box_content, target_open_date)
+$boxDetails = [];
+
+if (!empty($registeredBoxes)) {
+    $boxIds = array_column($registeredBoxes, 'box_id');
+    $placeholders = implode(',', array_fill(0, count($boxIds), '?'));
+
+    $stmt = $pdo->prepare("
+        SELECT box_id, name_top, name_sub, box_content, target_open_date
+        FROM user_details
+        WHERE box_id IN ($placeholders)
+    ");
+    $stmt->execute($boxIds);
+    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $d) {
+        $boxDetails[$d['box_id']] = $d;
+    }
+}
+
+// Derive current status (incl. locked_since) from the newest box_data_history entry per box.
+// $boxHistory is already ordered DESC by created_at, so index [0] per box is the latest.
+$boxActual = [];
+
+foreach ($boxHistory as $boxName => $entries) {
+    $boxActual[$boxName] = [
+        'lock_status'  => $entries[0]['lock_status'],
+        'locked_since' => $entries[0]['created_at'],
+    ];
+}
+
+function locked_duration(?string $lockedSince): string
+{
+    if (!$lockedSince) {
+        return '';
+    }
+
+    $diff = time() - strtotime($lockedSince);
+    if ($diff < 0) {
+        $diff = 0;
+    }
+
+    $days    = intdiv($diff, 86400);
+    $hours   = intdiv($diff % 86400, 3600);
+    $minutes = intdiv($diff % 3600, 60);
+
+    $parts = [];
+    if ($days > 0)    $parts[] = $days . 'd';
+    if ($hours > 0)   $parts[] = $hours . 'h';
+    if ($minutes > 0 || empty($parts)) $parts[] = $minutes . 'm';
+
+    return implode(' ', $parts);
 }
 ?>

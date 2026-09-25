@@ -16,6 +16,11 @@ $stmt->execute([':username' => $username]);
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
 $proVersion = $row['pro_version'];
 
+// Load user data
+$stmt = $pdo->prepare("SELECT username, email, created_at, public_status FROM users WHERE id = ?");
+$stmt->execute([$user_id]);
+$user = $stmt->fetch();
+
 // Registrierte Boxen abrufen
 $sql = "SELECT box_id, registered_at FROM user_boxes 
         WHERE user_id = :user_id 
@@ -67,7 +72,7 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="settings-card">
 
             <div class="settings-card-header">
-                Linked Boxes
+                My LockMeBox:
             </div>
 
             <div class="settings-card-body">
@@ -76,18 +81,56 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <p class="box-empty">No boxes registered yet.</p>
                 <?php else: ?>
                     <div class="box-list">
-                        <?php foreach ($registeredBoxes as $box): ?>
-                            <div class="box-item" id="box-<?= htmlspecialchars($box['box_id']) ?>" onclick="openHistoryDialog('<?= htmlspecialchars($box['box_id']) ?>')">
+                        <?php foreach ($registeredBoxes as $box):
+                            $bid = $box['box_id'];
+                            $d = $boxDetails[$bid] ?? null;
+                        ?>
+                            <div class="box-item" id="box-<?= htmlspecialchars($bid) ?>">
+
+                               <?php
+                                $actual = $boxActual[$bid] ?? null;
+                                $isLocked = $actual && (int)$actual['lock_status'] === 1;
+                                ?>
                                 <div class="box-item-main">
-                                    <span class="box-id">LockMeBox <?= htmlspecialchars($box['box_id']) ?></span>
-                                    <span class="box-status" id="box-status-<?= htmlspecialchars($box['box_id']) ?>"></span>
+                                    <span class="box-id">LockMeBox <?= htmlspecialchars($bid) ?></span>
+                                    <?php if ($isLocked && !empty($actual['locked_since'])): ?>
+                                         <div class="box-details-info">
+                                            <?php if (!empty($d['name_top'])): ?>
+                                                <span>Locker: <?= htmlspecialchars($d['name_top']) ?></span>
+                                            <?php endif; ?>
+                                            <?php if (!empty($d['name_sub'])): ?>
+                                                <span>Lockee: <?= htmlspecialchars($d['name_sub']) ?></span>
+                                            <?php endif; ?>
+                                            <?php if (!empty($d['box_content'])): ?>
+                                                <span>Box Content: <?= htmlspecialchars($d['box_content']) ?></span>
+                                            <?php endif; ?>
+                                            <?php if (!empty($d['target_open_date'])): ?>
+                                                <span>Target Open Date: <?= htmlspecialchars(date('d.m.Y H:i', strtotime($d['target_open_date']))) ?></span>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="box-details-info">
+                                            <span>Locked since: <?= htmlspecialchars(locked_duration($actual['locked_since'])) ?></span>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <span class="box-status" id="box-status-<?= htmlspecialchars($bid) ?>"></span>
                                 </div>
-                                <button
-                                    type="button"
-                                    class="box-remove-btn"
-                                    onclick="event.stopPropagation(); removeBox('<?= htmlspecialchars($box['box_id']) ?>')">
-                                    Remove
-                                </button>
+
+                                <div class="box-item-actions">
+
+                                    <button type="button" class="box-action-btn" onclick="openHistoryDialog('<?= htmlspecialchars($bid) ?>')">
+                                        Show History
+                                    </button>
+
+                                    <button type="button" class="box-action-btn" onclick="openBoxDetailsDialog('<?= htmlspecialchars($bid) ?>')">
+                                        Set Details
+                                    </button>
+
+                                    <button type="button" class="box-action-btn box-remove-btn" onclick="removeBox('<?= htmlspecialchars($bid) ?>')">
+                                        Remove Box
+                                    </button>
+
+                                </div>
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -96,6 +139,29 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
         </div>
+
+        <!-- PUBLIC STATUS -->
+        <div class="settings-card">
+
+            <div class="settings-card-header">
+                Public Status
+            </div>
+
+            <div class="settings-card-body">
+
+                <label class="toggle-row">
+                    <span>Show my box status publicly</span>
+                    <input
+                        type="checkbox"
+                        id="publicStatusToggle"
+                        <?= $user['public_status'] ? 'checked' : '' ?>
+                        onchange="togglePublicStatus(this.checked)">
+                </label>
+
+            </div>
+
+        </div>
+
 
         <!-- SECURITY -->
 
@@ -418,6 +484,51 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
             Close
         </button>
     </div>
+
+</dialog>
+
+<!-- =========================
+     BOX DETAILS DIALOG
+========================= -->
+
+<dialog id="boxDetailsDialog" class="modern-dialog">
+
+    <h3>Box Details – <span id="detailsBoxName"></span></h3>
+
+    <form id="boxDetailsForm">
+
+        <div class="input-group">
+            <input type="text" id="detailsNameTop" name="name_top" placeholder=" " required>
+            <label>Name of Locker</label>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="detailsNameSub" name="name_sub" placeholder=" ">
+            <label>Name of Lockee</label>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="detailsBoxContent" name="box_content" placeholder=" ">
+            <label>Box Content</label>
+        </div>
+
+        <div class="input-group">
+            <input type="datetime-local" id="detailsTargetDate" name="target_open_date" placeholder=" ">
+            <label>Target Open Date</label>
+        </div>
+
+        <div id="detailsError" class="alert alert-danger" style="display:none;"></div>
+
+        <div class="dialog-actions">
+            <button type="button" class="btn-modern" onclick="document.getElementById('boxDetailsDialog').close()">
+                Cancel
+            </button>
+            <button type="submit" class="btn-modern">
+                Save
+            </button>
+        </div>
+
+    </form>
 
 </dialog>
 

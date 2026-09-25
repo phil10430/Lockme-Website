@@ -47,7 +47,7 @@ require_once __DIR__ . '/templates/header.php';
             <button class="faq-question">LockMeBox Pro: How does remote control work?</button>
             <div class="faq-answer">
                     Create an account on lockmebox.com. 
-                    Sign in on your smartphone and connect to your LockMeBox.
+                    Sign in on with your App on your smartphone and connect to your LockMeBox.
                     The person who controls remotely has to sign in with the same account on lockmebox.com.
             </div>
         </div>

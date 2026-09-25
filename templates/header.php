@@ -25,10 +25,11 @@
         <script src="/assets/js/lock_dialog.js"></script>
         <script src="/assets/js/open_app_script.js"></script>
         <script src="/assets/js/lock_dialog_random_time.js"></script>
-        <script>
-    const boxHistoryData = <?php echo json_encode($boxHistory, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
-</script>
+        <script> const boxHistoryData = <?php echo json_encode($boxHistory, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT); ?>; </script>
         <script src="/assets/js/remove_box_script.js"></script>
+        <script src="/assets/js/toggle_public_status.js"></script>
+        <script>  window.boxDetails = <?= json_encode($boxDetails, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) ?>;</script>
+        <script src="/assets/js/box_details.js"></script>
     </head>
        
     <body class="<?= $bodyClass ?? '' ?>">   
@@ -41,50 +42,50 @@
 
 
 
+<!-- GLOBAL NAVBAR -->
+<nav class="topbar">
 
-    <!-- GLOBAL NAVBAR -->
-    <nav class="topbar">
+    <div class="topbar-inner">
 
-        <div class="topbar-inner">
+        <!-- LEFT -->
+        <div class="logo">
+            <a href="/">
+                <img src="/assets/images/logo_white.png" alt="Lockmebox Logo">
+            </a>
+        </div>
 
-            <!-- LEFT -->
-            <div class="logo">
-                <a href="/">
-                    <img src="/assets/images/logo_white.png" alt="Lockmebox Logo">
+        <!-- CENTER -->
+        <div class="top-center">
+            <a href="/puplic_user_status.php">Locked Users</a>
+            <a href="/faq.php">FAQ</a>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="top-right">
+
+            <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
+
+                <a href="/profile_page.php" title="Account">
+                    <i class="ti ti-user"></i>
                 </a>
-            </div>
 
-            <!-- CENTER -->
-            <div class="top-center">
-                <a href="/faq.php">FAQ</a>
-            </div>
+                <a href="/logout.php" title="Logout">
+                    <i class="ti ti-logout"></i>
+                </a>
 
-            <!-- RIGHT -->
-            <div class="top-right">
+            <?php else: ?>
 
-                <?php if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true): ?>
+                <a href="/control_center.php" title="Login">
+                    <i class="ti ti-login"></i>
+                </a>
 
-                    <a href="/profile_page.php" title="Account">
-                        <i class="ti ti-user"></i>
-                    </a>
-
-                    <a href="/logout.php" title="Logout">
-                        <i class="ti ti-logout"></i>
-                    </a>
-
-                <?php else: ?>
-
-                    <a href="/control_center.php" title="Login">
-                        <i class="ti ti-login"></i>
-                    </a>
-
-                <?php endif; ?>
-
-            </div>
+            <?php endif; ?>
 
         </div>
 
-    </nav>
+    </div>
+
+</nav>
 
 <?php if (!empty($noindex)): ?>
   <meta name="robots" content="noindex, nofollow">
