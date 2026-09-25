@@ -125,6 +125,9 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <button type="button" class="box-action-btn" onclick="openBoxDetailsDialog('<?= htmlspecialchars($bid) ?>')">
                                         Set Details
                                     </button>
+                                        <button type="button" class="box-action-btn" onclick="openShareDialog('<?= htmlspecialchars($bid) ?>')">
+                                        Share Status
+                                    </button>
 
                                     <button type="button" class="box-action-btn box-remove-btn" onclick="removeBox('<?= htmlspecialchars($bid) ?>')">
                                         Remove Box
@@ -533,4 +536,61 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </dialog>
 
 
+<!-- =========================
+     SHARE DIALOG
+========================= -->
+
+<!-- =========================
+     SHARE DIALOG
+========================= -->
+
+<dialog id="shareDialog" class="modern-dialog">
+
+    <h4>Share Status of LockMeBox <span id="shareBoxName"></span></h4>
+
+    <?php if (!$user['public_status']): ?>
+        <div class="alert alert-danger">
+            Your public status is currently off. Turn it on above so this link actually shows something.
+        </div>
+    <?php endif; ?>
+
+    <div class="input-group">
+        <input type="text" id="shareLinkInput" readonly onclick="this.select()">
+        <label>Link</label>
+    </div>
+
+    <div class="share-icon-row">
+
+        <button type="button" class="share-icon-btn" onclick="copyShareLink()" title="Copy link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+        </button>
+
+        <a id="shareTwitterLink" class="share-icon-btn" target="_blank" rel="noopener" title="Share on X">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+        </a>
+
+        <a id="shareBlueskyLink" class="share-icon-btn" target="_blank" rel="noopener" title="Share on Bluesky">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 10.8c-.9-1.75-3.36-5.02-5.64-6.63C4.17 2.65 3.3 2.98 2.73 3.3c-.66.38-.83 1.36-.83 1.93 0 .58.32 4.76.53 5.45.7 2.3 3.2 3.08 5.5 2.82-3.98.58-7.5 2.24-2.87 7.4 5.08 5.23 6.96-1.12 7.94-4.49.98 3.37 2.16 9.5 7.91 4.49 4.32-4.49 1.4-6.82-2.58-7.4 2.3.26 4.8-.52 5.5-2.82.21-.69.53-4.87.53-5.45 0-.57-.17-1.55-.83-1.93-.57-.32-1.44-.65-3.63.87-2.28 1.61-4.74 4.88-5.64 6.63z"/>
+            </svg>
+        </a>
+
+    </div>
+
+    <p id="shareCopiedMsg" class="settings-muted" style="display:none; margin-top:10px;">
+        Link copied.
+    </p>
+
+    <div class="dialog-actions">
+        <button type="button" class="btn-modern" onclick="document.getElementById('shareDialog').close()">
+            Close
+        </button>
+    </div>
+
+</dialog>
 <?php require_once __DIR__ . '/templates/footer.php'; ?>
