@@ -68,7 +68,7 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
   
-        <!-- REGISTERED BOXES -->
+       <!-- REGISTERED BOXES -->
         <div class="settings-card">
 
             <div class="settings-card-header">
@@ -77,66 +77,233 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             <div class="settings-card-body">
 
-               <?php if (empty($registeredBoxes)): ?>
-                    <p class="box-empty">No boxes registered yet.</p>
-                <?php else: ?>
-                    <div class="box-list">
-                        <?php foreach ($registeredBoxes as $box):
-                            $bid = $box['box_id'];
-                            $d = $boxDetails[$bid] ?? null;
-                        ?>
-                            <div class="box-item" id="box-<?= htmlspecialchars($bid) ?>">
+                <?php if (empty($registeredBoxes)): ?>
 
-                               <?php
-                                $actual = $boxActual[$bid] ?? null;
-                                $isLocked = $actual && (int)$actual['lock_status'] === 1;
-                                ?>
+                    <p class="box-empty">
+                        No boxes registered yet.
+                    </p>
+
+                <?php else: ?>
+
+                    <div class="box-list">
+
+                        <?php foreach (
+                            $registeredBoxes as $box
+                        ):
+
+                            $bid =
+                                $box['box_id'];
+
+                            $d =
+                                $boxDetails[$bid]
+                                ?? null;
+
+                            $actual =
+                                $boxActual[$bid]
+                                ?? null;
+
+                            $isLocked =
+                                $actual &&
+                                (int) $actual['lock_status'] === 1;
+
+                        ?>
+
+                            <div
+                                class="box-item"
+                                id="box-<?= htmlspecialchars($bid) ?>"
+                            >
+
                                 <div class="box-item-main">
-                                    <span class="box-id">LockMeBox <?= htmlspecialchars($bid) ?></span>
-                                    <?php if ($isLocked && !empty($actual['locked_since'])): ?>
-                                         <div class="box-details-info">
-                                            <?php if (!empty($d['name_top'])): ?>
-                                                <span>Locker: <?= htmlspecialchars($d['name_top']) ?></span>
-                                            <?php endif; ?>
-                                            <?php if (!empty($d['name_sub'])): ?>
-                                                <span>Lockee: <?= htmlspecialchars($d['name_sub']) ?></span>
-                                            <?php endif; ?>
-                                            <?php if (!empty($d['box_content'])): ?>
-                                                <span>Box Content: <?= htmlspecialchars($d['box_content']) ?></span>
-                                            <?php endif; ?>
-                                            <?php if (!empty($d['target_open_date'])): ?>
-                                                <span>Target Open Date: <?= htmlspecialchars(date('d.m.Y H:i', strtotime($d['target_open_date']))) ?></span>
-                                            <?php endif; ?>
-                                        </div>
+
+                                    <!-- =================================
+                                        AVATAR + BOX ID
+                                        ================================= -->
+
+                                    <div class="box-title-row">
+
+                                        <?php if (
+                                            $d &&
+                                            !empty($d['avatar_path'])
+                                        ): ?>
+
+                                            <img
+                                                class="box-list-avatar"
+                                                src="<?= htmlspecialchars($d['avatar_path']) ?>"
+                                                alt=""
+                                                loading="lazy"
+                                            >
+
+                                        <?php else: ?>
+
+                                            <div
+                                                class="box-list-avatar-placeholder"
+                                                aria-hidden="true"
+                                            ></div>
+
+                                        <?php endif; ?>
+
+
+                                        <span class="box-id">
+                                            LockMeBox
+                                            <?= htmlspecialchars($bid) ?>
+                                        </span>
+
+                                    </div>
+
+
+                                    <!-- =================================
+                                        DETAILS
+                                        ================================= -->
+
+                                    <?php if (
+                                        $isLocked &&
+                                        !empty($actual['locked_since'])
+                                    ): ?>
+
                                         <div class="box-details-info">
-                                            <span>Locked since: <?= htmlspecialchars(locked_duration($actual['locked_since'])) ?></span>
+
+                                            <?php if (
+                                                !empty($d['name_top'])
+                                            ): ?>
+
+                                                <span>
+                                                    Keyholder:
+                                                    <?= htmlspecialchars(
+                                                        $d['name_top']
+                                                    ) ?>
+                                                </span>
+
+                                            <?php endif; ?>
+
+
+                                            <?php if (
+                                                !empty($d['name_sub'])
+                                            ): ?>
+
+                                                <span>
+                                                    Lockee:
+                                                    <?= htmlspecialchars(
+                                                        $d['name_sub']
+                                                    ) ?>
+                                                </span>
+
+                                            <?php endif; ?>
+
+
+                                            <?php if (
+                                                !empty($d['box_content'])
+                                            ): ?>
+
+                                                <span>
+                                                    Box Content:
+                                                    <?= htmlspecialchars(
+                                                        $d['box_content']
+                                                    ) ?>
+                                                </span>
+
+                                            <?php endif; ?>
+
+
+                                            <?php if (
+                                                !empty(
+                                                    $d['target_open_date']
+                                                )
+                                            ): ?>
+
+                                                <span>
+                                                    Target Open Date:
+                                                    <?= htmlspecialchars(
+                                                        date(
+                                                            'd.m.Y H:i',
+                                                            strtotime(
+                                                                $d[
+                                                                    'target_open_date'
+                                                                ]
+                                                            )
+                                                        )
+                                                    ) ?>
+                                                </span>
+
+                                            <?php endif; ?>
+
                                         </div>
+
+
+                                        <div class="box-details-info">
+
+                                            <span>
+                                                Locked since:
+                                                <?= htmlspecialchars(
+                                                    locked_duration(
+                                                        $actual[
+                                                            'locked_since'
+                                                        ]
+                                                    )
+                                                ) ?>
+                                            </span>
+
+                                        </div>
+
                                     <?php endif; ?>
 
-                                    <span class="box-status" id="box-status-<?= htmlspecialchars($bid) ?>"></span>
+
+                                    <span
+                                        class="box-status"
+                                        id="box-status-<?= htmlspecialchars($bid) ?>"
+                                    ></span>
+
                                 </div>
+
+
+                                <!-- =================================
+                                    ACTIONS
+                                    ================================= -->
 
                                 <div class="box-item-actions">
 
-                                    <button type="button" class="box-action-btn" onclick="openHistoryDialog('<?= htmlspecialchars($bid) ?>')">
+                                    <button
+                                        type="button"
+                                        class="box-action-btn"
+                                        onclick="openHistoryDialog('<?= htmlspecialchars($bid) ?>')"
+                                    >
                                         Show History
                                     </button>
 
-                                    <button type="button" class="box-action-btn" onclick="openBoxDetailsDialog('<?= htmlspecialchars($bid) ?>')">
+
+                                    <button
+                                        type="button"
+                                        class="box-action-btn"
+                                        onclick="openBoxDetailsDialog('<?= htmlspecialchars($bid) ?>')"
+                                    >
                                         Set Details
                                     </button>
-                                        <button type="button" class="box-action-btn" onclick="openShareDialog('<?= htmlspecialchars($bid) ?>')">
+
+
+                                    <button
+                                        type="button"
+                                        class="box-action-btn"
+                                        onclick="openShareDialog('<?= htmlspecialchars($bid) ?>')"
+                                    >
                                         Share Status
                                     </button>
 
-                                    <button type="button" class="box-action-btn box-remove-btn" onclick="removeBox('<?= htmlspecialchars($bid) ?>')">
+
+                                    <button
+                                        type="button"
+                                        class="box-action-btn box-remove-btn"
+                                        onclick="removeBox('<?= htmlspecialchars($bid) ?>')"
+                                    >
                                         Remove Box
                                     </button>
 
                                 </div>
+
                             </div>
+
                         <?php endforeach; ?>
+
                     </div>
+
                 <?php endif; ?>
 
             </div>
@@ -498,11 +665,47 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <h3>Box Details – <span id="detailsBoxName"></span></h3>
 
-    <form id="boxDetailsForm">
+    <form id="boxDetailsForm" enctype="multipart/form-data">
 
+     <div class="avatar-upload-row">
+
+            <div class="avatar-wrapper">
+
+                <img
+                    id="detailsAvatarPreview"
+                    class="avatar-preview"
+                    src=""
+                    alt=""
+                    style="display:none;"
+                >
+
+                <div
+                    id="detailsAvatarPlaceholder"
+                    class="avatar-placeholder">
+                </div>
+
+                <label
+                    class="avatar-upload-icon"
+                    for="detailsAvatar"
+                    title="Change avatar"
+                    aria-label="Change avatar"
+                >
+                    <span>📷</span>
+
+                    <input
+                        type="file"
+                        id="detailsAvatar"
+                        name="avatar"
+                        accept="image/png, image/jpeg, image/webp"
+                    >
+                </label>
+
+            </div>
+
+        </div>
         <div class="input-group">
             <input type="text" id="detailsNameTop" name="name_top" placeholder=" " required>
-            <label>Name of Locker</label>
+            <label>Name of Keyholder</label>
         </div>
 
         <div class="input-group">
