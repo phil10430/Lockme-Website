@@ -6,127 +6,32 @@ let currentDetailsBoxId = null;
 // =========================================================
 
 function openBoxDetailsDialog(boxId) {
-
     currentDetailsBoxId = boxId;
+    const d = (window.boxDetails && window.boxDetails[boxId]) || {};
 
-    const d =
-        (window.boxDetails &&
-         window.boxDetails[boxId])
-            || {};
+    document.getElementById('detailsBoxName').textContent = boxId;
+    document.getElementById('detailsNameTop').value = d.name_top || '';
+    document.getElementById('detailsNameSub').value = d.name_sub || '';
+    document.getElementById('detailsBoxContent').value = d.box_content || '';
+    document.getElementById('detailsTargetDate').value =
+        d.target_open_date ? d.target_open_date.replace(' ', 'T').slice(0, 16) : '';
+    document.getElementById('detailsAvatar').value = '';
+    document.getElementById('detailsPublicStatus').checked = !!(d.public_status && Number(d.public_status) === 1);
 
-
-    // -----------------------------------------------------
-    // Box name
-    // -----------------------------------------------------
-
-    document.getElementById(
-        'detailsBoxName'
-    ).textContent = boxId;
-
-
-    // -----------------------------------------------------
-    // Text fields
-    // -----------------------------------------------------
-
-    document.getElementById(
-        'detailsNameTop'
-    ).value = d.name_top || '';
-
-    document.getElementById(
-        'detailsNameSub'
-    ).value = d.name_sub || '';
-
-    document.getElementById(
-        'detailsBoxContent'
-    ).value = d.box_content || '';
-
-
-    // -----------------------------------------------------
-    // Target date
-    // -----------------------------------------------------
-
-    document.getElementById(
-        'detailsTargetDate'
-    ).value =
-        d.target_open_date
-            ? d.target_open_date
-                .replace(' ', 'T')
-                .slice(0, 16)
-            : '';
-
-
-    // -----------------------------------------------------
-    // Avatar
-    // -----------------------------------------------------
-
-    const preview =
-        document.getElementById(
-            'detailsAvatarPreview'
-        );
-
-    const placeholder =
-        document.getElementById(
-            'detailsAvatarPlaceholder'
-        );
-
-    const avatarInput =
-        document.getElementById(
-            'detailsAvatar'
-        );
-
-
-    // Reset file input
-
-    if (avatarInput) {
-        avatarInput.value = '';
-    }
-
-
-    // Existing avatar
+    const preview = document.getElementById('detailsAvatarPreview');
+    const placeholder = document.getElementById('detailsAvatarPlaceholder');
 
     if (d.avatar_path) {
-
-        preview.src =
-            d.avatar_path;
-
-        preview.style.display =
-            'block';
-
-        if (placeholder) {
-            placeholder.style.display =
-                'none';
-        }
-
+        preview.src = '/' + d.avatar_path;
+        preview.style.display = 'block';
+        placeholder.style.display = 'none';
     } else {
-
-        preview.src = '';
-
-        preview.style.display =
-            'none';
-
-        if (placeholder) {
-            placeholder.style.display =
-                'block';
-        }
+        preview.style.display = 'none';
+        placeholder.style.display = 'block';
     }
 
-
-    // -----------------------------------------------------
-    // Reset error
-    // -----------------------------------------------------
-
-    document.getElementById(
-        'detailsError'
-    ).style.display = 'none';
-
-
-    // -----------------------------------------------------
-    // Open dialog
-    // -----------------------------------------------------
-
-    document.getElementById(
-        'boxDetailsDialog'
-    ).showModal();
+    document.getElementById('detailsError').style.display = 'none';
+    document.getElementById('boxDetailsDialog').showModal();
 }
 
 
@@ -321,6 +226,10 @@ document.addEventListener(
                         'detailsTargetDate'
                     ).value
                 );
+                formData.append(
+                    'public_status',
+                    document.getElementById('detailsPublicStatus').checked ? '1' : '0'
+                );
 
 
                 // -----------------------------------------
@@ -441,52 +350,24 @@ document.addEventListener(
 // =========================================================
 
 function openShareDialog(boxId) {
+    const url = window.location.origin + '/box_share.php?box_id=' + encodeURIComponent(boxId);
+    const text = 'My LockMeBox status:';
+    const d = (window.boxDetails && window.boxDetails[boxId]) || {};
 
-    const url =
-        window.location.origin +
-        '/box_share.php?box_id=' +
-        encodeURIComponent(boxId);
+    document.getElementById('shareBoxName').textContent = boxId;
+    document.getElementById('shareLinkInput').value = url;
+    document.getElementById('shareCopiedMsg').style.display = 'none';
 
-    const text =
-        'My LockMeBox status:';
+    document.getElementById('sharePublicWarning').style.display =
+        (d.public_status && Number(d.public_status) === 1) ? 'none' : 'block';
 
+    document.getElementById('shareTwitterLink').href =
+        'https://twitter.com/intent/tweet?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(text);
 
-    document.getElementById(
-        'shareBoxName'
-    ).textContent = boxId;
+    document.getElementById('shareBlueskyLink').href =
+        'https://bsky.app/intent/compose?text=' + encodeURIComponent(text + ' ' + url);
 
-
-    document.getElementById(
-        'shareLinkInput'
-    ).value = url;
-
-
-    document.getElementById(
-        'shareCopiedMsg'
-    ).style.display = 'none';
-
-
-    document.getElementById(
-        'shareTwitterLink'
-    ).href =
-        'https://twitter.com/intent/tweet?url=' +
-        encodeURIComponent(url) +
-        '&text=' +
-        encodeURIComponent(text);
-
-
-    document.getElementById(
-        'shareBlueskyLink'
-    ).href =
-        'https://bsky.app/intent/compose?text=' +
-        encodeURIComponent(
-            text + ' ' + url
-        );
-
-
-    document.getElementById(
-        'shareDialog'
-    ).showModal();
+    document.getElementById('shareDialog').showModal();
 }
 
 

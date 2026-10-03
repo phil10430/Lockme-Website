@@ -15,19 +15,13 @@ require_once __DIR__ . '/templates/header.php';
 $box = null;
 
 if (preg_match('/^\d+$/', $boxId)) {
-
     $stmt = $pdo->prepare("
         SELECT ub.box_id
         FROM user_boxes ub
-        JOIN users u ON u.id = ub.user_id
-        WHERE ub.box_id = :box_id
-        AND u.public_status = 1
+        JOIN user_details ud ON ud.box_id = ub.box_id
+        WHERE ub.box_id = :box_id AND ud.public_status = 1
     ");
-
-    $stmt->execute([
-        ':box_id' => $boxId
-    ]);
-
+    $stmt->execute([':box_id' => $boxId]);
     $box = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 

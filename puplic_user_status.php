@@ -9,21 +9,20 @@ require_once __DIR__ . '/templates/header.php';
 
 
 // =========================================================
-// REGISTERED BOXES
+// REGISTERED BOXES (box-level public_status)
 // =========================================================
 
 $stmt = $pdo->prepare("
     SELECT ub.box_id, ub.registered_at
     FROM user_boxes ub
-    JOIN users u ON u.id = ub.user_id
-    WHERE u.public_status = 1
+    JOIN user_details ud ON ud.box_id = ub.box_id
+    WHERE ud.public_status = 1
     ORDER BY ub.registered_at DESC
 ");
 
 $stmt->execute();
 
 $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 
 // =========================================================
 // LATEST STATUS PER BOX
@@ -494,7 +493,7 @@ if (!empty($registeredBoxes)) {
     <div class="status-header">
 
         <h1>
-            Locked Users
+            LOCKEES
         </h1>
 
     </div>

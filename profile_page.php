@@ -17,7 +17,7 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
 $proVersion = $row['pro_version'];
 
 // Load user data
-$stmt = $pdo->prepare("SELECT username, email, created_at, public_status FROM users WHERE id = ?");
+$stmt = $pdo->prepare("SELECT username, email, created_at FROM users WHERE id = ?");
 $stmt->execute([$user_id]);
 $user = $stmt->fetch();
 
@@ -119,34 +119,27 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         AVATAR + BOX ID
                                         ================================= -->
 
-                                    <div class="box-title-row">
+                                   <div class="box-title-row">
 
-                                        <?php if (
-                                            $d &&
-                                            !empty($d['avatar_path'])
-                                        ): ?>
-
-                                            <img
-                                                class="box-list-avatar"
-                                                src="<?= htmlspecialchars($d['avatar_path']) ?>"
-                                                alt=""
-                                                loading="lazy"
-                                            >
-
+                                        <?php if ($d && !empty($d['avatar_path'])): ?>
+                                            <img class="box-list-avatar" src="<?= htmlspecialchars($d['avatar_path']) ?>" alt="" loading="lazy">
                                         <?php else: ?>
-
-                                            <div
-                                                class="box-list-avatar-placeholder"
-                                                aria-hidden="true"
-                                            ></div>
-
+                                            <div class="box-list-avatar-placeholder" aria-hidden="true"></div>
                                         <?php endif; ?>
 
-
                                         <span class="box-id">
-                                            LockMeBox
-                                            <?= htmlspecialchars($bid) ?>
+                                            LockMeBox <?= htmlspecialchars($bid) ?>
                                         </span>
+
+                                        <?php if ($d && (int)($d['public_status'] ?? 0) === 1): ?>
+                                            <span class="box-public-badge" title="Status is publicly visible">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <circle cx="12" cy="12" r="10"></circle>
+                                                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                                                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                                </svg>
+                                            </span>
+                                        <?php endif; ?>
 
                                     </div>
 
@@ -310,35 +303,7 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         </div>
 
-        <!-- PUBLIC STATUS -->
-        <div class="settings-card">
-
-            <div class="settings-card-header">
-                Public Status
-            </div>
-
-            <div class="settings-card-body">
-
-                <label class="toggle-row">
-                    <span>Show my box status publicly</span>
-
-                    <input
-                        type="checkbox"
-                        id="publicStatusToggle"
-                        <?= $user['public_status'] ? 'checked' : '' ?>
-                        onchange="togglePublicStatus(this.checked)"
-                    >
-                </label>
-
-                <p class="toggle-explanation">
-                    When enabled, you’ll be listed on the
-                    <a href="/puplic_user_status.php">Locked Users Page</a>, where others can see your current locked status.
-                </p>
-
-            </div>
-
-        </div>
-
+    
 
         <!-- SECURITY -->
 
@@ -674,45 +639,18 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <form id="boxDetailsForm" enctype="multipart/form-data">
 
-     <div class="avatar-upload-row">
-
-            <div class="avatar-wrapper">
-
-                <img
-                    id="detailsAvatarPreview"
-                    class="avatar-preview"
-                    src=""
-                    alt=""
-                    style="display:none;"
-                >
-
-                <div
-                    id="detailsAvatarPlaceholder"
-                    class="avatar-placeholder">
-                </div>
-
-                <label
-                    class="avatar-upload-icon"
-                    for="detailsAvatar"
-                    title="Change avatar"
-                    aria-label="Change avatar"
-                >
-                    <span>📷</span>
-
-                    <input
-                        type="file"
-                        id="detailsAvatar"
-                        name="avatar"
-                        accept="image/png, image/jpeg, image/webp"
-                    >
-                </label>
-
-            </div>
-
+        <div class="avatar-upload-row">
+            <img id="detailsAvatarPreview" class="avatar-preview" src="" alt="" style="display:none;">
+            <div id="detailsAvatarPlaceholder" class="avatar-placeholder"></div>
+            <label class="btn-modern avatar-upload-btn">
+                Upload Image
+                <input type="file" id="detailsAvatar" name="avatar" accept="image/png, image/jpeg, image/webp" style="display:none;">
+            </label>
         </div>
+
         <div class="input-group">
             <input type="text" id="detailsNameTop" name="name_top" placeholder=" " required>
-            <label>Name of Keyholder</label>
+            <label>Name of Locker</label>
         </div>
 
         <div class="input-group">
@@ -729,6 +667,11 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <input type="datetime-local" id="detailsTargetDate" name="target_open_date" placeholder=" ">
             <label>Target Open Date</label>
         </div>
+
+        <label class="toggle-row">
+            <span>Show this box's status publicly</span>
+            <input type="checkbox" id="detailsPublicStatus" name="public_status_checkbox">
+        </label>
 
         <div id="detailsError" class="alert alert-danger" style="display:none;"></div>
 
@@ -758,11 +701,10 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <h4>Share Status of LockMeBox <span id="shareBoxName"></span></h4>
 
-    <?php if (!$user['public_status']): ?>
-        <div class="alert alert-danger">
-            Your public status is currently off. Turn it on above so this link actually shows something.
-        </div>
-    <?php endif; ?>
+    <div id="sharePublicWarning" class="alert alert-danger" style="display:none;">
+        This box's status is currently private. Enable "Show this box's status publicly" in Set Details so this link actually shows something.
+    </div>
+
 
     <div class="input-group">
         <input type="text" id="shareLinkInput" readonly onclick="this.select()">

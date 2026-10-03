@@ -22,7 +22,18 @@
     box-sizing:border-box;
 }
 
+html{
+    background:var(--mainbackground-color);
+}
+
+/* Fixed overall site width - body becomes the positioning
+   context so absolutely positioned children (navbar) stay
+   within this width instead of the full browser viewport */
 body{
+    position:relative;
+    max-width:1300px;
+    margin:0 auto;
+
     background:var(--mainbackground-color);
     color:var(--primary-color);
     font-family:"Inter", Arial, sans-serif;
@@ -31,9 +42,13 @@ body{
     overflow-x:hidden;
     padding-top:72px;
 }
+
+/* Landing page keeps the same top offset as every other page,
+   so the navbar sits above the hero instead of overlapping it */
 body.landing-page{
-    padding-top:0;
+    padding-top:72px;
 }
+
 /* TYPOGRAPHY */
 
 h1{
@@ -71,6 +86,21 @@ a:focus,
 a:active{
     text-decoration:none;
     color:var(--link-hover-color);
+}
+
+/* =========================================================
+   iOS SAFARI ZOOM-ON-FOCUS FIX
+========================================================= */
+
+input,
+textarea,
+select {
+    font-size: 16px;
+}
+
+/* .form-control überschreibt sonst wieder auf 15px */
+.form-control{
+    font-size: 16px;
 }
 
 /* =========================================================
@@ -135,18 +165,16 @@ a:active{
     text-decoration: none;
     font-size: 12.5px;
     font-weight: 500;
-    letter-spacing: 1.6px; 
+    letter-spacing: 1.6px;
     opacity: 0.7;
     padding: 4px 0;
     transition: opacity 0.25s ease;
 }
- 
 
 .top-center a:hover {
     opacity: 1;
 }
 
- 
 @media (max-width: 768px) {
     .top-center {
         gap: 16px;
@@ -157,6 +185,7 @@ a:active{
         letter-spacing: 1px;
     }
 }
+
 /* RIGHT */
 
 .top-right {
@@ -189,6 +218,7 @@ a:active{
     background: rgba(255, 255, 255, 0.08);
     transform: translateY(-1px);
 }
+
 /* =========================================================
    LANDING PAGE
 ========================================================= */
@@ -196,7 +226,10 @@ a:active{
 .landing-wrapper{
     position:relative;
 
-    min-height:100vh;
+    /* account for the 72px navbar offset already applied via
+       body.landing-page padding-top, so the hero still fills
+       exactly one viewport height below the navbar */
+    min-height:calc(100vh - 72px);
 
     background:
         linear-gradient(to bottom,
@@ -282,7 +315,7 @@ a:active{
     background:transparent;
     color:#fff;
     font-size:14px;
-    letter-spacing:2px; 
+    letter-spacing:2px;
     border-radius:50px;
     transition:.3s ease;
     cursor:pointer;
@@ -317,20 +350,17 @@ a:active{
   user-select: none;
 }
 
-/* Ripple on hover */
 .btn-round:hover {
   color:#fff;
   background: rgba(255, 255, 255, 0.17);
   border-color: rgba(255, 255, 255, 0.25);
 }
 
-/* Ripple on press */
 .btn-round:active {
   background: rgba(255, 255, 255, 0.22);
   transform: scale(0.95);
 }
 
-/* Flash-overlay (entspricht dem Android Ripple) */
 .btn-round::after {
   content: '';
   display: block;
@@ -348,7 +378,6 @@ a:active{
   transition: none;
 }
 
-/* Breite Varianten */
 .btn-round[style*="width:80px"]  { width: 80px  !important; }
 .btn-round[style*="width:120px"] { width: 120px !important; }
 
@@ -358,6 +387,7 @@ a:active{
   max-width: 100%;
   height: auto;
 }
+
 /* =========================================================
    CARD
 ========================================================= */
@@ -506,13 +536,12 @@ a:active{
    FORM
 ========================================================= */
 
-
 .form-control{
     width:100%;
     padding:14px 16px;
 
     border-radius:12px;
-    background:transparent; 
+    background:transparent;
     border:1px solid var(--secondary-color);
 
     color:var(--primary-color);
@@ -527,23 +556,21 @@ a:active{
     backdrop-filter: blur(8px);
 }
 
-/* FOCUS STATE */
 .form-control:focus{
-    background:transparent; 
+    background:transparent;
     border-color:var(--secondary-color);
     color:var(--primary-color);
 }
 
-/* PLACEHOLDER */
 .form-control::placeholder{
     color:var(--secondary-color);
 }
 
-/* TEXTAREA */
 textarea.form-control{
     resize:none;
     min-height:140px;
 }
+
 /* =========================================================
    BOX CONTROL
 ========================================================= */
@@ -583,9 +610,7 @@ footer{
 }
 
 .footer-legal a{
-    
     text-decoration:none;
-
     font-size:14px;
 }
 
@@ -600,47 +625,44 @@ footer{
 }
 
 /* =========================================================
-   MOBILE
+   MOBILE (SITE-WIDE)
 ========================================================= */
 
-/* =========================================================
-   MOBILE
-========================================================= */
 @media(max-width:768px){
-.topbar{
-padding:0 20px;
+    .topbar{
+        padding:0 20px;
     }
-/* .top-center{
-display:none;
-    } */  ← ENTFERNEN
-.top-right{
-gap:14px;
+    .top-right{
+        gap:14px;
     }
-.top-right a{
-font-size:16px;
+    .top-right a{
+        font-size:16px;
     }
-.logo img{
-height:40px;
+    .logo img{
+        height:40px;
     }
-.hero h1{
-font-size:42px;
+    .hero h1{
+        font-size:42px;
     }
-.hero p{
-font-size:16px;
+    .hero p{
+        font-size:16px;
     }
-.btn-modern{
-width:100%;
+    .btn-modern{
+        width:100%;
     }
-.hero-buttons{
-width:100%;
+    .hero-buttons{
+        width:100%;
     }
-.login-card,
-.register-card,
-.passwordreset-card{
-width:50%;
+    .login-card,
+    .register-card,
+    .passwordreset-card{
+        width:50%;
     }
 }
 
+/* =========================================================
+   FAQ
+========================================================= */
 
 .faq-wrapper{
     min-height:80vh;
@@ -666,14 +688,10 @@ width:50%;
     margin-bottom:40px;
 }
 
-/* ITEM */
-
 .faq-item{
     border-bottom:1px solid rgba(255,255,255,0.08);
     padding:15px 0;
 }
-
-/* QUESTION */
 
 .faq-question{
     width:100%;
@@ -691,8 +709,6 @@ width:50%;
     opacity:0.7;
 }
 
-/* ANSWER */
-
 .faq-answer{
     max-height:0;
     overflow:hidden;
@@ -701,8 +717,6 @@ width:50%;
     line-height:1.6;
     transition:max-height 0.3s ease;
 }
-
-/* OPEN STATE */
 
 .faq-item.active .faq-answer{
     max-height:200px;
@@ -721,8 +735,6 @@ width:50%;
     height:100%;
 }
 
-/* GLASS CARD */
-
 .pro-mini-card {
     width: 100%;
     max-width: 350px;
@@ -738,9 +750,6 @@ width:50%;
         0 0 0 1px rgba(0, 0, 0, 0.3) inset;
 }
 
-
-/* TITLE */
-
 .pro-mini-card h2{
     font-size:24px;
     line-height:1.2;
@@ -748,21 +757,16 @@ width:50%;
     margin-bottom:14px;
 }
 
-/* TEXT */
-
 .pro-mini-card p:not(.pro-note) {
     font-size:14px;
     line-height:1.6;
     margin-bottom:24px;
 }
 
-/* BUTTON */
-
 .pro-mini-card .btn-modern{
     width:100%;
     text-align: center;
 }
-
 
 .pro-feature {
     display: flex;
@@ -826,7 +830,7 @@ width:50%;
 }
 
 .pro-note::before {
-    content: "\ea98"; /* ti-info-circle unicode */
+    content: "\ea98";
     font-family: "tabler-icons";
     font-size: 14px;
     color: #6366F1;
@@ -848,7 +852,7 @@ width:50%;
     display:flex;
     justify-content:center;
 
-    padding:120px 20px 60px;
+    padding:20px 20px 60px;
 }
 
 .settings-container{
@@ -856,9 +860,7 @@ width:50%;
     max-width:760px;
 }
 
-/* =========================
-   HERO
-========================= */
+/* HERO */
 
 .settings-hero{
     display:flex;
@@ -882,9 +884,7 @@ width:50%;
     color:var(--secondary-color);
 }
 
-/* =========================
-   SETTINGS CARD
-========================= */
+/* SETTINGS CARD */
 
 .settings-card{
     margin-bottom:22px;
@@ -905,8 +905,6 @@ width:50%;
     overflow:hidden;
 }
 
-/* HEADER */
-
 .settings-card-header{
     padding:22px 26px;
 
@@ -919,15 +917,9 @@ width:50%;
     color:var(--secondary-color);
 }
 
-/* BODY */
-
 .settings-card-body{
     padding:26px;
 }
-
-/* =========================
-   MUTED TEXT
-========================= */
 
 .settings-muted{
     color:var(--secondary-color);
@@ -937,9 +929,7 @@ width:50%;
     margin-bottom:20px;
 }
 
-/* =========================
-   PRO STATUS
-========================= */
+/* PRO STATUS */
 
 .pro-status{
     display:flex;
@@ -954,8 +944,6 @@ width:50%;
 
     border:1px solid rgba(255,255,255,0.06);
 }
-
-/* ACTIVE */
 
 .pro-status.active{
     background:
@@ -974,21 +962,22 @@ width:50%;
     text-transform:uppercase;
 }
 
-/* =========================
-   DANGER ZONE
-========================= */
+/* DANGER ZONE */
 
 .danger-zone{
     border-color:rgba(255,107,107,0.15);
 }
 
-/* =========================
-   MODERN DIALOG
-========================= */
+/* =========================================================
+   MODERN DIALOG  (single, consolidated definition)
+========================================================= */
 
 .modern-dialog{
     width:100%;
     max-width:440px;
+
+    max-height:85vh;
+    overflow-y:auto;
 
     padding:32px;
 
@@ -1005,15 +994,11 @@ width:50%;
     margin:auto;
 }
 
-/* BACKDROP */
-
 .modern-dialog::backdrop{
     background:rgba(0,0,0,0.72);
 
     backdrop-filter:blur(8px);
 }
-
-/* TITLE */
 
 .modern-dialog h3{
     margin-bottom:24px;
@@ -1021,19 +1006,30 @@ width:50%;
     font-size:28px;
 }
 
-/* =========================
-   INPUT GROUP
-========================= */
+@media(max-width:768px){
+    .modern-dialog{
+        padding:24px 20px;
+        max-height:88vh;
+        width:92vw;
+    }
+
+    .modern-dialog h3{
+        font-size:22px;
+    }
+}
+
+/* =========================================================
+   INPUT GROUP  (single, consolidated definition)
+========================================================= */
 
 .input-group{
+    width:100%;
     position:relative;
-
     margin-bottom:22px;
 }
 
-/* INPUT */
-
-.input-group input{
+.input-group input,
+.input-group textarea{
     width:100%;
 
     padding:18px 14px 10px;
@@ -1049,17 +1045,22 @@ width:50%;
     outline:none;
 
     transition:0.25s ease;
+        -webkit-appearance: none;
+    appearance: none;
+    overflow: hidden;
 }
 
-/* FOCUS */
+.input-group input[type="datetime-local"] {
+    min-width: 0;
+    box-sizing: border-box;
+}
 
-.input-group input:focus{
+.input-group input:focus,
+.input-group textarea:focus{
     border-color:rgba(255,255,255,0.22);
 
     background:rgba(255,255,255,0.04);
 }
-
-/* LABEL */
 
 .input-group label{
     position:absolute;
@@ -1076,8 +1077,6 @@ width:50%;
     transition:0.2s ease;
 }
 
-/* FLOATING LABEL */
-
 .input-group input:focus + label,
 .input-group input:not(:placeholder-shown) + label{
     top:6px;
@@ -1087,9 +1086,9 @@ width:50%;
     opacity:0.7;
 }
 
-/* =========================
+/* =========================================================
    DIALOG ACTIONS
-========================= */
+========================================================= */
 
 .dialog-actions{
     display:flex;
@@ -1100,9 +1099,9 @@ width:50%;
     margin-top:30px;
 }
 
-/* =========================
-   BUTTONS
-========================= */
+/* =========================================================
+   BUTTONS (dialog-related)
+========================================================= */
 
 .btn-danger-modern{
     padding:14px 24px;
@@ -1123,10 +1122,6 @@ width:50%;
     opacity:0.85;
     transform:translateY(-1px);
 }
-
-/* =========================
-   DIALOG BUTTON
-========================= */
 
 .btn-dialog {
   display: inline-flex;
@@ -1150,21 +1145,15 @@ width:50%;
   user-select: none;
 }
 
-/* HOVER */
 .btn-dialog:hover {
   background: #343434;
   transform: translateY(-1px);
 }
 
-/* ACTIVE */
 .btn-dialog:active {
   transform: scale(0.97);
   background: #3a3a3a;
 }
-
-/* =========================
-   PRIMARY BUTTON
-========================= */
 
 .btn-dialog-primary {
   background: #E53935;
@@ -1173,20 +1162,14 @@ width:50%;
   font-weight: 700;
 }
 
-/* HOVER */
 .btn-dialog-primary:hover {
   background: #ef5350;
   transform: translateY(-1px);
 }
 
-/* ACTIVE */
 .btn-dialog-primary:active {
   background: #c62828;
 }
-
-/* =========================
-   RIPPLE
-========================= */
 
 .btn-dialog::after,
 .btn-dialog-primary::after {
@@ -1204,9 +1187,10 @@ width:50%;
   opacity: 1;
   transition: none;
 }
-/* =========================
+
+/* =========================================================
    ALERTS
-========================= */
+========================================================= */
 
 .alert{
     margin-bottom:20px;
@@ -1234,14 +1218,14 @@ width:50%;
     color:#8dffb0;
 }
 
-/* =========================
-   MOBILE
-========================= */
+/* =========================================================
+   SETTINGS MOBILE
+========================================================= */
 
 @media(max-width:768px){
 
     .settings-wrapper{
-        padding:100px 16px 40px;
+        padding:0px 16px 40px;
     }
 
     .settings-hero{
@@ -1262,9 +1246,9 @@ width:50%;
     }
 }
 
-/* =========================
+/* =========================================================
    AUTH-MESSAGES
-========================= */
+========================================================= */
 
 .auth-message{
     display:flex;
@@ -1300,7 +1284,6 @@ width:50%;
 /* =========================
    LOCKED-USERS-COUNTER on Landing page
 ========================= */
-
 
 .hero-live-indicator {
     display: inline-flex;
@@ -1436,7 +1419,6 @@ width:50%;
    Box HISTORY
 ========================= */
 
-
 .history-dialog {
     max-width: 480px;
     width: 90%;
@@ -1520,7 +1502,6 @@ width:50%;
     padding: 20px 0;
 }
 
-
 .history-summary-box {
     display: flex;
     align-items: center;
@@ -1550,6 +1531,7 @@ width:50%;
     padding: 3px 10px;
     border-radius: 20px;
 }
+
 .history-month-row {
     display: flex;
     align-items: center;
@@ -1595,6 +1577,7 @@ width:50%;
     font-weight: 600;
     color: #fff;
 }
+
 .history-summary-detail {
     display: block;
     font-size: 0.85rem;
@@ -1645,10 +1628,10 @@ width:50%;
     transform: translateX(14px);
 }
 
-
 /* =========================
    Share Public Status
 ========================= */
+
 .share-icon-row {
     display: flex;
     gap: 10px;
@@ -1695,28 +1678,37 @@ width:50%;
     border-color: #4a4a4e;
 }
 
-
-
-
+/* =========================
+   Avatar upload (box details dialog)
+========================= */
 
 .avatar-upload-row {
     display: flex;
     align-items: center;
+    gap: 14px;
     margin-bottom: 18px;
 }
 
 .avatar-wrapper {
     position: relative;
-    width: 58px;
-    height: 58px;
 }
 
 .avatar-preview,
 .avatar-placeholder {
-    width: 58px;
-    height: 58px;
     border-radius: 50%;
     object-fit: cover;
+}
+
+.avatar-wrapper,
+.avatar-preview,
+.avatar-placeholder {
+    width: 72px;
+    height: 72px;
+    min-width: 72px;
+    min-height: 72px;
+    max-width: 72px;
+    max-height: 72px;
+    flex-shrink: 0;
 }
 
 .avatar-placeholder {
@@ -1726,11 +1718,11 @@ width:50%;
 
 .avatar-upload-icon {
     position: absolute;
-    right: -4px;
-    bottom: -4px;
+    right: -6px;
+    bottom: -6px;
 
-    width: 23px;
-    height: 23px;
+    width: 20px;
+    height: 20px;
 
     display: flex;
     align-items: center;
@@ -1745,14 +1737,16 @@ width:50%;
 
     cursor: pointer;
 
-    font-size: 11px;
-    line-height: 1;
-
     box-sizing: border-box;
 
     transition:
         transform 0.15s ease,
         opacity 0.15s ease;
+}
+
+.avatar-upload-icon svg {
+    width: 10px;
+    height: 10px;
 }
 
 .avatar-upload-icon:hover {
@@ -1767,8 +1761,23 @@ width:50%;
     display: none;
 }
 
+.avatar-remove-btn {
+    background: none;
+    border: none;
+    color: #f87171;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0;
+}
 
+.avatar-remove-btn:hover {
+    text-decoration: underline;
+}
 
+/* =========================
+   Box list avatar + title row
+========================= */
 
 .box-title-row {
     display: flex;
@@ -1779,10 +1788,7 @@ width:50%;
 
 .box-list-avatar,
 .box-list-avatar-placeholder {
-    width: 34px;
-    height: 34px;
     border-radius: 50%;
-    flex-shrink: 0;
 }
 
 .box-list-avatar {
@@ -1793,4 +1799,30 @@ width:50%;
 .box-list-avatar-placeholder {
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.box-list-avatar,
+.box-list-avatar-placeholder,
+.box-avatar,
+.box-avatar-placeholder {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    max-width: 44px;
+    max-height: 44px;
+    flex-shrink: 0;
+}
+
+.box-public-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #4ade80;
+    flex-shrink: 0;
+}
+
+.box-public-badge svg {
+    width: 14px;
+    height: 14px;
 }
