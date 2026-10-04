@@ -87,17 +87,17 @@ function getCurrentStatus(entries) {
     const duration = calculateLockedDuration(entries);
 
     if (!duration.isCurrentlyLocked) {
-        return { text: '🔓 Open', className: 'box-status-open' };
+        return { text: 'Open', className: 'box-status-open' };
     }
 
     const entry = duration.lockingEntry;
-    let text = '🔒 Locked';
+    let text = '';
 
     if (entry) {
         if (entry.protection_level_timer == 1 && entry.open_time) {
-            text += ' until ' + formatOpenTime(entry.open_time);
+            text = ' until ' + formatOpenTime(entry.open_time);
         } else if (entry.protection_level_password == 1) {
-            text += ' by password ';
+            text = ' by password ';
         }
     }
 

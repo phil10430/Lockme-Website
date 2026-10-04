@@ -333,8 +333,10 @@ foreach ($boxHistory as $boxName => $entries) {
     if (empty($entries)) continue;
 
     $boxActual[$boxName] = [
-        'lock_status'  => $entries[0]['lock_status'],
-        'locked_since' => $entries[0]['created_at'],
+        'lock_status'              => $entries[0]['lock_status'],
+        'locked_since'             => $entries[0]['created_at'],
+        'protection_level_timer'   => $entries[0]['protection_level_timer'],
+        'protection_level_password'=> $entries[0]['protection_level_password'],
     ];
 }
 

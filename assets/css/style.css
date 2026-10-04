@@ -1893,3 +1893,306 @@ footer{
 .ycal-full {
     background: #ef4444;
 }
+
+
+
+
+/* =========================
+   Box card
+========================= */
+
+.box-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+
+    background: #222225;
+    border: 1px solid #37373c;
+    border-radius: 14px;
+
+    transition:
+        border-color 0.18s ease,
+        background 0.18s ease;
+}
+
+.box-item:hover {
+    background: #262629;
+    border-color: #48484f;
+}
+
+/* Main content */
+
+.box-item-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* =========================
+   Title and avatar
+========================= */
+
+.box-title-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 9px;
+    width: 100%;
+    min-width: 0;
+}
+
+.box-list-avatar,
+.box-list-avatar-placeholder {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.box-list-avatar-placeholder {
+    background: #34343a;
+    border: 1px solid #414147;
+}
+
+.box-id {
+    color: #f3f4f6;
+    font-size: 15px;
+    font-weight: 650;
+    letter-spacing: -0.2px;
+}
+
+/* Public profile indicator */
+
+.box-public-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 25px;
+    flex-shrink: 0;
+
+    color: #a1a1aa;
+    background: #303035;
+    border: 1px solid #414147;
+    border-radius: 7px;
+}
+
+.box-public-badge svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* =========================
+   Related names
+========================= */
+
+.box-relation-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.box-person {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #d4d4dc;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.box-person svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: #a1a1aa;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+}
+
+.box-relation-label {
+    color: #85858f;
+    font-size: 11px;
+}
+/* Description */
+
+.box-content-quote {
+    margin-top: 12px;
+    padding-left: 10px;
+    border-left: 2px solid #414147;
+
+    color: #c4c4cc;
+    font-size: 12px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+.box-content-label {
+    margin-top: 12px;
+    margin-bottom: 5px;
+    color: #85858f;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.box-content-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    margin-top: 10px;
+    padding: 6px 10px;
+
+    background: #303035;
+    border: 1px solid #414147;
+    border-radius: 7px;
+
+    color: #d4d4dc;
+    font-size: 12px;
+    line-height: 1.3;
+    font-weight: 500;
+
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+.box-content-tag svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    color: #a1a1aa;
+}
+/* =========================
+   Lock information
+========================= */
+
+.box-lock-status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #37373c;
+
+    color: #fca5a5;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.box-lock-status svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+/* =========================
+   Action buttons
+========================= */
+
+.box-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.box-action-icons {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.box-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 34px;
+    height: 34px;
+    padding: 0;
+
+    color: #a1a1aa;
+    background: #303035;
+    border: 1px solid #414147;
+    border-radius: 9px;
+
+    cursor: pointer;
+    transition:
+        color 0.15s ease,
+        background 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.box-icon-btn svg {
+    width: 15px;
+    height: 15px;
+}
+
+.box-icon-btn:hover {
+    color: #ffffff;
+    background: #3b3b42;
+    border-color: #55555e;
+}
+
+.box-icon-btn-danger {
+    color: #a1a1aa;
+    background: transparent;
+    border-color: transparent;
+    margin-left: 3px;
+}
+
+.box-icon-btn-danger:hover {
+    color: #f87171;
+    background: #3d2528;
+    border-color: #603338;
+}
+
+/* Keyboard accessibility */
+
+.box-icon-btn:focus-visible {
+    outline: 2px solid #93c5fd;
+    outline-offset: 2px;
+}
+
+/* =========================
+   Mobile layout
+========================= */
+
+@media (max-width: 600px) {
+    .box-item {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 13px;
+        border-radius: 12px;
+    }
+
+    .box-item-main {
+        flex-basis: 100%;
+    }
+
+    .box-item-actions {
+        width: 100%;
+        justify-content: flex-end;
+        padding-top: 10px;
+        border-top: 1px solid #37373c;
+    }
+
+    .box-lock-status {
+        width: 100%;
+    }
+}
