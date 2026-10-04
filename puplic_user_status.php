@@ -19,10 +19,22 @@ $stmt = $pdo->prepare("
     WHERE ud.public_status = 1
     ORDER BY ub.registered_at DESC
 ");
-
 $stmt->execute();
-
 $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// =========================================================
+// TOTAL LOCKED COUNT (all boxes, regardless of public_status)
+// =========================================================
+
+$totalLockedCount = 0;
+
+try {
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM box_data_actual WHERE lock_status = 1");
+    $stmt->execute();
+    $totalLockedCount = (int) $stmt->fetchColumn();
+} catch (PDOException $e) {
+    $totalLockedCount = 0; // Fallback, falls DB-Fehler
+}
 
 // =========================================================
 // LATEST STATUS PER BOX
@@ -31,54 +43,20 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $latestStatus = [];
 
 if (!empty($registeredBoxes)) {
-
-    $boxIds = array_column(
-        $registeredBoxes,
-        'box_id'
-    );
-
-    $placeholders = implode(
-        ',',
-        array_fill(
-            0,
-            count($boxIds),
-            '?'
-        )
-    );
+    $boxIds = array_column($registeredBoxes, 'box_id');
+    $placeholders = implode(',', array_fill(0, count($boxIds), '?'));
 
     $stmt = $pdo->prepare("
-        SELECT
-            box_name,
-            lock_status,
-            open_time,
-            created_at,
-            protection_level_timer,
-            protection_level_password
-
+        SELECT box_name, lock_status, open_time, created_at, protection_level_timer, protection_level_password
         FROM box_data_history
-
         WHERE box_name IN ($placeholders)
-
         ORDER BY created_at DESC
     ");
-
     $stmt->execute($boxIds);
 
-    $historyRows = $stmt->fetchAll(
-        PDO::FETCH_ASSOC
-    );
-
-
-    foreach ($historyRows as $r) {
-
-        // First row per box is the newest
-        if (!isset(
-            $latestStatus[$r['box_name']]
-        )) {
-
-            $latestStatus[
-                $r['box_name']
-            ] = $r;
+    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $r) {
+        if (!isset($latestStatus[$r['box_name']])) {
+            $latestStatus[$r['box_name']] = $r;
         }
     }
 }
@@ -90,44 +68,11 @@ if (!empty($registeredBoxes)) {
 
 function box_state(?array $status): string
 {
-    if ($status === null) {
-        return 'unknown';
-    }
+    if ($status === null) return 'unknown';
 
-    $val = strtolower(
-        (string) $status['lock_status']
-    );
-
-    if (
-        in_array(
-            $val,
-            [
-                '1',
-                'locked',
-                'true',
-                'closed'
-            ],
-            true
-        )
-    ) {
-        return 'locked';
-    }
-
-    if (
-        in_array(
-            $val,
-            [
-                '0',
-                'unlocked',
-                'false',
-                'open'
-            ],
-            true
-        )
-    ) {
-        return 'unlocked';
-    }
-
+    $val = strtolower((string)$status['lock_status']);
+    if (in_array($val, ['1', 'locked', 'true', 'closed'], true)) return 'locked';
+    if (in_array($val, ['0', 'unlocked', 'false', 'open'], true)) return 'unlocked';
     return 'unknown';
 }
 
@@ -136,55 +81,21 @@ function box_state(?array $status): string
 // LOCKED DURATION
 // =========================================================
 
-function locked_duration(
-    ?string $lockedSince
-): string {
+function locked_duration(?string $lockedSince): string
+{
+    if (!$lockedSince) return '';
 
-    if (!$lockedSince) {
-        return '';
-    }
-
-    $diff = max(
-        0,
-        time() - strtotime($lockedSince)
-    );
-
-    $days = intdiv(
-        $diff,
-        86400
-    );
-
-    $hours = intdiv(
-        $diff % 86400,
-        3600
-    );
-
-    $minutes = intdiv(
-        $diff % 3600,
-        60
-    );
+    $diff = max(0, time() - strtotime($lockedSince));
+    $days = intdiv($diff, 86400);
+    $hours = intdiv($diff % 86400, 3600);
+    $minutes = intdiv($diff % 3600, 60);
 
     $parts = [];
+    if ($days > 0)  $parts[] = $days . 'd';
+    if ($hours > 0) $parts[] = $hours . 'h';
+    if ($minutes > 0 || empty($parts)) $parts[] = $minutes . 'm';
 
-    if ($days > 0) {
-        $parts[] = $days . 'd';
-    }
-
-    if ($hours > 0) {
-        $parts[] = $hours . 'h';
-    }
-
-    if (
-        $minutes > 0 ||
-        empty($parts)
-    ) {
-        $parts[] = $minutes . 'm';
-    }
-
-    return implode(
-        ' ',
-        $parts
-    );
+    return implode(' ', $parts);
 }
 
 
@@ -192,19 +103,9 @@ function locked_duration(
 // KEEP ONLY CURRENTLY LOCKED BOXES
 // =========================================================
 
-$registeredBoxes = array_values(
-    array_filter(
-        $registeredBoxes,
-        function ($box) use ($latestStatus) {
-
-            return box_state(
-                $latestStatus[
-                    $box['box_id']
-                ] ?? null
-            ) === 'locked';
-        }
-    )
-);
+$registeredBoxes = array_values(array_filter($registeredBoxes, function ($box) use ($latestStatus) {
+    return box_state($latestStatus[$box['box_id']] ?? null) === 'locked';
+}));
 
 
 // =========================================================
@@ -214,468 +115,171 @@ $registeredBoxes = array_values(
 $boxDetails = [];
 
 if (!empty($registeredBoxes)) {
-
-    $boxIds = array_column(
-        $registeredBoxes,
-        'box_id'
-    );
-
-    $placeholders = implode(
-        ',',
-        array_fill(
-            0,
-            count($boxIds),
-            '?'
-        )
-    );
+    $boxIds = array_column($registeredBoxes, 'box_id');
+    $placeholders = implode(',', array_fill(0, count($boxIds), '?'));
 
     $stmt = $pdo->prepare("
-        SELECT
-            box_id,
-            name_top,
-            name_sub,
-            box_content,
-            avatar_path
-
+        SELECT box_id, name_top, name_sub, box_content, avatar_path, public_status
         FROM user_details
-
         WHERE box_id IN ($placeholders)
     ");
-
     $stmt->execute($boxIds);
 
-    foreach (
-        $stmt->fetchAll(PDO::FETCH_ASSOC)
-        as $d
-    ) {
-
-        $boxDetails[
-            $d['box_id']
-        ] = $d;
+    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $d) {
+        $boxDetails[$d['box_id']] = $d;
     }
 }
-
 ?>
 
 <style>
+/* Scoped layout override for this page only - reuses all
+   existing classes/content from profile_page.php, just
+   arranges the same box-items as a responsive grid instead
+   of a stacked list, and tightens their spacing. */
 
-.box-status-page {
-    --bg: #000000;
-    --surface: #1c1f24;
-    --border: #2b2f36;
-    --text: #e9e7e2;
-    --text-muted: #888d96;
-    --locked: #ff1515;
-
-    background: var(--bg);
-    color: var(--text);
-
-    min-height: 100vh;
-}
-
-
-.status-wrapper {
-    max-width: 980px;
-
-    margin: 0 auto;
-
-    padding:
-        48px
-        24px
-        64px;
-}
-
-
-.status-header {
-    display: flex;
-
-    align-items: baseline;
-    justify-content: space-between;
-
-    margin-bottom: 28px;
-}
-
-
-.status-header h1 {
-    font-size: 20px;
-    font-weight: 600;
-
-    letter-spacing: -0.01em;
-
-    margin: 0;
-}
-
-
-.status-count {
-    font-size: 13px;
-    color: var(--text-muted);
-}
-
-
-.status-empty {
-    border:
-        1px dashed
-        var(--border);
-
-    border-radius: 6px;
-
-    padding: 32px;
-
-    text-align: center;
-
-    color: var(--text-muted);
-
-    font-size: 14px;
-}
-
-
-.box-grid {
+.box-status-page .box-list {
     display: grid;
-
-    grid-template-columns:
-        repeat(
-            auto-fill,
-            minmax(190px, 1fr)
-        );
-
-    gap: 10px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
 }
 
+@media (min-width: 769px) {
+    .box-status-page .box-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
 
-.box-tile {
-    background: var(--surface);
-
-    border:
-        1px solid
-        var(--border);
-
-    border-radius: 4px;
-
-    padding:
-        12px
-        14px;
-
-    display: flex;
-
+.box-status-page .box-item {
     flex-direction: column;
-
-    gap: 6px;
+    align-items: flex-start;
+    padding: 10px 12px;
+    gap: 4px;
 }
 
-
-/* =====================================================
-   TOP AREA
-   Avatar + Box ID
-   ===================================================== */
-
-.box-top {
-    display: flex;
-
-    align-items: center;
-
-    gap: 9px;
-
-    min-width: 0;
+.box-status-page .box-item-main {
+    gap: 3px;
 }
-
-
-.box-avatar {
-    width: 34px;
-    height: 34px;
-
-    border-radius: 50%;
-
-    object-fit: cover;
-
-    flex-shrink: 0;
-
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.12);
-
-    background:
-        rgba(255, 255, 255, 0.06);
-}
-
-
-.box-avatar-placeholder {
-    width: 34px;
-    height: 34px;
-
-    border-radius: 50%;
-
-    flex-shrink: 0;
-
-    background:
-        rgba(255, 255, 255, 0.06);
-
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.12);
-}
-
-
-.box-id {
-    font-family:
-        ui-monospace,
-        SFMono-Regular,
-        Menlo,
-        Consolas,
-        monospace;
-
-    font-size: 13px;
-
-    color: var(--text);
-
-    white-space: nowrap;
-
-    overflow: hidden;
-
-    text-overflow: ellipsis;
-}
-
-
-.box-details-info {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 2px;
-
-    font-size: 11px;
-
-    color: var(--text-muted);
-}
-
-
-.box-details-info span {
-    white-space: nowrap;
-
-    overflow: hidden;
-
-    text-overflow: ellipsis;
-}
-
-
-.box-meta {
-    margin-top: auto;
-
-    padding-top: 4px;
-}
-
-
-.box-state {
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 6px;
-
-    font-size: 12px;
-
-    color: var(--locked);
-}
-
-
-.box-state svg {
-    width: 12px;
-    height: 12px;
-
-    flex-shrink: 0;
-}
-
 </style>
 
+<div class="settings-wrapper">
 
-<div class="status-wrapper">
+    <div class="settings-container">
 
-    <div class="status-header">
+        <div class="settings-hero">
+            <div>
+                <h1>Lockees</h1>
+                <p><?= $totalLockedCount ?> locked total &middot; <?= count($registeredBoxes) ?> public</p>
+            </div>
+        </div>
 
-        <h1>
-            LOCKEES
-        </h1>
+        <div class="settings-card">
 
-    </div>
+            <div class="settings-card-body">
 
+                <?php if (empty($registeredBoxes)): ?>
 
-    <?php if (empty($registeredBoxes)): ?>
+                    <p class="box-empty">No locked boxes right now.</p>
 
-        <p class="status-empty">
-            No locked boxes right now.
-        </p>
+                <?php else: ?>
 
-    <?php else: ?>
+                    <div class="box-list">
 
-        <div class="box-grid">
+                        <?php foreach ($registeredBoxes as $box):
+                            $id = $box['box_id'];
+                            $status = $latestStatus[$id] ?? null;
+                            $d = $boxDetails[$id] ?? null;
+                            $isLocked = true; // already filtered to locked-only above
+                            $actual = ['locked_since' => $status['created_at'] ?? null];
+                        ?>
 
-            <?php foreach (
-                $registeredBoxes as $box
-            ):
+                            <div class="box-item" id="box-<?= htmlspecialchars($id) ?>">
 
-                $id =
-                    $box['box_id'];
+                                <div class="box-item-main">
 
-                $status =
-                    $latestStatus[$id]
-                    ?? null;
+                                    <div class="box-title-row">
+                                        <?php if ($d && !empty($d['avatar_path'])): ?>
+                                            <img class="box-list-avatar" src="<?= htmlspecialchars($d['avatar_path']) ?>" alt="" loading="lazy">
+                                        <?php else: ?>
+                                            <div class="box-list-avatar-placeholder" aria-hidden="true"></div>
+                                        <?php endif; ?>
 
-                $d =
-                    $boxDetails[$id]
-                    ?? null;
+                                        <span class="box-id">LockMeBox <?= htmlspecialchars($id) ?></span>
+                                    </div>
 
-            ?>
+                                    <?php if ($d && (!empty($d['name_top']) || !empty($d['name_sub']))): ?>
+                                        <div class="box-relation-row">
 
-                <div
-                    class="box-tile"
-                    data-state="locked"
-                    data-box-id="<?= htmlspecialchars($id) ?>"
-                >
+                                            <?php if (!empty($d['name_top'])): ?>
+                                                <span class="box-relation-top"><?= htmlspecialchars($d['name_top']) ?></span>
+                                            <?php endif; ?>
 
-                    <!-- =================================
-                         BOX HEADER
-                         ================================= -->
+                                            <?php if (!empty($d['name_top']) && !empty($d['name_sub'])): ?>
+                                                <div class="box-relation-sub-row">
+                                                    <svg class="box-relation-icon"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="1.8"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        aria-label="locked for">
+                                                        <path d="M5 12h14"></path>
+                                                        <path d="m13 6 6 6-6 6"></path>
+                                                    </svg>
+                                                    <span><?= htmlspecialchars($d['name_sub']) ?></span>
+                                                </div>
+                                            <?php elseif (!empty($d['name_sub'])): ?>
+                                                <span><?= htmlspecialchars($d['name_sub']) ?></span>
+                                            <?php endif; ?>
 
-                    <div class="box-top">
+                                        </div>
+                                    <?php endif; ?>
 
-                        <?php if (
-                            $d &&
-                            !empty($d['avatar_path'])
-                        ): ?>
+                                    <?php if ($d && !empty($d['box_content'])): ?>
+                                        <div class="box-content-tag">
+                                            <svg viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="1.8"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                aria-hidden="true">
+                                                <circle cx="7.5" cy="15.5" r="5.5"></circle>
+                                                <path d="m21 2-9.6 9.6"></path>
+                                                <path d="m15.5 7.5 3 3"></path>
+                                                <path d="m18.5 4.5 3 3"></path>
+                                            </svg>
+                                            <span><?= htmlspecialchars($d['box_content']) ?></span>
+                                        </div>
+                                    <?php endif; ?>
 
-                            <img
-                                class="box-avatar"
-                                src="<?= htmlspecialchars($d['avatar_path']) ?>"
-                                alt=""
-                                loading="lazy"
-                            >
+                                    <?php if ($isLocked && !empty($actual['locked_since'])): ?>
+                                        <div class="box-lock-status">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <rect x="5" y="11" width="14" height="10" rx="2"></rect>
+                                                <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+                                            </svg>
+                                            Locked since <?= htmlspecialchars(locked_duration($actual['locked_since'])) ?>
+                                        </div>
+                                    <?php endif; ?>
 
-                        <?php else: ?>
+                                </div>
 
-                            <div
-                                class="box-avatar-placeholder"
-                                aria-hidden="true"
-                            ></div>
+                            </div>
 
-                        <?php endif; ?>
-
-
-                        <span class="box-id">
-                            LockMeBox
-                            <?= htmlspecialchars($id) ?>
-                        </span>
+                        <?php endforeach; ?>
 
                     </div>
 
+                <?php endif; ?>
 
-                    <!-- =================================
-                         BOX DETAILS
-                         ================================= -->
-
-                    <?php if ($d): ?>
-
-                        <div class="box-details-info">
-
-                            <?php if (
-                                !empty($d['name_top'])
-                            ): ?>
-
-                                <span>
-                                    Keyholder:
-                                    <?= htmlspecialchars(
-                                        $d['name_top']
-                                    ) ?>
-                                </span>
-
-                            <?php endif; ?>
-
-
-                            <?php if (
-                                !empty($d['name_sub'])
-                            ): ?>
-
-                                <span>
-                                    Lockee:
-                                    <?= htmlspecialchars(
-                                        $d['name_sub']
-                                    ) ?>
-                                </span>
-
-                            <?php endif; ?>
-
-
-                            <?php if (
-                                !empty($d['box_content'])
-                            ): ?>
-
-                                <span>
-                                    Box Content:
-                                    <?= htmlspecialchars(
-                                        $d['box_content']
-                                    ) ?>
-                                </span>
-
-                            <?php endif; ?>
-
-                        </div>
-
-                    <?php endif; ?>
-
-
-                    <!-- =================================
-                         STATUS
-                         ================================= -->
-
-                    <span class="box-meta">
-
-                        <span class="box-state">
-
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            >
-                                <rect
-                                    x="5"
-                                    y="11"
-                                    width="14"
-                                    height="10"
-                                    rx="2"
-                                ></rect>
-
-                                <path
-                                    d="M8 11V7a4 4 0 0 1 8 0v4"
-                                ></path>
-                            </svg>
-
-                            Locked since
-                            <?= htmlspecialchars(
-                                locked_duration(
-                                    $status[
-                                        'created_at'
-                                    ] ?? null
-                                )
-                            ) ?>
-
-                        </span>
-
-                    </span>
-
-                </div>
-
-            <?php endforeach; ?>
+            </div>
 
         </div>
 
-    <?php endif; ?>
+    </div>
 
 </div>
 
 
-<?php
-
-require_once __DIR__ . '/templates/footer.php';
-
-?>
+<?php require_once __DIR__ . '/templates/footer.php'; ?>

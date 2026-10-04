@@ -627,17 +627,17 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         <div class="input-group">
             <input type="text" id="detailsNameTop" name="name_top" placeholder=" " required>
-            <label>Name of Locker</label>
+            <label>Keyholder name</label>
         </div>
 
         <div class="input-group">
             <input type="text" id="detailsNameSub" name="name_sub" placeholder=" ">
-            <label>Name of Lockee</label>
+            <label>Lockee name</label>
         </div>
 
         <div class="input-group">
             <input type="text" id="detailsBoxContent" name="box_content" placeholder=" ">
-            <label>Box Content</label>
+            <label>Keys for</label>
         </div>
 
         <label class="toggle-row">

@@ -56,148 +56,175 @@ function locked_duration(?string $lockedSince): string
 ?>
 
 <style>
-.box-status-page {
-    --bg: #000000;
-    --surface: #1c1f24;
-    --border: #2b2f36;
-    --text: #e9e7e2;
-    --text-muted: #888d96;
-    --locked: #f53030;
-    --unlocked: #14eb26;
-    background: var(--bg);
-    color: var(--text);
+/* Scoped layout override for this single-box page only -
+   reuses the same box-item content classes from
+   profile_page.php / box_status.php, just centers and
+   enlarges them since this page shows exactly one box. */
+
+.box-status-page .settings-wrapper {
     min-height: 100vh;
+    align-items: center;
 }
 
-.share-wrapper {
+.box-status-page .settings-container {
     max-width: 420px;
-    margin: 0 auto;
-    padding: 96px 24px 64px;
 }
 
-.share-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 24px;
-}
-
-.share-box-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-    min-width: 0;
-}
-
-.share-avatar,
-.share-avatar-placeholder {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background: rgba(255, 255, 255, 0.06);
-}
-
-.share-avatar {
-    object-fit: cover;
-}
-
-.share-box-id {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 14px;
-    color: var(--text-muted);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.share-state {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 16px;
-}
-
-.share-state svg { width: 16px; height: 16px; }
-.share-state.locked { color: var(--locked); }
-.share-state.unlocked { color: var(--unlocked); }
-
-.share-details {
-    display: flex;
+.box-status-page .box-item {
     flex-direction: column;
-    gap: 4px;
-    font-size: 13px;
-    color: var(--text-muted);
-}
-
-.share-details span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.share-empty {
+    align-items: center;
     text-align: center;
-    color: var(--text-muted);
+    padding: 32px 24px;
+}
+
+.box-status-page .box-item-main {
+    align-items: center;
+    width: 100%;
+}
+
+.box-status-page .box-title-row {
+    flex-direction: column;
+    gap: 10px;
+}
+
+.box-status-page .box-list-avatar,
+.box-status-page .box-list-avatar-placeholder {
+    width: 84px;
+    height: 84px;
+    min-width: 84px;
+    min-height: 84px;
+}
+
+.box-status-page .box-id {
+    font-size: 16px;
+}
+
+.box-status-page .box-title-row {
+    flex-direction: column;
+    gap: 10px;
+}
+
+.box-status-page .box-relation-row {
+    align-items: flex-start;
+}
+
+.box-status-page .box-relation-sub-row {
+    padding-left: 14px;
+}
+
+.box-status-page .box-content-tag {
+    justify-content: center;
+}
+
+.box-status-page .box-lock-status {
+    justify-content: center;
     font-size: 14px;
-    padding: 40px 0;
+    margin-top: 10px;
+}
+
+.box-status-page .settings-card .box-item {
+    background: none;
+    border: none;
+    padding: 0;
 }
 </style>
 
-<div class="share-wrapper">
+<div class="settings-wrapper">
 
-    <?php if (!$box): ?>
-        <p class="share-empty">This box's status isn't shared publicly.</p>
-    <?php else: ?>
-        <div class="share-card">
+    <div class="settings-container">
 
-            <div class="share-box-header">
-                <?php if ($details && !empty($details['avatar_path'])): ?>
-                    <img class="share-avatar" src="<?= htmlspecialchars($details['avatar_path']) ?>" alt="">
-                <?php else: ?>
-                    <div class="share-avatar-placeholder" aria-hidden="true"></div>
-                <?php endif; ?>
+        <?php if (!$box): ?>
 
-                <div class="share-box-id">LockMeBox <?= htmlspecialchars($boxId) ?></div>
-            </div>
+            <p class="box-empty">This box's status isn't shared publicly.</p>
 
-            <div class="share-state <?= $isLocked ? 'locked' : 'unlocked' ?>">
-                <?php if ($isLocked): ?>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="5" y="11" width="14" height="10" rx="2"></rect>
-                        <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
-                    </svg>
-                    Locked since <?= htmlspecialchars(locked_duration($status['created_at'] ?? null)) ?>
-                <?php else: ?>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="5" y="11" width="14" height="10" rx="2"></rect>
-                        <path d="M8 11V7a4 4 0 0 1 7.75-3.5"></path>
-                    </svg>
-                    Unlocked
-                <?php endif; ?>
-            </div>
+        <?php else: ?>
 
-            <?php if ($details): ?>
-                <div class="share-details">
-                    <?php if (!empty($details['name_top'])): ?>
-                        <span>Keyholder: <?= htmlspecialchars($details['name_top']) ?></span>
-                    <?php endif; ?>
+            <div class="settings-card">
 
-                    <?php if (!empty($details['name_sub'])): ?>
-                        <span>Lockee: <?= htmlspecialchars($details['name_sub']) ?></span>
-                    <?php endif; ?>
+                <div class="settings-card-body">
 
-                    <?php if (!empty($details['box_content'])): ?>
-                        <span>Box Content: <?= htmlspecialchars($details['box_content']) ?></span>
-                    <?php endif; ?>
+                    <div class="box-item">
+
+                        <div class="box-item-main">
+
+                            <div class="box-title-row">
+                                <?php if ($details && !empty($details['avatar_path'])): ?>
+                                    <img class="box-list-avatar" src="<?= htmlspecialchars($details['avatar_path']) ?>" alt="" loading="lazy">
+                                <?php else: ?>
+                                    <div class="box-list-avatar-placeholder" aria-hidden="true"></div>
+                                <?php endif; ?>
+
+                                <span class="box-id">LockMeBox <?= htmlspecialchars($boxId) ?></span>
+                            </div>
+
+                            <?php if ($details && (!empty($details['name_top']) || !empty($details['name_sub']))): ?>
+                                <div class="box-relation-row">
+
+                                    <?php if (!empty($details['name_top'])): ?>
+                                        <span class="box-relation-top"><?= htmlspecialchars($details['name_top']) ?></span>
+                                    <?php endif; ?>
+
+                                    <?php if (!empty($details['name_top']) && !empty($details['name_sub'])): ?>
+                                        <div class="box-relation-sub-row">
+                                            <svg class="box-relation-icon"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="1.8"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                aria-label="locked for">
+                                                <path d="M5 12h14"></path>
+                                                <path d="m13 6 6 6-6 6"></path>
+                                            </svg>
+                                            <span><?= htmlspecialchars($details['name_sub']) ?></span>
+                                        </div>
+                                    <?php elseif (!empty($details['name_sub'])): ?>
+                                        <span><?= htmlspecialchars($details['name_sub']) ?></span>
+                                    <?php endif; ?>
+
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if ($details && !empty($details['box_content'])): ?>
+                                <div class="box-content-tag">
+                                    <svg viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="1.8"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        aria-hidden="true">
+                                        <circle cx="7.5" cy="15.5" r="5.5"></circle>
+                                        <path d="m21 2-9.6 9.6"></path>
+                                        <path d="m15.5 7.5 3 3"></path>
+                                        <path d="m18.5 4.5 3 3"></path>
+                                    </svg>
+                                    <span><?= htmlspecialchars($details['box_content']) ?></span>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if ($isLocked && !empty($status['created_at'])): ?>
+                                <div class="box-lock-status">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="5" y="11" width="14" height="10" rx="2"></rect>
+                                        <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+                                    </svg>
+                                    Locked since <?= htmlspecialchars(locked_duration($status['created_at'])) ?>
+                                </div>
+                            <?php endif; ?>
+
+                        </div>
+
+                    </div>
+
                 </div>
-            <?php endif; ?>
 
-        </div>
-    <?php endif; ?>
+            </div>
+
+        <?php endif; ?>
+
+    </div>
 
 </div>
 
