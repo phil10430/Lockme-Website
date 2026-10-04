@@ -235,7 +235,6 @@ if (!empty($registeredBoxes)) {
             name_top,
             name_sub,
             box_content,
-            target_open_date,
             avatar_path
 
         FROM user_details
@@ -612,29 +611,6 @@ if (!empty($registeredBoxes)) {
                                     Box Content:
                                     <?= htmlspecialchars(
                                         $d['box_content']
-                                    ) ?>
-                                </span>
-
-                            <?php endif; ?>
-
-
-                            <?php if (
-                                !empty(
-                                    $d['target_open_date']
-                                )
-                            ): ?>
-
-                                <span>
-                                    Target Open Date:
-                                    <?= htmlspecialchars(
-                                        date(
-                                            'd.m.Y H:i',
-                                            strtotime(
-                                                $d[
-                                                    'target_open_date'
-                                                ]
-                                            )
-                                        )
                                     ) ?>
                                 </span>
 

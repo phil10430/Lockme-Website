@@ -27,6 +27,8 @@
         <script src="/assets/js/lock_dialog_random_time.js"></script>
         <script> const boxHistoryData = <?php echo json_encode($boxHistory, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT); ?>; </script>
         <script src="/assets/js/remove_box_script.js"></script>
+         <script> const boxHistoryData = <?php echo json_encode($boxHistory, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT); ?>; </script>
+        <script src="/assets/js/box_details_calendar.js"></script>
         <script src="/assets/js/toggle_public_status.js"></script>
         <script>  window.boxDetails = <?= json_encode($boxDetails, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) ?>;</script>
         <script src="/assets/js/box_details.js"></script>

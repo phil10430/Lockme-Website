@@ -196,35 +196,7 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                             <?php endif; ?>
 
-
-                                            <?php if (
-                                                !empty(
-                                                    $d['target_open_date']
-                                                )
-                                            ): ?>
-
-                                                <span>
-                                                    Target Open Date:
-                                                    <?= htmlspecialchars(
-                                                        date(
-                                                            'd.m.Y H:i',
-                                                            strtotime(
-                                                                $d[
-                                                                    'target_open_date'
-                                                                ]
-                                                            )
-                                                        )
-                                                    ) ?>
-                                                </span>
-
-                                            <?php endif; ?>
-
-                                        </div>
-
-
-                                        <div class="box-details-info">
-
-                                            <span>
+                                              <span>
                                                 Locked since:
                                                 <?= htmlspecialchars(
                                                     locked_duration(
@@ -234,8 +206,12 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     )
                                                 ) ?>
                                             </span>
-
                                         </div>
+
+
+
+                                          
+
 
                                     <?php endif; ?>
 
@@ -661,11 +637,6 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="input-group">
             <input type="text" id="detailsBoxContent" name="box_content" placeholder=" ">
             <label>Box Content</label>
-        </div>
-
-        <div class="input-group">
-            <input type="datetime-local" id="detailsTargetDate" name="target_open_date" placeholder=" ">
-            <label>Target Open Date</label>
         </div>
 
         <label class="toggle-row">

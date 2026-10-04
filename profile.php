@@ -55,7 +55,6 @@ if (isset($_POST['saveBoxDetails'])) {
     $nameTop      = trim($_POST['name_top'] ?? '');
     $nameSub      = trim($_POST['name_sub'] ?? '');
     $boxContent   = trim($_POST['box_content'] ?? '');
-    $targetDate   = trim($_POST['target_open_date'] ?? '');
     $publicStatus = (isset($_POST['public_status']) && $_POST['public_status'] === '1') ? 1 : 0;
 
     if (!preg_match('/^\d+$/', $boxId)) {
@@ -74,16 +73,6 @@ if (isset($_POST['saveBoxDetails'])) {
         http_response_code(403);
         echo json_encode(['success' => false, 'message' => 'Box not found.']);
         exit;
-    }
-
-    $targetDateSql = null;
-    if ($targetDate !== '') {
-        $ts = strtotime($targetDate);
-        if ($ts === false) {
-            echo json_encode(['success' => false, 'message' => 'Invalid date.']);
-            exit;
-        }
-        $targetDateSql = date('Y-m-d H:i:s', $ts);
     }
 
     // ---- Avatar upload (optional) ----
@@ -149,17 +138,16 @@ if (isset($_POST['saveBoxDetails'])) {
             ':name_top'         => $nameTop,
             ':name_sub'         => $nameSub ?: null,
             ':box_content'      => $boxContent ?: null,
-            ':target_open_date' => $targetDateSql,
             ':public_status'    => $publicStatus,
         ];
 
         if ($newAvatarUploaded) {
             $stmt = $pdo->prepare("
-                INSERT INTO user_details (user_id, box_id, name_top, name_sub, box_content, target_open_date, avatar_path, public_status)
-                VALUES (:user_id, :box_id, :name_top, :name_sub, :box_content, :target_open_date, :avatar_path, :public_status)
+                INSERT INTO user_details (user_id, box_id, name_top, name_sub, box_content, avatar_path, public_status)
+                VALUES (:user_id, :box_id, :name_top, :name_sub, :box_content, :avatar_path, :public_status)
                 ON DUPLICATE KEY UPDATE
                     name_top = VALUES(name_top), name_sub = VALUES(name_sub),
-                    box_content = VALUES(box_content), target_open_date = VALUES(target_open_date),
+                    box_content = VALUES(box_content),
                     avatar_path = VALUES(avatar_path), public_status = VALUES(public_status)
             ");
             $stmt->execute($baseParams + [':avatar_path' => $avatarPath]);
@@ -170,11 +158,11 @@ if (isset($_POST['saveBoxDetails'])) {
             }
         } else {
             $stmt = $pdo->prepare("
-                INSERT INTO user_details (user_id, box_id, name_top, name_sub, box_content, target_open_date, public_status)
-                VALUES (:user_id, :box_id, :name_top, :name_sub, :box_content, :target_open_date, :public_status)
+                INSERT INTO user_details (user_id, box_id, name_top, name_sub, box_content,  public_status)
+                VALUES (:user_id, :box_id, :name_top, :name_sub, :box_content,  :public_status)
                 ON DUPLICATE KEY UPDATE
                     name_top = VALUES(name_top), name_sub = VALUES(name_sub),
-                    box_content = VALUES(box_content), target_open_date = VALUES(target_open_date),
+                    box_content = VALUES(box_content),
                     public_status = VALUES(public_status)
             ");
             $stmt->execute($baseParams);
@@ -323,7 +311,7 @@ if (!empty($registeredBoxes)) {
     $placeholders = implode(',', array_fill(0, count($boxIds), '?'));
 
     $stmt = $pdo->prepare("
-        SELECT box_id, name_top, name_sub, box_content, target_open_date, avatar_path, public_status
+        SELECT box_id, name_top, name_sub, box_content, avatar_path, public_status
         FROM user_details
         WHERE box_id IN ($placeholders)
     ");

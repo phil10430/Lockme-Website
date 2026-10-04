@@ -13,8 +13,6 @@ function openBoxDetailsDialog(boxId) {
     document.getElementById('detailsNameTop').value = d.name_top || '';
     document.getElementById('detailsNameSub').value = d.name_sub || '';
     document.getElementById('detailsBoxContent').value = d.box_content || '';
-    document.getElementById('detailsTargetDate').value =
-        d.target_open_date ? d.target_open_date.replace(' ', 'T').slice(0, 16) : '';
     document.getElementById('detailsAvatar').value = '';
     document.getElementById('detailsPublicStatus').checked = !!(d.public_status && Number(d.public_status) === 1);
 
@@ -220,12 +218,7 @@ document.addEventListener(
                     ).value
                 );
 
-                formData.append(
-                    'target_open_date',
-                    document.getElementById(
-                        'detailsTargetDate'
-                    ).value
-                );
+        
                 formData.append(
                     'public_status',
                     document.getElementById('detailsPublicStatus').checked ? '1' : '0'
