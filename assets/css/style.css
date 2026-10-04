@@ -1995,34 +1995,19 @@ footer{
 .box-relation-row {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 6px;
-}
-
-.box-person {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    color: #d4d4dc;
+    gap: 7px;
+    margin-top: 4px;
+    color: #a1a1aa;
     font-size: 12px;
-    font-weight: 500;
+    line-height: 1.4;
+    flex-wrap: wrap;
 }
 
-.box-person svg {
-    width: 14px;
-    height: 14px;
-    fill: none;
-    stroke: #a1a1aa;
-    stroke-width: 1.7;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+.box-relation-icon {
+    width: 13px;
+    height: 13px;
     flex-shrink: 0;
-}
-
-.box-relation-label {
-    color: #85858f;
-    font-size: 11px;
+    color: #71717a;
 }
 /* Description */
 

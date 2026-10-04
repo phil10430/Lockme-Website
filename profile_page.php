@@ -154,33 +154,34 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             <?php endif; ?>
                                     </div>
 
-                                    <?php if ($d && (!empty($d['name_top']) || !empty($d['name_sub']))): ?>
+                                  <?php if ($d && (!empty($d['name_top']) || !empty($d['name_sub']))): ?>
                                         <div class="box-relation-row">
                                             <?php if (!empty($d['name_top'])): ?>
-                                                <span class="box-person box-locker">
-                                                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                                                        <circle cx="12" cy="8" r="4"></circle>
-                                                        <path d="M4 21v-2a8 8 0 0 1 16 0v2"></path>
-                                                    </svg>
-                                                    <?= htmlspecialchars($d['name_top']) ?>
-                                                </span>
+                                                <span><?= htmlspecialchars($d['name_top']) ?></span>
                                             <?php endif; ?>
 
                                             <?php if (!empty($d['name_top']) && !empty($d['name_sub'])): ?>
-                                                <span class="box-relation-label">locks</span>
+                                                <svg class="box-relation-icon"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    stroke-width="1.8"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    aria-label="locked for">
+                                                    <path d="M5 12h14"></path>
+                                                    <path d="m13 6 6 6-6 6"></path>
+                                                </svg>
                                             <?php endif; ?>
 
                                             <?php if (!empty($d['name_sub'])): ?>
-                                                <span class="box-person box-locked-person">
-                                                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                                                        <circle cx="12" cy="8" r="4"></circle>
-                                                        <path d="M4 21v-2a8 8 0 0 1 16 0v2"></path>
-                                                    </svg>
-                                                    <?= htmlspecialchars($d['name_sub']) ?>
-                                                </span>
+                                                <span><?= htmlspecialchars($d['name_sub']) ?></span>
                                             <?php endif; ?>
                                         </div>
                                     <?php endif; ?>
+
+
+                                    
                                     <?php if ($d && !empty($d['box_content'])): ?>
                                         <div class="box-content-tag">
                                         <svg viewBox="0 0 24 24"
