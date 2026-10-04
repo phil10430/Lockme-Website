@@ -1991,23 +1991,31 @@ footer{
 /* =========================
    Related names
 ========================= */
-
 .box-relation-row {
     display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 13px;
+    color: #d1d5db;
+    margin-top: 2px;
+}
+
+.box-relation-top {
+    font-weight: 500;
+}
+
+.box-relation-sub-row {
+    display: flex;
     align-items: center;
-    gap: 7px;
-    margin-top: 4px;
-    color: #a1a1aa;
-    font-size: 12px;
-    line-height: 1.4;
-    flex-wrap: wrap;
+    gap: 6px;
+    padding-left: 14px;
+    color: #9ca3af;
 }
 
 .box-relation-icon {
-    width: 13px;
-    height: 13px;
+    width: 12px;
+    height: 12px;
     flex-shrink: 0;
-    color: #71717a;
 }
 /* Description */
 

@@ -155,12 +155,14 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     </div>
 
                                   <?php if ($d && (!empty($d['name_top']) || !empty($d['name_sub']))): ?>
-                                        <div class="box-relation-row">
-                                            <?php if (!empty($d['name_top'])): ?>
-                                                <span><?= htmlspecialchars($d['name_top']) ?></span>
-                                            <?php endif; ?>
+                                    <div class="box-relation-row">
 
-                                            <?php if (!empty($d['name_top']) && !empty($d['name_sub'])): ?>
+                                        <?php if (!empty($d['name_top'])): ?>
+                                            <span class="box-relation-top"><?= htmlspecialchars($d['name_top']) ?></span>
+                                        <?php endif; ?>
+
+                                        <?php if (!empty($d['name_top']) && !empty($d['name_sub'])): ?>
+                                            <div class="box-relation-sub-row">
                                                 <svg class="box-relation-icon"
                                                     viewBox="0 0 24 24"
                                                     fill="none"
@@ -172,14 +174,14 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     <path d="M5 12h14"></path>
                                                     <path d="m13 6 6 6-6 6"></path>
                                                 </svg>
-                                            <?php endif; ?>
-
-                                            <?php if (!empty($d['name_sub'])): ?>
                                                 <span><?= htmlspecialchars($d['name_sub']) ?></span>
-                                            <?php endif; ?>
-                                        </div>
-                                    <?php endif; ?>
+                                            </div>
+                                        <?php elseif (!empty($d['name_sub'])): ?>
+                                            <span><?= htmlspecialchars($d['name_sub']) ?></span>
+                                        <?php endif; ?>
 
+                                    </div>
+                                <?php endif; ?>
 
                                     
                                     <?php if ($d && !empty($d['box_content'])): ?>
