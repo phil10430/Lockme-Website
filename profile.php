@@ -324,6 +324,29 @@ if (!empty($registeredBoxes)) {
 
 
 // =========================================================
+// EFFECTIVE LOCK STATE
+// (a box with lock_status = 1 counts as open once its timer
+//  has expired, even if no new history row has arrived yet)
+// =========================================================
+
+function is_effectively_locked(?array $status): bool
+{
+    if ($status === null || (int)$status['lock_status'] !== 1) {
+        return false;
+    }
+
+    if (!empty($status['protection_level_timer']) && !empty($status['open_time'])) {
+        $openTime = strtotime($status['open_time']);
+        if ($openTime !== false && $openTime <= time()) {
+            return false; // timer expired - box is effectively open
+        }
+    }
+
+    return true;
+}
+
+
+// =========================================================
 // DERIVE CURRENT STATUS
 // =========================================================
 
@@ -333,10 +356,12 @@ foreach ($boxHistory as $boxName => $entries) {
     if (empty($entries)) continue;
 
     $boxActual[$boxName] = [
-        'lock_status'              => $entries[0]['lock_status'],
-        'locked_since'             => $entries[0]['created_at'],
-        'protection_level_timer'   => $entries[0]['protection_level_timer'],
-        'protection_level_password'=> $entries[0]['protection_level_password'],
+        'lock_status'               => $entries[0]['lock_status'],
+        'locked_since'              => $entries[0]['created_at'],
+        'open_time'                 => $entries[0]['open_time'],
+        'protection_level_timer'    => $entries[0]['protection_level_timer'],
+        'protection_level_password' => $entries[0]['protection_level_password'],
+        'effectively_locked'        => is_effectively_locked($entries[0]),
     ];
 }
 

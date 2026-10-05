@@ -18,25 +18,45 @@ function openHistoryDialog(boxId) {
     document.getElementById('historyDialog').showModal();
 }
 
-
-// Build continuous status intervals (open/closed) from the raw log entries
+ 
+// Build continuous status intervals (open/closed) from the raw log entries.
+// A "closed" interval is split at the point its timer expires (if any),
+// since the box is effectively open from then on even before the next
+// history row confirms it.
 function buildStatusSegments(entries) {
     const sorted = [...entries].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
     const segments = [];
 
     for (let i = 0; i < sorted.length; i++) {
-        const start = new Date(sorted[i].created_at.replace(' ', 'T'));
+        const entry = sorted[i];
+        const start = new Date(entry.created_at.replace(' ', 'T'));
         const end = (i + 1 < sorted.length)
             ? new Date(sorted[i + 1].created_at.replace(' ', 'T'))
             : new Date(); // last known state extends until now
 
-        if (end > start) {
-            segments.push({
-                start,
-                end,
-                status: sorted[i].lock_status == 1 ? 'closed' : 'open'
-            });
+        if (end <= start) continue;
+
+        const isClosed = entry.lock_status == 1;
+
+        if (isClosed && entry.protection_level_timer && entry.open_time) {
+            const timerExpiry = new Date(entry.open_time.replace(' ', 'T'));
+
+            if (timerExpiry <= start) {
+                // timer already expired at the moment this entry was created
+                segments.push({ start, end, status: 'open' });
+                continue;
+            }
+
+            if (timerExpiry < end) {
+                // split: locked until the timer runs out, open afterwards
+                segments.push({ start, end: timerExpiry, status: 'closed' });
+                segments.push({ start: timerExpiry, end, status: 'open' });
+                continue;
+            }
+            // timerExpiry >= end: timer hasn't run out within this window yet
         }
+
+        segments.push({ start, end, status: isClosed ? 'closed' : 'open' });
     }
 
     return segments;

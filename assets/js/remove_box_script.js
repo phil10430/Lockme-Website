@@ -56,8 +56,22 @@ function calculateLockedDuration(entries) {
         }
     }
 
+    let isCurrentlyLocked = lockStart !== null;
+
     if (lockStart) {
-        totalMs += (new Date() - lockStart);
+        let effectiveEnd = new Date();
+
+        // A timer-protected box counts as open again once its timer
+        // has expired, even if no new history row confirms it yet.
+        if (lockingEntry && lockingEntry.protection_level_timer == 1 && lockingEntry.open_time) {
+            const timerExpiry = new Date(lockingEntry.open_time.replace(' ', 'T'));
+            if (timerExpiry <= new Date()) {
+                effectiveEnd = timerExpiry;
+                isCurrentlyLocked = false;
+            }
+        }
+
+        totalMs += (effectiveEnd - lockStart);
     }
 
     const totalHours = totalMs / (1000 * 60 * 60);
@@ -67,8 +81,8 @@ function calculateLockedDuration(entries) {
     return {
         days,
         hours,
-        isCurrentlyLocked: lockStart !== null,
-        lockingEntry // null if not currently locked
+        isCurrentlyLocked,
+        lockingEntry: isCurrentlyLocked ? lockingEntry : null
     };
 }
 

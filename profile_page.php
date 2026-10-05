@@ -98,13 +98,9 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 $boxDetails[$bid]
                                 ?? null;
 
-                            $actual =
-                                $boxActual[$bid]
-                                ?? null;
-
-                            $isLocked =
-                                $actual &&
-                                (int) $actual['lock_status'] === 1;
+                          
+                            $actual = $boxActual[$bid] ?? null;
+                            $isLocked = $actual && $actual['effectively_locked'];
 
                         ?>
 
@@ -659,11 +655,6 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </form>
 
 </dialog>
-
-
-<!-- =========================
-     SHARE DIALOG
-========================= -->
 
 <!-- =========================
      SHARE DIALOG

@@ -76,6 +76,26 @@ function box_state(?array $status): string
     return 'unknown';
 }
 
+// A box counts as "effectively locked" only if lock_status says
+// locked AND, when timer-protected, the timer hasn't expired yet.
+// A box with lock_status = 1 whose timer has already run out is
+// treated as open, since the box would physically release itself.
+function is_effectively_locked(?array $status): bool
+{
+    if (box_state($status) !== 'locked') {
+        return false;
+    }
+
+    if (!empty($status['protection_level_timer']) && !empty($status['open_time'])) {
+        $openTime = strtotime($status['open_time']);
+        if ($openTime !== false && $openTime <= time()) {
+            return false; // timer has expired - box is effectively open
+        }
+    }
+
+    return true;
+}
+
 
 // =========================================================
 // LOCKED DURATION
@@ -104,7 +124,7 @@ function locked_duration(?string $lockedSince): string
 // =========================================================
 
 $registeredBoxes = array_values(array_filter($registeredBoxes, function ($box) use ($latestStatus) {
-    return box_state($latestStatus[$box['box_id']] ?? null) === 'locked';
+    return is_effectively_locked($latestStatus[$box['box_id']] ?? null);
 }));
 
 
