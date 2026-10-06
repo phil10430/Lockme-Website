@@ -1,0 +1,81 @@
+/* =========================================================
+
+   LOGIN / REGISTER
+
+========================================================= */
+
+.login-card{
+
+    margin:150px auto;
+
+    width:50%;
+
+}
+
+.passwordreset-card{
+
+    margin:110px auto;
+
+    width:50%;
+
+}
+
+.register-card{
+
+    margin:80px auto;
+
+    width:50%;
+
+}
+
+.choose-lock-text{
+
+    font-size:13px;
+
+    color:var(--secondary-color);
+
+}
+
+/* =========================================================
+
+   AUTH-MESSAGES
+
+========================================================= */
+
+.auth-message{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:14px 16px;
+
+    border-radius:14px;
+
+    font-size:14px;
+
+    margin-bottom:18px;
+
+}
+
+.auth-error{
+
+    background:rgba(255, 80, 80, 0.10);
+
+    border:1px solid rgba(255, 80, 80, 0.18);
+
+    color:#ffb3b3;
+
+    backdrop-filter:blur(8px);
+
+}
+
+.auth-message-icon{
+
+    font-size:15px;
+
+    opacity:0.9;
+
+}

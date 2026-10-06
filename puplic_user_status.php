@@ -1,3 +1,4 @@
+
 <?php
 session_start();
 
@@ -22,19 +23,26 @@ $stmt = $pdo->prepare("
 $stmt->execute();
 $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+
 // =========================================================
-// TOTAL LOCKED COUNT (all boxes, regardless of public_status)
+// TOTAL LOCKED COUNT
 // =========================================================
 
 $totalLockedCount = 0;
 
 try {
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM box_data_actual WHERE lock_status = 1");
+    $stmt = $pdo->prepare("
+        SELECT COUNT(*)
+        FROM box_data_actual
+        WHERE lock_status = 1
+    ");
     $stmt->execute();
+
     $totalLockedCount = (int) $stmt->fetchColumn();
 } catch (PDOException $e) {
-    $totalLockedCount = 0; // Fallback, falls DB-Fehler
+    $totalLockedCount = 0;
 }
+
 
 // =========================================================
 // LATEST STATUS PER BOX
@@ -43,20 +51,28 @@ try {
 $latestStatus = [];
 
 if (!empty($registeredBoxes)) {
+
     $boxIds = array_column($registeredBoxes, 'box_id');
     $placeholders = implode(',', array_fill(0, count($boxIds), '?'));
 
     $stmt = $pdo->prepare("
-        SELECT box_name, lock_status, open_time, created_at, protection_level_timer, protection_level_password
+        SELECT
+            box_name,
+            lock_status,
+            open_time,
+            created_at,
+            protection_level_timer,
+            protection_level_password
         FROM box_data_history
         WHERE box_name IN ($placeholders)
         ORDER BY created_at DESC
     ");
+
     $stmt->execute($boxIds);
 
-    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $r) {
-        if (!isset($latestStatus[$r['box_name']])) {
-            $latestStatus[$r['box_name']] = $r;
+    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $status) {
+        if (!isset($latestStatus[$status['box_name']])) {
+            $latestStatus[$status['box_name']] = $status;
         }
     }
 }
@@ -68,28 +84,42 @@ if (!empty($registeredBoxes)) {
 
 function box_state(?array $status): string
 {
-    if ($status === null) return 'unknown';
+    if ($status === null) {
+        return 'unknown';
+    }
 
-    $val = strtolower((string)$status['lock_status']);
-    if (in_array($val, ['1', 'locked', 'true', 'closed'], true)) return 'locked';
-    if (in_array($val, ['0', 'unlocked', 'false', 'open'], true)) return 'unlocked';
+    $value = strtolower((string) $status['lock_status']);
+
+    if (in_array($value, ['1', 'locked', 'true', 'closed'], true)) {
+        return 'locked';
+    }
+
+    if (in_array($value, ['0', 'unlocked', 'false', 'open'], true)) {
+        return 'unlocked';
+    }
+
     return 'unknown';
 }
 
-// A box counts as "effectively locked" only if lock_status says
-// locked AND, when timer-protected, the timer hasn't expired yet.
-// A box with lock_status = 1 whose timer has already run out is
-// treated as open, since the box would physically release itself.
+
+// =========================================================
+// EFFECTIVE LOCK STATE
+// =========================================================
+
 function is_effectively_locked(?array $status): bool
 {
     if (box_state($status) !== 'locked') {
         return false;
     }
 
-    if (!empty($status['protection_level_timer']) && !empty($status['open_time'])) {
+    if (
+        !empty($status['protection_level_timer']) &&
+        !empty($status['open_time'])
+    ) {
         $openTime = strtotime($status['open_time']);
+
         if ($openTime !== false && $openTime <= time()) {
-            return false; // timer has expired - box is effectively open
+            return false;
         }
     }
 
@@ -103,17 +133,35 @@ function is_effectively_locked(?array $status): bool
 
 function locked_duration(?string $lockedSince): string
 {
-    if (!$lockedSince) return '';
+    if (!$lockedSince) {
+        return '';
+    }
 
-    $diff = max(0, time() - strtotime($lockedSince));
+    $timestamp = strtotime($lockedSince);
+
+    if ($timestamp === false) {
+        return '';
+    }
+
+    $diff = max(0, time() - $timestamp);
+
     $days = intdiv($diff, 86400);
     $hours = intdiv($diff % 86400, 3600);
     $minutes = intdiv($diff % 3600, 60);
 
     $parts = [];
-    if ($days > 0)  $parts[] = $days . 'd';
-    if ($hours > 0) $parts[] = $hours . 'h';
-    if ($minutes > 0 || empty($parts)) $parts[] = $minutes . 'm';
+
+    if ($days > 0) {
+        $parts[] = $days . 'd';
+    }
+
+    if ($hours > 0) {
+        $parts[] = $hours . 'h';
+    }
+
+    if ($minutes > 0 || empty($parts)) {
+        $parts[] = $minutes . 'm';
+    }
 
     return implode(' ', $parts);
 }
@@ -123,9 +171,16 @@ function locked_duration(?string $lockedSince): string
 // KEEP ONLY CURRENTLY LOCKED BOXES
 // =========================================================
 
-$registeredBoxes = array_values(array_filter($registeredBoxes, function ($box) use ($latestStatus) {
-    return is_effectively_locked($latestStatus[$box['box_id']] ?? null);
-}));
+$registeredBoxes = array_values(
+    array_filter(
+        $registeredBoxes,
+        function ($box) use ($latestStatus) {
+            return is_effectively_locked(
+                $latestStatus[$box['box_id']] ?? null
+            );
+        }
+    )
+);
 
 
 // =========================================================
@@ -135,51 +190,125 @@ $registeredBoxes = array_values(array_filter($registeredBoxes, function ($box) u
 $boxDetails = [];
 
 if (!empty($registeredBoxes)) {
+
     $boxIds = array_column($registeredBoxes, 'box_id');
     $placeholders = implode(',', array_fill(0, count($boxIds), '?'));
 
     $stmt = $pdo->prepare("
-        SELECT box_id, name_top, name_sub, box_content, avatar_path, public_status
+        SELECT
+            box_id,
+            name_top,
+            name_sub,
+            box_content,
+            avatar_path,
+            public_status
         FROM user_details
         WHERE box_id IN ($placeholders)
     ");
+
     $stmt->execute($boxIds);
 
-    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $d) {
-        $boxDetails[$d['box_id']] = $d;
+    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $details) {
+        $boxDetails[$details['box_id']] = $details;
     }
 }
 ?>
 
 <style>
-/* Scoped layout override for this page only - reuses all
-   existing classes/content from profile_page.php, just
-   arranges the same box-items as a responsive grid instead
-   of a stacked list, and tightens their spacing. */
+
+/* =========================================================
+   PUBLIC LOCKEE GRID
+   ========================================================= */
 
 .box-status-page .box-list {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
 }
 
-@media (min-width: 769px) {
+/*
+ * Three wider columns on desktop.
+ * The minimum width prevents the relation text
+ * from wrapping unnecessarily.
+ */
+@media (min-width: 1100px) {
     .box-status-page .box-list {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3, minmax(320px, 1fr));
     }
 }
 
+@media (min-width: 769px) and (max-width: 1099px) {
+    .box-status-page .box-list {
+        grid-template-columns: repeat(2, minmax(320px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .box-status-page .box-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =========================================================
+   BOX CARD
+   ========================================================= */
+
 .box-status-page .box-item {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     padding: 10px 12px;
-    gap: 4px;
+    gap: 8px;
 }
 
 .box-status-page .box-item-main {
-    gap: 3px;
+    width: 100%;
 }
+
+
+/* =========================================================
+   LOCK RELATION
+   ========================================================= */
+
+.box-status-page .box-lock-relation {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    gap: 5px;
+}
+
+.box-status-page .lockee-name,
+.box-status-page .relation-text,
+.box-status-page .keyholder-name {
+    white-space: nowrap;
+}
+
+.box-status-page .lockee-name,
+.box-status-page .keyholder-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.box-status-page .box-title-content {
+    min-width: 0;
+}
+
+.box-status-page .box-id {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
 </style>
+
 
 <div class="settings-wrapper">
 
@@ -188,9 +317,15 @@ if (!empty($registeredBoxes)) {
         <div class="settings-hero">
             <div>
                 <h1>Lockees</h1>
-                <p><?= $totalLockedCount ?> locked total &middot; <?= count($registeredBoxes) ?> public</p>
+
+                <p>
+                    <?= $totalLockedCount ?> locked total
+                    &middot;
+                    <?= count($registeredBoxes) ?> public
+                </p>
             </div>
         </div>
+
 
         <div class="settings-card">
 
@@ -198,90 +333,204 @@ if (!empty($registeredBoxes)) {
 
                 <?php if (empty($registeredBoxes)): ?>
 
-                    <p class="box-empty">No locked boxes right now.</p>
+                    <p class="box-empty">
+                        No locked boxes right now.
+                    </p>
 
                 <?php else: ?>
 
                     <div class="box-list">
 
                         <?php foreach ($registeredBoxes as $box):
+
                             $id = $box['box_id'];
                             $status = $latestStatus[$id] ?? null;
-                            $d = $boxDetails[$id] ?? null;
-                            $isLocked = true; // already filtered to locked-only above
-                            $actual = ['locked_since' => $status['created_at'] ?? null];
+                            $details = $boxDetails[$id] ?? null;
+
+                            $actual = [
+                                'locked_since' => $status['created_at'] ?? null
+                            ];
+
+                            $isLocked = true;
+
                         ?>
 
-                            <div class="box-item" id="box-<?= htmlspecialchars($id) ?>">
+                            <div
+                                class="box-item"
+                                id="box-<?= htmlspecialchars($id) ?>">
 
                                 <div class="box-item-main">
 
+
+                                    <!-- =================================================
+                                         BOX TITLE
+                                    ================================================== -->
+
                                     <div class="box-title-row">
-                                        <?php if ($d && !empty($d['avatar_path'])): ?>
-                                            <img class="box-list-avatar" src="<?= htmlspecialchars($d['avatar_path']) ?>" alt="" loading="lazy">
+
+                                        <?php if ($details && !empty($details['avatar_path'])): ?>
+
+                                            <img
+                                                class="box-list-avatar"
+                                                src="<?= htmlspecialchars($details['avatar_path']) ?>"
+                                                alt=""
+                                                loading="lazy">
+
                                         <?php else: ?>
-                                            <div class="box-list-avatar-placeholder" aria-hidden="true"></div>
+
+                                            <div
+                                                class="box-list-avatar-placeholder"
+                                                aria-hidden="true">
+                                            </div>
+
                                         <?php endif; ?>
 
-                                        <span class="box-id">LockMeBox <?= htmlspecialchars($id) ?></span>
+                                        <div class="box-title-content">
+
+                                            <span class="box-id">
+                                                LockMeBox <?= htmlspecialchars($id) ?>
+                                            </span>
+
+                                        </div>
+
                                     </div>
 
-                                    <?php if ($d && (!empty($d['name_top']) || !empty($d['name_sub']))): ?>
-                                        <div class="box-relation-row">
 
-                                            <?php if (!empty($d['name_top'])): ?>
-                                                <span class="box-relation-top"><?= htmlspecialchars($d['name_top']) ?></span>
+                                    <!-- =================================================
+                                         LOCK RELATION
+                                    ================================================== -->
+
+                                    <?php if (
+                                        $details &&
+                                        (
+                                            !empty($details['name_sub']) ||
+                                            !empty($details['name_top'])
+                                        )
+                                    ): ?>
+
+                                        <div class="box-lock-relation">
+
+                                            <?php if (!empty($details['name_sub'])): ?>
+
+                                                <span class="lockee-name">
+                                                    <?= htmlspecialchars($details['name_sub']) ?>
+                                                </span>
+
                                             <?php endif; ?>
 
-                                            <?php if (!empty($d['name_top']) && !empty($d['name_sub'])): ?>
-                                                <div class="box-relation-sub-row">
-                                                    <svg class="box-relation-icon"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        stroke-width="1.8"
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
-                                                        aria-label="locked for">
-                                                        <path d="M5 12h14"></path>
-                                                        <path d="m13 6 6 6-6 6"></path>
-                                                    </svg>
-                                                    <span><?= htmlspecialchars($d['name_sub']) ?></span>
-                                                </div>
-                                            <?php elseif (!empty($d['name_sub'])): ?>
-                                                <span><?= htmlspecialchars($d['name_sub']) ?></span>
+
+                                            <?php if (
+                                                !empty($details['name_sub']) &&
+                                                !empty($details['name_top'])
+                                            ): ?>
+
+                                                <span class="relation-text">
+                                                    is locked by
+                                                </span>
+
+                                            <?php endif; ?>
+
+
+                                            <?php if (!empty($details['name_top'])): ?>
+
+                                                <span class="keyholder-name">
+                                                    <?= htmlspecialchars($details['name_top']) ?>
+                                                </span>
+
                                             <?php endif; ?>
 
                                         </div>
+
                                     <?php endif; ?>
 
-                                    <?php if ($d && !empty($d['box_content'])): ?>
+
+                                    <!-- =================================================
+                                         BOX CONTENT
+                                    ================================================== -->
+
+                                    <?php if (
+                                        $details &&
+                                        !empty($details['box_content'])
+                                    ): ?>
+
                                         <div class="box-content-tag">
-                                            <svg viewBox="0 0 24 24"
+
+                                            <svg
+                                                viewBox="0 0 24 24"
                                                 fill="none"
                                                 stroke="currentColor"
                                                 stroke-width="1.8"
                                                 stroke-linecap="round"
                                                 stroke-linejoin="round"
                                                 aria-hidden="true">
-                                                <circle cx="7.5" cy="15.5" r="5.5"></circle>
+
+                                                <circle
+                                                    cx="7.5"
+                                                    cy="15.5"
+                                                    r="5.5">
+                                                </circle>
+
                                                 <path d="m21 2-9.6 9.6"></path>
                                                 <path d="m15.5 7.5 3 3"></path>
                                                 <path d="m18.5 4.5 3 3"></path>
+
                                             </svg>
-                                            <span><?= htmlspecialchars($d['box_content']) ?></span>
+
+                                            <span>
+                                                <?= htmlspecialchars($details['box_content']) ?>
+                                            </span>
+
                                         </div>
+
                                     <?php endif; ?>
 
-                                    <?php if ($isLocked && !empty($actual['locked_since'])): ?>
+
+                                    <!-- =================================================
+                                         LOCK STATUS
+                                    ================================================== -->
+
+                                    <?php if (
+                                        $isLocked &&
+                                        !empty($actual['locked_since'])
+                                    ): ?>
+
                                         <div class="box-lock-status">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <rect x="5" y="11" width="14" height="10" rx="2"></rect>
+
+                                            <svg
+                                                class="box-lock-icon"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                aria-hidden="true">
+
+                                                <rect
+                                                    x="5"
+                                                    y="11"
+                                                    width="14"
+                                                    height="10"
+                                                    rx="2">
+                                                </rect>
+
                                                 <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+
                                             </svg>
-                                            Locked since <?= htmlspecialchars(locked_duration($actual['locked_since'])) ?>
+
+                                            <span class="box-lock-duration">
+                                                Locked since
+                                                <?= htmlspecialchars(
+                                                    locked_duration(
+                                                        $actual['locked_since']
+                                                    )
+                                                ) ?>
+                                            </span>
+
                                         </div>
+
                                     <?php endif; ?>
+
 
                                 </div>
 

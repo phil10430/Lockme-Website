@@ -104,28 +104,56 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                         ?>
 
-                            <div class="box-item" id="box-<?= htmlspecialchars($bid) ?>">
+                       
+                            <div class="box-item">
 
                                 <div class="box-item-main">
 
+                                    <!-- =====================================================
+                                        BOX HEADER
+                                    ====================================================== -->
+
                                     <div class="box-title-row">
+
                                         <?php if ($d && !empty($d['avatar_path'])): ?>
-                                            <img class="box-list-avatar" src="<?= htmlspecialchars($d['avatar_path']) ?>" alt="" loading="lazy">
+
+                                            <img
+                                                class="box-list-avatar"
+                                                src="<?= htmlspecialchars($d['avatar_path']) ?>"
+                                                alt=""
+                                                loading="lazy"
+                                            >
+
                                         <?php else: ?>
-                                            <div class="box-list-avatar-placeholder" aria-hidden="true"></div>
+
+                                            <div
+                                                class="box-list-avatar-placeholder"
+                                                aria-hidden="true">
+                                            </div>
+
                                         <?php endif; ?>
 
-                                        <span class="box-id">LockMeBox <?= htmlspecialchars($bid) ?></span>             
-                                            <?php if ($d): ?>
-                                                <span class="box-public-badge"
-                                                    title="<?= (int)($d['public_status'] ?? 0) === 1
-                                                        ? 'Profil is publicly visible'
-                                                        : 'Profil is not public' ?>"
-                                                    aria-label="<?= (int)($d['public_status'] ?? 0) === 1
-                                                        ? 'Öffentliches Profil'
-                                                        : 'Privates Profil' ?>">
 
-                                                    <svg viewBox="0 0 24 24"
+                                        <div class="box-title-content">
+
+                                            <span class="box-id">
+                                                LockMeBox <?= htmlspecialchars($bid) ?>
+                                            </span>
+
+
+                                            <?php if ($d): ?>
+
+                                                <span
+                                                    class="box-public-badge"
+                                                    title="<?= (int)($d['public_status'] ?? 0) === 1
+                                                        ? 'Profile is publicly visible'
+                                                        : 'Profile is not public' ?>"
+                                                    aria-label="<?= (int)($d['public_status'] ?? 0) === 1
+                                                        ? 'Public profile'
+                                                        : 'Private profile' ?>">
+
+                                                    <svg
+                                                        viewBox="0 0 24 24"
                                                         fill="none"
                                                         stroke="currentColor"
                                                         stroke-width="1.8"
@@ -134,137 +162,335 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                         aria-hidden="true">
 
                                                         <?php if ((int)($d['public_status'] ?? 0) === 1): ?>
-                                                            <!-- Öffentlich: Auge -->
+
                                                             <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"></path>
                                                             <circle cx="12" cy="12" r="3"></circle>
+
                                                         <?php else: ?>
-                                                            <!-- Privat: Durchgestrichenes Auge -->
+
                                                             <path d="M3 3l18 18"></path>
                                                             <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"></path>
                                                             <path d="M9.9 5.2A11.4 11.4 0 0 1 12 5c6.4 0 10 7 10 7a15.7 15.7 0 0 1-3 3.8"></path>
                                                             <path d="M6.2 6.2C3.5 8 2 12 2 12s3.6 7 10 7c1.1 0 2.1-.2 3-.5"></path>
+
                                                         <?php endif; ?>
 
                                                     </svg>
+
                                                 </span>
+
                                             <?php endif; ?>
-                                    </div>
 
-                                  <?php if ($d && (!empty($d['name_top']) || !empty($d['name_sub']))): ?>
-                                    <div class="box-relation-row">
-
-                                        <?php if (!empty($d['name_top'])): ?>
-                                            <span class="box-relation-top"><?= htmlspecialchars($d['name_top']) ?></span>
-                                        <?php endif; ?>
-
-                                        <?php if (!empty($d['name_top']) && !empty($d['name_sub'])): ?>
-                                            <div class="box-relation-sub-row">
-                                                <svg class="box-relation-icon"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    stroke-width="1.8"
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    aria-label="locked for">
-                                                    <path d="M5 12h14"></path>
-                                                    <path d="m13 6 6 6-6 6"></path>
-                                                </svg>
-                                                <span><?= htmlspecialchars($d['name_sub']) ?></span>
-                                            </div>
-                                        <?php elseif (!empty($d['name_sub'])): ?>
-                                            <span><?= htmlspecialchars($d['name_sub']) ?></span>
-                                        <?php endif; ?>
+                                        </div>
 
                                     </div>
-                                <?php endif; ?>
 
-                                    
+
+                                    <!-- =====================================================
+                                        RELATIONSHIP
+                                    ====================================================== -->
+
+                                    <?php if ($d && (!empty($d['name_top']) || !empty($d['name_sub']))): ?>
+
+                                        <div class="box-lock-relation">
+
+                                            <?php if (!empty($d['name_sub'])): ?>
+
+                                                <span class="lockee-name">
+                                                    <?= htmlspecialchars($d['name_sub']) ?>
+                                                </span>
+
+                                            <?php endif; ?>
+
+
+                                            <?php if (!empty($d['name_sub']) && !empty($d['name_top'])): ?>
+
+                                                <span class="relation-text">
+                                                    is locked by
+                                                </span>
+
+                                            <?php endif; ?>
+
+
+                                            <?php if (!empty($d['name_top'])): ?>
+
+                                                <span class="keyholder-name">
+                                                    <?= htmlspecialchars($d['name_top']) ?>
+                                                </span>
+
+                                            <?php endif; ?>
+
+                                        </div>
+
+                                    <?php endif; ?>
+
+
+                                    <!-- =====================================================
+                                        BOX CONTENT / KEY
+                                    ====================================================== -->
+
                                     <?php if ($d && !empty($d['box_content'])): ?>
+
                                         <div class="box-content-tag">
-                                        <svg viewBox="0 0 24 24"
+
+                                            <svg
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="1.8"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                aria-hidden="true">
+
+                                                <circle
+                                                    cx="7.5"
+                                                    cy="15.5"
+                                                    r="5.5">
+                                                </circle>
+
+                                                <path d="m21 2-9.6 9.6"></path>
+                                                <path d="m15.5 7.5 3 3"></path>
+                                                <path d="m18.5 4.5 3 3"></path>
+
+                                            </svg>
+
+
+                                            <span>
+                                                <?= htmlspecialchars($d['box_content']) ?>
+                                            </span>
+
+                                        </div>
+
+                                    <?php endif; ?>
+
+
+                                    <!-- =====================================================
+                                        LOCK STATUS
+                                    ====================================================== -->
+
+                                    <div class="box-lock-status">
+
+                                        <?php if ($isLocked && !empty($actual['locked_since'])): ?>
+
+                                            <svg
+                                                class="box-lock-icon"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                aria-hidden="true">
+
+                                                <rect
+                                                    x="5"
+                                                    y="11"
+                                                    width="14"
+                                                    height="10"
+                                                    rx="2">
+                                                </rect>
+
+                                                <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+
+                                            </svg>
+
+
+                                            <span class="box-lock-duration">
+                                                Locked since
+                                                <?= htmlspecialchars(locked_duration($actual['locked_since'])) ?>
+                                            </span>
+
+                                        <?php endif; ?>
+
+
+                                        <!-- JavaScript status -->
+                                        <span
+                                            class="box-status"
+                                            id="box-status-<?= htmlspecialchars($bid) ?>">
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+
+                                <!-- =========================================================
+                                    ACTIONS
+                                ========================================================== -->
+
+                                <div class="box-item-actions">
+
+                                    <div class="box-action-icons">
+
+                                        <!-- History -->
+                                        <button
+                                            type="button"
+                                            class="box-icon-btn"
+                                            title="Show History"
+                                            aria-label="Show History"
+                                            onclick="openHistoryDialog('<?= htmlspecialchars($bid) ?>')">
+
+                                            <svg
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                aria-hidden="true">
+
+                                                <rect
+                                                    x="3"
+                                                    y="5"
+                                                    width="18"
+                                                    height="16"
+                                                    rx="2">
+                                                </rect>
+
+                                                <path d="M16 3v4"></path>
+                                                <path d="M8 3v4"></path>
+                                                <path d="M3 11h18"></path>
+
+                                            </svg>
+
+                                        </button>
+
+
+                                        <!-- Box Details -->
+                                        <button
+                                            type="button"
+                                            class="box-icon-btn"
+                                            title="Set Details"
+                                            aria-label="Set Details"
+                                            onclick="openBoxDetailsDialog('<?= htmlspecialchars($bid) ?>')">
+
+                                            <svg
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                aria-hidden="true">
+
+                                                <path d="M12 20h9"></path>
+
+                                                <path
+                                                    d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z">
+                                                </path>
+
+                                            </svg>
+
+                                        </button>
+
+
+                                        <!-- Share -->
+                                        <button
+                                            type="button"
+                                            class="box-icon-btn"
+                                            title="Share Status"
+                                            aria-label="Share Status"
+                                            onclick="openShareDialog('<?= htmlspecialchars($bid) ?>')">
+
+                                            <svg
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                aria-hidden="true">
+
+                                                <circle
+                                                    cx="18"
+                                                    cy="5"
+                                                    r="3">
+                                                </circle>
+
+                                                <circle
+                                                    cx="6"
+                                                    cy="12"
+                                                    r="3">
+                                                </circle>
+
+                                                <circle
+                                                    cx="18"
+                                                    cy="19"
+                                                    r="3">
+                                                </circle>
+
+                                                <line
+                                                    x1="8.59"
+                                                    y1="13.51"
+                                                    x2="15.42"
+                                                    y2="17.49">
+                                                </line>
+
+                                                <line
+                                                    x1="15.41"
+                                                    y1="6.51"
+                                                    x2="8.59"
+                                                    y2="10.49">
+                                                </line>
+
+                                            </svg>
+
+                                        </button>
+
+                                    </div>
+
+
+                                    <!-- Remove -->
+                                    <button
+                                        type="button"
+                                        class="box-icon-btn box-icon-btn-danger"
+                                        title="Remove Box"
+                                        aria-label="Remove Box"
+                                        onclick="removeBox('<?= htmlspecialchars($bid) ?>')">
+
+                                        <svg
+                                            viewBox="0 0 24 24"
                                             fill="none"
                                             stroke="currentColor"
                                             stroke-width="1.8"
                                             stroke-linecap="round"
                                             stroke-linejoin="round"
                                             aria-hidden="true">
-                                            <circle cx="7.5" cy="15.5" r="5.5"></circle>
-                                            <path d="m21 2-9.6 9.6"></path>
-                                            <path d="m15.5 7.5 3 3"></path>
-                                            <path d="m18.5 4.5 3 3"></path>
-                                        </svg>
 
-                                        <span><?= htmlspecialchars($d['box_content']) ?></span>
-                                    </div>
-                                    <?php endif; ?>
- 
-                                    <?php if ($isLocked && !empty($actual['locked_since'])): ?>
-                                        <div class="box-lock-status">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <rect x="5" y="11" width="14" height="10" rx="2"></rect>
-                                                <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
-                                            </svg>
-                                            Locked since <?= htmlspecialchars(locked_duration($actual['locked_since'])) ?>
-                                        </div>
-                                    <?php endif; ?>
-
-
-                                    <span class="box-status" id="box-status-<?= htmlspecialchars($bid) ?>"></span>
-
-                                </div>
-
-                                <div class="box-item-actions">
-
-                                    <div class="box-action-icons">
-
-                                        <button type="button" class="box-icon-btn" title="Show History" aria-label="Show History" onclick="openHistoryDialog('<?= htmlspecialchars($bid) ?>')">
-
-                                            <svg viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                stroke-width="2"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round">
-                                                <rect x="3" y="5" width="18" height="16" rx="2"></rect>
-                                                <path d="M16 3v4"></path>
-                                                <path d="M8 3v4"></path>
-                                                <path d="M3 11h18"></path>
-                                            </svg>
-
-                                        </button>
-
-                                        <button type="button" class="box-icon-btn" title="Set Details" aria-label="Set Details" onclick="openBoxDetailsDialog('<?= htmlspecialchars($bid) ?>')">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M12 20h9"></path>
-                                                <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
-                                            </svg>
-                                        </button>
-
-                                        <button type="button" class="box-icon-btn" title="Share Status" aria-label="Share Status" onclick="openShareDialog('<?= htmlspecialchars($bid) ?>')">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <circle cx="18" cy="5" r="3"></circle>
-                                                <circle cx="6" cy="12" r="3"></circle>
-                                                <circle cx="18" cy="19" r="3"></circle>
-                                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                                            </svg>
-                                        </button>
-
-                                    </div>
-
-                                    <button type="button" class="box-icon-btn box-icon-btn-danger" title="Remove Box" aria-label="Remove Box" onclick="removeBox('<?= htmlspecialchars($bid) ?>')">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <polyline points="3 6 5 6 21 6"></polyline>
-                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                            <line x1="10" y1="11" x2="10" y2="17"></line>
-                                            <line x1="14" y1="11" x2="14" y2="17"></line>
+
+                                            <path
+                                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6">
+                                            </path>
+
+                                            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+
+                                            <line
+                                                x1="10"
+                                                y1="11"
+                                                x2="10"
+                                                y2="17">
+                                            </line>
+
+                                            <line
+                                                x1="14"
+                                                y1="11"
+                                                x2="14"
+                                                y2="17">
+                                            </line>
+
                                         </svg>
+
                                     </button>
 
                                 </div>
 
+
+
                             </div>
+
+
 
                         <?php endforeach; ?>
 

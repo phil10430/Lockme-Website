@@ -1,0 +1,67 @@
+/* =========================================================
+
+   MOBILE (SITE-WIDE)
+
+========================================================= */
+
+@media(max-width:768px){
+
+    .topbar{
+
+        padding:0 20px;
+
+    }
+
+    .top-right{
+
+        gap:14px;
+
+    }
+
+    .top-right a{
+
+        font-size:16px;
+
+    }
+
+    .logo img{
+
+        height:40px;
+
+    }
+
+    .hero h1{
+
+        font-size:42px;
+
+    }
+
+    .hero p{
+
+        font-size:16px;
+
+    }
+
+    .btn-modern{
+
+        width:100%;
+
+    }
+
+    .hero-buttons{
+
+        width:100%;
+
+    }
+
+    .login-card,
+
+    .register-card,
+
+    .passwordreset-card{
+
+        width:50%;
+
+    }
+
+}

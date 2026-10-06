@@ -1,0 +1,645 @@
+/* =========================================================
+
+   BUTTONS
+
+========================================================= */
+
+.btn-modern{
+
+    padding:15px 34px;
+
+    border:1px solid #fff;
+
+    background:transparent;
+
+    color:#fff;
+
+    font-size:14px;
+
+    letter-spacing:2px;
+
+    border-radius:50px;
+
+    transition:.3s ease;
+
+    cursor:pointer;
+
+    display:inline-block;
+
+}
+
+.btn-modern:hover{
+
+    background:#fff;
+
+    color:#000;
+
+    transform:translateY(-2px);
+
+}
+
+/* OLD ROUND BUTTONS */
+
+.btn-round {
+
+  color:#fff;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  width: 52px;
+
+  height: 52px;
+
+  border-radius: 16px;
+
+  border: 1px solid rgba(255, 255, 255, 0.13);
+
+  background: rgba(255, 255, 255, 0.10);
+
+  cursor: pointer;
+
+  letter-spacing: 1px;
+
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+
+  position: relative;
+
+  overflow: hidden;
+
+  outline: none;
+
+  -webkit-tap-highlight-color: transparent;
+
+  user-select: none;
+
+}
+
+.btn-round:hover {
+
+  color:#fff;
+
+  background: rgba(255, 255, 255, 0.17);
+
+  border-color: rgba(255, 255, 255, 0.25);
+
+}
+
+.btn-round:active {
+
+  background: rgba(255, 255, 255, 0.22);
+
+  transform: scale(0.95);
+
+}
+
+.btn-round::after {
+
+  content: '';
+
+  display: block;
+
+  position: absolute;
+
+  inset: 0;
+
+  border-radius: 15px;
+
+  background: rgba(255, 255, 255, 0.20);
+
+  opacity: 0;
+
+  transition: opacity 0.25s;
+
+  pointer-events: none;
+
+}
+
+.btn-round:active::after {
+
+  opacity: 1;
+
+  transition: none;
+
+}
+
+.btn-round[style*="width:80px"]  { width: 80px  !important; }
+
+.btn-round[style*="width:120px"] { width: 120px !important; }
+
+.btn-round img {
+
+  display: block;
+
+  margin: 0 auto;
+
+  max-width: 100%;
+
+  height: auto;
+
+}
+
+/* =========================================================
+
+   CARD
+
+========================================================= */
+
+.card{
+
+    background-color:transparent !important;
+
+    max-width:300px;
+
+    margin:0 auto;
+
+    border:none;
+
+}
+
+.card-legal{
+
+    max-width:600px;
+
+    margin:0 auto;
+
+    color:var(--primary-color);
+
+}
+
+.card-header,
+
+.card-footer{
+
+    color:var(--primary-color);
+
+    border:none;
+
+    text-align:center;
+
+}
+
+.card-body{
+
+    flex:none;
+
+    padding:0;
+
+}
+
+/* =========================================================
+
+   OVERLAY CARD
+
+========================================================= */
+
+.overlay-card{
+
+    position:relative;
+
+    display:flex;
+
+    justify-content:center;
+
+}
+
+.overlay-card .bg-image{
+
+    width:300px;
+
+}
+
+.overlay-card .card-content{
+
+    color:var(--primary-color);
+
+    position:absolute;
+
+    width:100%;
+
+    z-index:2;
+
+}
+
+/* =========================================================
+
+   FORM
+
+========================================================= */
+
+.form-control{
+
+    width:100%;
+
+    padding:14px 16px;
+
+    border-radius:12px;
+
+    background:transparent;
+
+    border:1px solid var(--secondary-color);
+
+    color:var(--primary-color);
+
+    font-size:15px;
+
+    font-family:inherit;
+
+    outline:none;
+
+    transition:all 0.25s ease;
+
+    backdrop-filter: blur(8px);
+
+}
+
+.form-control:focus{
+
+    background:transparent;
+
+    border-color:var(--secondary-color);
+
+    color:var(--primary-color);
+
+}
+
+.form-control::placeholder{
+
+    color:var(--secondary-color);
+
+}
+
+textarea.form-control{
+
+    resize:none;
+
+    min-height:140px;
+
+}
+
+/* =========================================================
+
+   MODERN DIALOG  (single, consolidated definition)
+
+========================================================= */
+
+.modern-dialog{
+
+    width:100%;
+
+    max-width:440px;
+
+    max-height:85vh;
+
+    overflow-y:auto;
+
+    padding:32px;
+
+    border:none;
+
+    border-radius:28px;
+
+    background:#0b0b0b;
+
+    color:var(--primary-color);
+
+    box-shadow:
+
+        0 20px 60px rgba(0,0,0,0.6);
+
+    margin:auto;
+
+}
+
+.modern-dialog::backdrop{
+
+    background:rgba(0,0,0,0.72);
+
+    backdrop-filter:blur(8px);
+
+}
+
+.modern-dialog h3{
+
+    margin-bottom:24px;
+
+    font-size:28px;
+
+}
+
+@media(max-width:768px){
+
+    .modern-dialog{
+
+        padding:24px 20px;
+
+        max-height:88vh;
+
+        width:92vw;
+
+    }
+
+    .modern-dialog h3{
+
+        font-size:22px;
+
+    }
+
+}
+
+/* =========================================================
+
+   INPUT GROUP  (single, consolidated definition)
+
+========================================================= */
+
+.input-group{
+
+    width:100%;
+
+    position:relative;
+
+    margin-bottom:22px;
+
+}
+
+.input-group input,
+
+.input-group textarea{
+
+    width:100%;
+
+    padding:18px 14px 10px;
+
+    border-radius:14px;
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    background:rgba(255,255,255,0.03);
+
+    color:var(--primary-color);
+
+    outline:none;
+
+    transition:0.25s ease;
+
+        -webkit-appearance: none;
+
+    appearance: none;
+
+    overflow: hidden;
+
+}
+
+.input-group input[type="datetime-local"] {
+
+    min-width: 0;
+
+    box-sizing: border-box;
+
+}
+
+.input-group input:focus,
+
+.input-group textarea:focus{
+
+    border-color:rgba(255,255,255,0.22);
+
+    background:rgba(255,255,255,0.04);
+
+}
+
+.input-group label{
+
+    position:absolute;
+
+    left:14px;
+
+    top:15px;
+
+    font-size:14px;
+
+    color:var(--secondary-color);
+
+    pointer-events:none;
+
+    transition:0.2s ease;
+
+}
+
+.input-group input:focus + label,
+
+.input-group input:not(:placeholder-shown) + label{
+
+    top:6px;
+
+    font-size:11px;
+
+    opacity:0.7;
+
+}
+
+/* =========================================================
+
+   DIALOG ACTIONS
+
+========================================================= */
+
+.dialog-actions{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:12px;
+
+    margin-top:30px;
+
+}
+
+/* =========================================================
+
+   BUTTONS (dialog-related)
+
+========================================================= */
+
+.btn-danger-modern{
+
+    padding:14px 24px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:#ff5a5a;
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:0.2s ease;
+
+}
+
+.btn-danger-modern:hover{
+
+    opacity:0.85;
+
+    transform:translateY(-1px);
+
+}
+
+.btn-dialog {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex: 1;
+
+  height: 52px;
+
+  padding: 0 16px;
+
+  border-radius: 16px;
+
+  border: 1px solid rgba(255, 255, 255, 0.25);
+
+  background: #2A2A2A;
+
+  color: var(--primary-color);
+
+  font-size: 15px;
+
+  font-weight: 400;
+
+  cursor: pointer;
+
+  transition: background 0.15s, transform 0.1s, opacity 0.2s;
+
+  position: relative;
+
+  overflow: hidden;
+
+  outline: none;
+
+  -webkit-tap-highlight-color: transparent;
+
+  user-select: none;
+
+}
+
+.btn-dialog:hover {
+
+  background: #343434;
+
+  transform: translateY(-1px);
+
+}
+
+.btn-dialog:active {
+
+  transform: scale(0.97);
+
+  background: #3a3a3a;
+
+}
+
+.btn-dialog-primary {
+
+  background: #E53935;
+
+  border-color: transparent;
+
+  color: #ffffff;
+
+  font-weight: 700;
+
+}
+
+.btn-dialog-primary:hover {
+
+  background: #ef5350;
+
+  transform: translateY(-1px);
+
+}
+
+.btn-dialog-primary:active {
+
+  background: #c62828;
+
+}
+
+.btn-dialog::after,
+
+.btn-dialog-primary::after {
+
+  content: '';
+
+  position: absolute;
+
+  inset: 0;
+
+  background: rgba(255, 255, 255, 0.15);
+
+  opacity: 0;
+
+  transition: opacity 0.25s;
+
+  pointer-events: none;
+
+}
+
+.btn-dialog:active::after,
+
+.btn-dialog-primary:active::after {
+
+  opacity: 1;
+
+  transition: none;
+
+}
+
+/* =========================================================
+
+   ALERTS
+
+========================================================= */
+
+.alert{
+
+    margin-bottom:20px;
+
+    padding:14px 16px;
+
+    border-radius:14px;
+
+    font-size:14px;
+
+}
+
+.alert-danger{
+
+    background:rgba(255,80,80,0.08);
+
+    border:1px solid rgba(255,80,80,0.12);
+
+    color:#ff8f8f;
+
+}
+
+.alert-success{
+
+    background:rgba(80,255,120,0.06);
+
+    border:1px solid rgba(80,255,120,0.1);
+
+    color:#8dffb0;
+
+}
