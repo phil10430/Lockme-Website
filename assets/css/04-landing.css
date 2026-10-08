@@ -1,307 +1,349 @@
+
 /* =========================================================
-
    LANDING PAGE
-
 ========================================================= */
 
-.landing-wrapper{
-
-    position:relative;
-
-    /* account for the 72px navbar offset already applied via
-
-       body.landing-page padding-top, so the hero still fills
-
-       exactly one viewport height below the navbar */
-
-    min-height:calc(100vh - 72px);
+.landing-wrapper {
+    position: relative;
+    min-height: calc(100vh - 72px);
 
     background:
-
-        linear-gradient(to bottom,
-
-        rgba(0,0,0,.45),
-
-        rgba(0,0,0,.85)),
-
+        linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, .38),
+            rgba(0, 0, 0, .78)
+        ),
         url('https://kinkystuffmade.com/wp-content/uploads/2026/02/DSC01644-scaled.jpeg')
-
         center center / cover no-repeat;
 
-    display:flex;
-
-    flex-direction:column;
-
+    display: flex;
+    flex-direction: column;
 }
 
-/* HERO */
-
-.hero{
-
-    flex:1;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    text-align:center;
-
-    padding:
-
-        0px 20px
-
-        40px;
-
-}
-
-.hero-content{
-
-    max-width:850px;
-
-}
-
-.hero-subtitle{
-
-    font-size:18px;
-
-    color:var(--primary-color);
-
-    opacity:0.85;
-
-    margin-bottom:12px;
-
-}
-
-.hero-text{
-
-    font-size:15px;
-
-    line-height:1.8;
-
-    color:var(--secondary-color);
-
-    max-width:520px;
-
-    margin:0 auto 40px;
-
-}
-
-.hero h1{
-
-    font-size:72px;
-
-    font-weight:800;
-
-    letter-spacing:6px;
-
-    margin-bottom:20px;
-
-    text-transform:uppercase;
-
-}
-
-.hero p{
-
-    font-size:18px;
-
-    line-height:1.7;
-
-    color:#cfcfcf;
-
-    margin-bottom:40px;
-
-}
-
-/* HERO BUTTONS */
-
-.hero-buttons{
-
-    display:flex;
-
-    flex-wrap:wrap;
-
-    justify-content:center;
-
-    gap:18px;
-
-}
-
-.hero-buttons a{
-
-    text-decoration:none;
-
-}
 
 /* =========================================================
-
-   STATUS ELEMENTS
-
+   HERO
 ========================================================= */
 
-.status-message{
+.hero {
+    flex: 1;
 
-    position:absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    top:66px;
+    text-align: center;
 
-    left:50%;
-
-    transform:translateX(-50%);
-
-    text-align:center;
-
-    color:var(--secondary-color);
-
+    padding: 60px 20px 80px;
 }
 
-.locked-text{
+.hero-content {
+    width: min(680px, 100%);
 
-    position:absolute;
-
-    top:110px;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-    text-align:center;
-
-    font-size:2.5rem;
-
-}
-
-.locked-since{
-
-    position:absolute;
-
-    top:140px;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-    text-align:center;
-
-}
-
-.time-left{
-
-    position:absolute;
-
-    top:230px;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-    text-align:center;
-
-}
-
-.end-time{
-
-    position:absolute;
-
-    top:250px;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-    text-align:center;
-
-    color:var(--secondary-color);
-
-}
-
-/* =========================================================
-
-   PROTECTION LEVEL
-
-========================================================= */
-
-.protection-level-wrapper{
-
-    position:absolute;
-
-    top:320px;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-    display:flex;
-
-    gap:10px;
-
-    justify-content:center;
-
-    align-items:center;
-
-}
-
-.password-symbol{
-
-    width:30px;
-
-}
-
-.timer-symbol{
-
-    width:20px;
-
-}
-
-/* =========================
-
-   LOCKED-USERS-COUNTER on Landing page
-
-========================= */
-
-.hero-live-indicator {
-
-    display: inline-flex;
-
+    display: flex;
+    flex-direction: column;
     align-items: center;
 
-    gap: 8px;
+    padding: 44px 48px;
 
-    background: rgba(0,0,0,0.05);
+    background: rgba(12, 12, 14, .54);
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 20px;
 
-    padding: 6px 14px;
+    box-shadow:
+        0 24px 70px rgba(0, 0, 0, .32);
 
-    border-radius: 999px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
 
-    font-size: 0.9rem;
 
-    margin-top: 12px;
+/* =========================================================
+   BRAND
+========================================================= */
+
+.hero-brand {
+    margin-bottom: 18px;
+
+    color: var(--primary-color);
+
+    font-size: 13px;
+    font-weight: 700;
+
+    letter-spacing: 3px;
+    text-transform: uppercase;
+
+    opacity: .9;
+}
+
+
+/* =========================================================
+   HERO HEADING
+========================================================= */
+
+.hero h1 {
+    margin: 0;
+
+    max-width: 600px;
+
+    color: #fff;
+
+    font-size: clamp(30px, 5vw, 30px);
+    font-weight: 750;
+
+    line-height: 1.08;
+    letter-spacing: -1.5px;
+}
+
+
+/* =========================================================
+   HERO TEXT
+========================================================= */
+
+.hero-text {
+    max-width: 510px;
+
+    margin: 20px auto 0;
+
+    color: #c7c7cc;
+
+    font-size: 15px;
+    line-height: 1.75;
+}
+
+
+/* =========================================================
+   COMMUNITY STATUS
+========================================================= */
+
+.hero-community-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    margin-top: 28px;
+
+    color: #b8b8bf;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.hero-community-count {
+    color: #fff;
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.hero-community-status a {
+    margin-left: 5px;
+
+    color: var(--primary-color);
+
+    font-weight: 600;
+
+    text-decoration: none;
+}
+
+.hero-community-status a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   HERO BUTTONS
+========================================================= */
+
+.hero-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    gap: 12px;
+
+    margin-top: 34px;
+}
+
+.hero-buttons a {
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   STATUS ELEMENTS
+========================================================= */
+
+.status-message {
+    position: absolute;
+
+    top: 66px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    text-align: center;
+
+    color: var(--secondary-color);
+}
+
+.locked-text {
+    position: absolute;
+
+    top: 110px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    text-align: center;
+
+    font-size: 2.5rem;
+}
+
+.locked-since {
+    position: absolute;
+
+    top: 140px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    text-align: center;
+}
+
+.time-left {
+    position: absolute;
+
+    top: 230px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    text-align: center;
+}
+
+.end-time {
+    position: absolute;
+
+    top: 250px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    text-align: center;
+
+    color: var(--secondary-color);
+}
+
+
+/* =========================================================
+   PROTECTION LEVEL
+========================================================= */
+
+.protection-level-wrapper {
+    position: absolute;
+
+    top: 320px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+}
+
+.password-symbol {
+    width: 30px;
+}
+
+.timer-symbol {
+    width: 20px;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .landing-wrapper {
+        min-height: calc(100vh - 60px);
+
+        background-position: center center;
+    }
+
+    .hero {
+        padding: 35px 14px 55px;
+    }
+
+    .hero-content {
+        width: 100%;
+
+        padding: 34px 22px;
+
+        border-radius: 16px;
+    }
+
+    .hero-brand {
+        margin-bottom: 14px;
+
+        font-size: 11px;
+        letter-spacing: 2.5px;
+    }
+
+    .hero h1 {
+        font-size: clamp(32px, 10vw, 44px);
+        letter-spacing: -1px;
+    }
+
+    .hero-text {
+        margin-top: 17px;
+
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    .hero-community-status {
+        margin-top: 24px;
+
+        font-size: 12px;
+    }
+
+    .hero-buttons {
+        width: 100%;
+
+        margin-top: 28px;
+
+        gap: 10px;
+    }
 
 }
 
-.hero-live-indicator::before {
 
-    content: "";
+/* =========================================================
+   VERY SMALL SCREENS
+========================================================= */
 
-    width: 8px;
+@media (max-width: 380px) {
 
-    height: 8px;
+    .hero-content {
+        padding: 30px 18px;
+    }
 
-    background: #e63946;
+    .hero-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
 
-    border-radius: 50%;
-
-    animation: pulse 1.5s infinite;
-
-}
-
-@keyframes pulse {
-
-    0% { opacity: 1; }
-
-    50% { opacity: 0.3; }
-
-    100% { opacity: 1; }
+    .hero-buttons a {
+        width: 100%;
+    }
 
 }

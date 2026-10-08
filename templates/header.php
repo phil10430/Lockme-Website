@@ -58,7 +58,7 @@
 
         <!-- CENTER -->
         <div class="top-center">
-            <a href="/puplic_user_status.php">LOCKEES</a>
+            <a href="/lockees.php">LOCKEES</a>
             <a href="/faq.php">FAQ</a>
         </div>
 
