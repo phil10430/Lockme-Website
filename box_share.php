@@ -130,8 +130,8 @@ function locked_duration(?string $lockedSince): string
 
 
 /* =========================================================
-   BOX CARD
-   ========================================================= */
+   PUBLIC BOX STATUS CARD
+========================================================= */
 
 .box-status-page .box-item {
     flex-direction: column;
@@ -143,34 +143,14 @@ function locked_duration(?string $lockedSince): string
 
 .box-status-page .box-item-main {
     width: 100%;
-    align-items: center;
-}
-
-
-/* =========================================================
-   TITLE
-   ========================================================= */
-
-.box-status-page .box-title-row {
+    display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    width: 100%;
-}
-
-.box-status-page .box-title-content {
-    justify-content: center;
     min-width: 0;
+    gap: 8px;
 }
 
-.box-status-page .box-id {
-    font-size: 16px;
-}
-
-
-/* =========================================================
-   AVATAR
-   ========================================================= */
+/* AVATAR */
 
 .box-status-page .box-list-avatar,
 .box-status-page .box-list-avatar-placeholder {
@@ -178,6 +158,116 @@ function locked_duration(?string $lockedSince): string
     height: 84px;
     min-width: 84px;
     min-height: 84px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* LOCKEE NAME */
+
+.box-status-page .box-title-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+}
+
+.box-status-page .box-title-content {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+}
+
+.box-status-page .lockee-title {
+    color: #f4f4f5;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+/* SECONDARY BOX ID */
+
+.box-status-page .box-id {
+    color: #71717a;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+/* LOCK RELATION */
+
+.box-status-page .box-lock-relation {
+    width: 100%;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 2px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.box-status-page .lockee-name {
+    display: none;
+}
+
+.box-status-page .relation-text {
+    color: #71717a;
+}
+
+.box-status-page .keyholder-name {
+    color: #d4d4dc;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+/* BOX CONTENT */
+
+.box-status-page .box-content-tag {
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+/* LOCK STATUS */
+
+.box-status-page .box-lock-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    margin-top: 4px;
+    font-size: 14px;
+}
+
+/* REMOVE INNER CARD STYLING */
+
+.box-status-page .settings-card .box-item {
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+/* MOBILE */
+
+@media (max-width: 480px) {
+    .box-status-page .settings-container {
+        max-width: 100%;
+    }
+
+    .box-status-page .box-item {
+        padding: 24px 16px;
+    }
+
+    .box-status-page .lockee-title {
+        font-size: 20px;
+    }
+
+    .box-status-page .box-lock-relation {
+        font-size: 13px;
+    }
 }
 
 
@@ -287,38 +377,40 @@ function locked_duration(?string $lockedSince): string
                                  BOX TITLE
                             ================================================== -->
 
+                            <!-- BOX TITLE -->
+
                             <div class="box-title-row">
 
-                                <?php if (
-                                    $details &&
-                                    !empty($details['avatar_path'])
-                                ): ?>
-
+                                <?php if ($details && !empty($details['avatar_path'])): ?>
                                     <img
                                         class="box-list-avatar"
                                         src="<?= htmlspecialchars($details['avatar_path']) ?>"
                                         alt=""
                                         loading="lazy">
-
                                 <?php else: ?>
-
                                     <div
                                         class="box-list-avatar-placeholder"
                                         aria-hidden="true">
                                     </div>
-
                                 <?php endif; ?>
 
-
                                 <div class="box-title-content">
-
-                                    <span class="box-id">
-                                        LockMeBox <?= htmlspecialchars($boxId) ?>
+                                    <span class="lockee-title">
+                                        <?= htmlspecialchars(
+                                            !empty($details['name_sub'])
+                                                ? $details['name_sub']
+                                                : 'Lockee'
+                                        ) ?>
                                     </span>
-
                                 </div>
 
+                                <span class="box-id">
+                                    LockMeBox #<?= htmlspecialchars($boxId) ?>
+                                </span>
+
                             </div>
+
+
 
 
                             <!-- =================================================

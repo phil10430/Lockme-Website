@@ -846,16 +846,16 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <input type="file" id="detailsAvatar" name="avatar" accept="image/png, image/jpeg, image/webp" style="display:none;">
             </label>
         </div>
-
+        <div class="input-group">
+            <input type="text" id="detailsNameSub" name="name_sub" placeholder=" ">
+            <label>Lockee name</label>
+        </div>
         <div class="input-group">
             <input type="text" id="detailsNameTop" name="name_top" placeholder=" " required>
             <label>Keyholder name</label>
         </div>
 
-        <div class="input-group">
-            <input type="text" id="detailsNameSub" name="name_sub" placeholder=" ">
-            <label>Lockee name</label>
-        </div>
+      
 
         <div class="input-group">
             <input type="text" id="detailsBoxContent" name="box_content" placeholder=" ">
