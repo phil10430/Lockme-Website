@@ -1,0 +1,797 @@
+/* =========================================================
+
+   COMMUNITY PAGE
+
+   All styles are intentionally scoped to this page.
+
+   ========================================================= */
+
+.community-page {
+
+    --community-card: #222225;
+
+    --community-card-hover: #28282c;
+
+    --community-border: #37373c;
+
+    --community-muted: #8f8f99;
+
+    --community-text: #f3f4f6;
+
+    --community-soft: #c9c9d0;
+
+    --community-accent: #a78bfa;
+
+}
+
+
+
+/* =========================================================
+
+   PAGE CONTAINER
+
+   ========================================================= */
+
+.community-page .settings-wrapper {
+
+    align-items: flex-start;
+
+}
+
+.community-page .settings-container {
+
+    max-width: 980px;
+
+}
+
+
+
+/* =========================================================
+
+   COMMUNITY HERO
+
+   ========================================================= */
+
+.community-hero {
+
+    margin-bottom: 18px;
+
+}
+
+.community-hero h1 {
+
+    margin: 0;
+
+    color: var(--community-text);
+
+    font-size: 26px;
+
+    font-weight: 700;
+
+    letter-spacing: -0.5px;
+
+}
+
+.community-hero p {
+
+    margin: 6px 0 0;
+
+    color: var(--community-muted);
+
+    font-size: 13px;
+
+}
+
+
+
+/* =========================================================
+
+   COMMUNITY SECTION
+
+   ========================================================= */
+
+.community-section {
+
+    margin-bottom: 18px;
+
+}
+
+.community-section-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 10px;
+
+}
+
+.community-section-title {
+
+    margin: 0;
+
+    color: var(--community-text);
+
+    font-size: 15px;
+
+    font-weight: 650;
+
+}
+
+.community-section-meta {
+
+    color: var(--community-muted);
+
+    font-size: 12px;
+
+}
+
+
+
+/* =========================================================
+
+   RECENT ACTIVITY
+
+   ========================================================= */
+
+.community-activity {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 1px;
+
+    overflow: hidden;
+
+    background: var(--community-card);
+
+    border: 1px solid var(--community-border);
+
+    border-radius: 14px;
+
+}
+
+.community-activity-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    min-width: 0;
+
+    padding: 12px 14px;
+
+    background: transparent;
+
+}
+
+.community-activity-item + .community-activity-item {
+
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+}
+
+.community-activity-avatar,
+
+.community-activity-avatar-placeholder {
+
+    width: 34px;
+
+    height: 34px;
+
+    min-width: 34px;
+
+    min-height: 34px;
+
+    flex: 0 0 34px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+}
+
+.community-activity-avatar {
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+}
+
+.community-activity-avatar-placeholder {
+
+    background: #34343a;
+
+    border: 1px solid #414147;
+
+}
+
+.community-activity-content {
+
+    display: flex;
+
+    flex-direction: column;
+
+    min-width: 0;
+
+    flex: 1;
+
+    gap: 2px;
+
+}
+
+.community-activity-text {
+
+    color: var(--community-soft);
+
+    font-size: 13px;
+
+    line-height: 1.4;
+
+}
+
+.community-activity-name {
+
+    color: #ffffff;
+
+    font-weight: 650;
+
+}
+
+.community-activity-duration {
+
+    color: #ffffff;
+
+    font-weight: 600;
+
+}
+
+.community-activity-time {
+
+    color: var(--community-muted);
+
+    font-size: 11px;
+
+}
+
+.community-activity-status {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 7px;
+
+    height: 7px;
+
+    min-width: 7px;
+
+    border-radius: 50%;
+
+    background: #f87171;
+
+}
+
+.community-activity-status.open {
+
+    background: #71717a;
+
+}
+
+
+
+/* =========================================================
+
+   LOCKEE GRID
+
+   ========================================================= */
+
+.community-lockee-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+
+    gap: 10px;
+
+}
+
+
+
+/* =========================================================
+
+   LOCKEE CARD
+
+   ========================================================= */
+
+.community-lockee-card {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    min-width: 0;
+
+    padding: 24px 18px 18px;
+
+    background: var(--community-card);
+
+    border: 1px solid var(--community-border);
+
+    border-radius: 14px;
+
+    text-align: center;
+
+    box-sizing: border-box;
+
+    transition:
+
+*background* 0.18s ease,
+
+        border-color 0.18s ease,
+
+        transform 0.18s ease;
+
+}
+
+.community-lockee-card:hover {
+
+    background: var(--community-card-hover);
+
+    border-color: #48484f;
+
+    transform: translateY(-1px);
+
+}
+
+
+
+/* =========================================================
+
+   LOCKEE AVATAR
+
+   ========================================================= */
+
+.community-lockee-avatar,
+
+.community-lockee-avatar-placeholder {
+
+    width: 82px;
+
+    height: 82px;
+
+    min-width: 82px;
+
+    min-height: 82px;
+
+    flex: 0 0 82px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+}
+
+.community-lockee-avatar {
+
+    border: 2px solid rgba(255, 255, 255, 0.13);
+
+}
+
+.community-lockee-avatar-placeholder {
+
+    background: #34343a;
+
+    border: 2px solid #414147;
+
+}
+
+
+
+/* =========================================================
+
+   LOCKEE NAME
+
+   ========================================================= */
+
+.community-lockee-name {
+
+    max-width: 100%;
+
+    margin-top: 13px;
+
+    overflow: hidden;
+
+    color: #ffffff;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    line-height: 1.3;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+}
+
+
+
+/* =========================================================
+
+   RELATION
+
+   ========================================================= */
+
+.community-lockee-relation {
+
+    display: flex;
+
+    align-items: baseline;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    max-width: 100%;
+
+    margin-top: 4px;
+
+    gap: 5px;
+
+    color: #71717a;
+
+    font-size: 12px;
+
+    line-height: 1.4;
+
+}
+
+.community-lockee-keyholder {
+
+    max-width: none;
+
+    overflow: visible;
+
+    color: #d4d4dc;
+
+    font-weight: 600;
+
+    text-overflow: clip;
+
+    white-space: normal;
+
+    overflow-wrap: anywhere;
+
+}
+
+
+
+/* =========================================================
+
+   KEY CONTENT
+
+   ========================================================= */
+
+.community-lockee-content {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    max-width: 100%;
+
+    margin-top: 12px;
+
+    color: #a1a1aa;
+
+    font-size: 12px;
+
+}
+
+.community-lockee-content svg {
+
+    width: 14px;
+
+    height: 14px;
+
+    flex: 0 0 14px;
+
+    color: #85858f;
+
+}
+
+.community-lockee-content span {
+
+    overflow: hidden;
+
+    color: #b8b8c1;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+}
+
+
+
+/* =========================================================
+
+   LOCKED STATUS
+
+   ========================================================= */
+
+.community-lockee-status {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    margin-top: 11px;
+
+    color: #a1a1aa;
+
+    font-size: 12px;
+
+}
+
+.community-lockee-status svg {
+
+    width: 14px;
+
+    height: 14px;
+
+    flex: 0 0 14px;
+
+    color: #fca5a5;
+
+}
+
+
+
+/* =========================================================
+
+   BOX ID
+
+   ========================================================= */
+
+.community-lockee-id {
+
+    margin-top: 13px;
+
+    color: #62626b;
+
+    font-size: 10px;
+
+    letter-spacing: 0.2px;
+
+}
+
+
+
+/* =========================================================
+
+   EMPTY STATE
+
+   ========================================================= */
+
+.community-empty {
+
+    padding: 30px 20px;
+
+    background: var(--community-card);
+
+    border: 1px solid var(--community-border);
+
+    border-radius: 14px;
+
+    color: var(--community-muted);
+
+    font-size: 13px;
+
+    text-align: center;
+
+}
+
+
+
+/* =========================================================
+
+   RESPONSIVE
+
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    .community-lockee-grid {
+
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    }
+
+}
+
+
+
+@media (max-width: 600px) {
+
+    .community-page .settings-container {
+
+        width: 100%;
+
+    }
+
+    .community-lockee-grid {
+
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        gap: 8px;
+
+    }
+
+    .community-lockee-card {
+        padding: 12px 8px;
+    }
+
+    .community-activity-item {
+
+        padding: 11px 12px;
+
+    }
+
+}
+
+
+
+/* =========================================================
+   PUBLIC PROFILE CARDS AND DIALOGS
+========================================================= */
+
+.community-page .community-lockee-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    padding: 14px 10px;
+    color: inherit;
+    text-align: center;
+    cursor: pointer;
+    font: inherit;
+    background: var(--community-card);
+    border: 1px solid var(--community-border);
+    border-radius: 14px;
+    transition: background .18s ease, border-color .18s ease, transform .18s ease;
+}
+
+.community-page .community-lockee-card:hover {
+    background: var(--community-card-hover);
+    border-color: #48484f;
+    transform: translateY(-1px);
+}
+
+.community-page .community-lockee-card:focus-visible {
+    outline: 2px solid var(--community-accent);
+    outline-offset: 3px;
+}
+
+.community-page .community-lockee-name {
+    max-width: 100%;
+    margin-top: 9px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+
+.community-page .community-profile-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 7px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.community-page .community-profile-hint {
+    margin-top: 5px;
+    font-size: 10px;
+}
+
+.community-page .community-status-dot {
+    width: 8px;
+    height: 8px;
+    flex: 0 0 8px;
+    border-radius: 50%;
+}
+
+.community-page .community-profile-status.is-locked { color: #fca5a5; }
+.community-page .community-profile-status.is-locked .community-status-dot { background: #f87171; }
+.community-page .community-profile-status.is-open { color: #a1a1aa; }
+.community-page .community-profile-status.is-open .community-status-dot { background: #71717a; }
+.community-page .community-profile-status.is-unknown { color: #fcd34d; }
+.community-page .community-profile-status.is-unknown .community-status-dot { background: #fbbf24; }
+
+.community-page .community-profile-hint {
+    margin-top: 8px;
+    color: #777780;
+    font-size: 11px;
+}
+
+.community-dialog {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    width: min(480px, calc(100vw - 32px));
+    max-width: 480px;
+    max-height: min(80vh, 720px);
+    overflow-y: auto;
+    padding: 26px;
+    color: var(--community-text, #f4f4f5);
+    background: var(--community-card, #18181b);
+    border: 1px solid var(--community-border, #303036);
+    border-radius: 18px;
+    box-shadow: 0 24px 80px rgb(0 0 0 / 45%);
+}
+
+.community-dialog::backdrop { background: rgb(0 0 0 / 72%); backdrop-filter: blur(3px); }
+.community-profile-dialog-header { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.community-profile-dialog-header .community-lockee-avatar,
+.community-profile-dialog-header .community-lockee-avatar-placeholder { width: 96px; height: 96px; }
+.community-profile-dialog-name { margin: 14px 0 0; font-size: 22px; line-height: 1.3; overflow-wrap: anywhere; }
+.community-profile-dialog-details { display: grid; gap: 14px; margin-top: 24px; }
+.community-profile-detail { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; padding-bottom: 12px; border-bottom: 1px solid var(--community-border); }
+.community-profile-detail-label { color: var(--community-muted); font-size: 13px; }
+.community-profile-detail-value { text-align: right; overflow-wrap: anywhere; }
+.community-dialog-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+
+/* Monochrome social profile icons in the public profile dialog */
+.community-social-links {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.community-social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    color: #fff;
+    background: #111113;
+    border: 1px solid #55555c;
+    border-radius: 50%;
+    text-decoration: none;
+    transition: background .18s ease, color .18s ease;
+}
+.community-social-link:hover,
+.community-social-link:focus-visible {
+    color: #111113;
+    background: #fff;
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+.community-social-link svg { display: block; width: 18px; height: 18px; }
+.community-social-link .social-instagram-outline { fill: none; stroke: currentColor; stroke-width: 1.8; }
+.community-social-row[hidden] { display: none; }

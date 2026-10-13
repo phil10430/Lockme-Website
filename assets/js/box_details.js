@@ -5,6 +5,7 @@ let currentDetailsBoxId = null;
 // OPEN BOX DETAILS DIALOG
 // =========================================================
 
+
 function openBoxDetailsDialog(boxId) {
     currentDetailsBoxId = boxId;
     const d = (window.boxDetails && window.boxDetails[boxId]) || {};
@@ -13,8 +14,21 @@ function openBoxDetailsDialog(boxId) {
     document.getElementById('detailsNameTop').value = d.name_top || '';
     document.getElementById('detailsNameSub').value = d.name_sub || '';
     document.getElementById('detailsBoxContent').value = d.box_content || '';
+
     document.getElementById('detailsAvatar').value = '';
-    document.getElementById('detailsPublicStatus').checked = !!(d.public_status && Number(d.public_status) === 1);
+
+    document.getElementById('detailsPublicStatus').checked =
+        Number(d.public_status) === 1;
+
+    // Load the Lockee's social profile URLs.
+    document.getElementById('detailsSocialX').value =
+        d.social_x || '';
+
+    document.getElementById('detailsSocialInstagram').value =
+        d.social_instagram || '';
+
+    document.getElementById('detailsSocialBluesky').value =
+        d.social_bluesky || '';
 
     const preview = document.getElementById('detailsAvatarPreview');
     const placeholder = document.getElementById('detailsAvatarPlaceholder');
@@ -24,6 +38,7 @@ function openBoxDetailsDialog(boxId) {
         preview.style.display = 'block';
         placeholder.style.display = 'none';
     } else {
+        preview.src = '';
         preview.style.display = 'none';
         placeholder.style.display = 'block';
     }
@@ -32,310 +47,272 @@ function openBoxDetailsDialog(boxId) {
     document.getElementById('boxDetailsDialog').showModal();
 }
 
-
 // =========================================================
 // DOM READY
 // =========================================================
 
-document.addEventListener(
-    'DOMContentLoaded',
-    function () {
+document.addEventListener('DOMContentLoaded', function () {
 
+    // =====================================================
+    // AVATAR PREVIEW
+    // =====================================================
 
-        // =================================================
-        // AVATAR PREVIEW
-        // =================================================
+    const avatarInput = document.getElementById('detailsAvatar');
+    const avatarPreview = document.getElementById('detailsAvatarPreview');
+    const avatarPlaceholder = document.getElementById('detailsAvatarPlaceholder');
 
-        const avatarInput =
-            document.getElementById(
-                'detailsAvatar'
-            );
+    if (avatarInput) {
+        avatarInput.addEventListener('change', function () {
 
-        const avatarPreview =
-            document.getElementById(
-                'detailsAvatarPreview'
-            );
+            const file = this.files[0];
 
-        const avatarPlaceholder =
-            document.getElementById(
-                'detailsAvatarPlaceholder'
-            );
+            if (!file) {
+                return;
+            }
 
+            // ---------------------------------------------
+            // Client-side MIME check
+            // ---------------------------------------------
 
-        if (avatarInput) {
+            const allowedTypes = [
+                'image/jpeg',
+                'image/png',
+                'image/webp'
+            ];
 
-            avatarInput.addEventListener(
-                'change',
-                function () {
+            if (!allowedTypes.includes(file.type)) {
+                this.value = '';
 
-                    const file =
-                        this.files[0];
+                alert('Only JPG, PNG and WebP images are allowed.');
 
-                    if (!file) {
-                        return;
-                    }
+                return;
+            }
 
+            // ---------------------------------------------
+            // Client-side size check
+            // ---------------------------------------------
 
-                    // -------------------------------------
-                    // Client-side MIME check
-                    // -------------------------------------
+            if (file.size > 2 * 1024 * 1024) {
+                this.value = '';
 
-                    const allowedTypes = [
-                        'image/jpeg',
-                        'image/png',
-                        'image/webp'
-                    ];
+                alert('Avatar must not be larger than 2 MB.');
 
-                    if (
-                        !allowedTypes.includes(
-                            file.type
-                        )
-                    ) {
+                return;
+            }
 
-                        this.value = '';
+            // ---------------------------------------------
+            // Create local preview
+            // ---------------------------------------------
 
-                        alert(
-                            'Only JPG, PNG and WebP images are allowed.'
-                        );
+            const reader = new FileReader();
 
-                        return;
-                    }
+            reader.onload = function (e) {
 
-
-                    // -------------------------------------
-                    // Client-side size check
-                    // -------------------------------------
-
-                    if (
-                        file.size >
-                        2 * 1024 * 1024
-                    ) {
-
-                        this.value = '';
-
-                        alert(
-                            'Avatar must not be larger than 2 MB.'
-                        );
-
-                        return;
-                    }
-
-
-                    // -------------------------------------
-                    // Create local preview
-                    // -------------------------------------
-
-                    const reader =
-                        new FileReader();
-
-                    reader.onload =
-                        function (e) {
-
-                            avatarPreview.src =
-                                e.target.result;
-
-                            avatarPreview.style.display =
-                                'block';
-
-                            if (avatarPlaceholder) {
-                                avatarPlaceholder.style.display =
-                                    'none';
-                            }
-                        };
-
-                    reader.readAsDataURL(file);
+                if (avatarPreview) {
+                    avatarPreview.src = e.target.result;
+                    avatarPreview.style.display = 'block';
                 }
-            );
+
+                if (avatarPlaceholder) {
+                    avatarPlaceholder.style.display = 'none';
+                }
+            };
+
+            reader.readAsDataURL(file);
+        });
+    }
+
+
+    // =====================================================
+    // BOX DETAILS FORM
+    // =====================================================
+
+    const form = document.getElementById('boxDetailsForm');
+
+    if (!form) {
+        return;
+    }
+
+    form.addEventListener('submit', function (e) {
+
+        e.preventDefault();
+
+        const errorBox = document.getElementById('detailsError');
+
+        if (errorBox) {
+            errorBox.style.display = 'none';
+            errorBox.textContent = '';
         }
 
+        // ---------------------------------------------
+        // Validate required elements
+        // ---------------------------------------------
 
-        // =================================================
-        // BOX DETAILS FORM
-        // =================================================
+        const nameTopInput = document.getElementById('detailsNameTop');
+        const nameSubInput = document.getElementById('detailsNameSub');
+        const boxContentInput = document.getElementById('detailsBoxContent');
+        const publicStatusInput = document.getElementById('detailsPublicStatus');
 
-        const form =
-            document.getElementById(
-                'boxDetailsForm'
-            );
+        const socialXInput = document.getElementById('detailsSocialX');
+        const socialInstagramInput = document.getElementById('detailsSocialInstagram');
+        const socialBlueskyInput = document.getElementById('detailsSocialBluesky');
 
-        if (!form) {
+        if (
+            !nameTopInput ||
+            !nameSubInput ||
+            !boxContentInput ||
+            !publicStatusInput ||
+            !socialXInput ||
+            !socialInstagramInput ||
+            !socialBlueskyInput
+        ) {
+            if (errorBox) {
+                errorBox.textContent =
+                    'One or more form fields could not be found. Please check the HTML element IDs.';
+                errorBox.style.display = 'block';
+            }
+
+            return;
+        }
+
+        if (
+            typeof currentDetailsBoxId === 'undefined' ||
+            currentDetailsBoxId === null ||
+            currentDetailsBoxId === ''
+        ) {
+            if (errorBox) {
+                errorBox.textContent = 'No box selected.';
+                errorBox.style.display = 'block';
+            }
+
             return;
         }
 
 
-        form.addEventListener(
-            'submit',
-            function (e) {
+        // ---------------------------------------------
+        // Build FormData
+        // ---------------------------------------------
 
-                e.preventDefault();
+        const formData = new FormData();
 
+        formData.append('saveBoxDetails', '1');
+        formData.append('boxId', currentDetailsBoxId);
 
-                const errorBox =
-                    document.getElementById(
-                        'detailsError'
-                    );
+        formData.append('name_top', nameTopInput.value);
+        formData.append('name_sub', nameSubInput.value);
+        formData.append('box_content', boxContentInput.value);
 
-                errorBox.style.display =
-                    'none';
-
-
-                // -----------------------------------------
-                // FormData
-                // -----------------------------------------
-
-                const formData =
-                    new FormData();
-
-
-                formData.append(
-                    'saveBoxDetails',
-                    '1'
-                );
-
-                formData.append(
-                    'boxId',
-                    currentDetailsBoxId
-                );
-
-                formData.append(
-                    'name_top',
-                    document.getElementById(
-                        'detailsNameTop'
-                    ).value
-                );
-
-                formData.append(
-                    'name_sub',
-                    document.getElementById(
-                        'detailsNameSub'
-                    ).value
-                );
-
-                formData.append(
-                    'box_content',
-                    document.getElementById(
-                        'detailsBoxContent'
-                    ).value
-                );
-
-        
-                formData.append(
-                    'public_status',
-                    document.getElementById('detailsPublicStatus').checked ? '1' : '0'
-                );
-
-
-                // -----------------------------------------
-                // Avatar
-                // -----------------------------------------
-
-                const avatarInput =
-                    document.getElementById(
-                        'detailsAvatar'
-                    );
-
-                if (
-                    avatarInput &&
-                    avatarInput.files.length > 0
-                ) {
-
-                    formData.append(
-                        'avatar',
-                        avatarInput.files[0]
-                    );
-                }
-
-
-                // -----------------------------------------
-                // Disable save button while uploading
-                // -----------------------------------------
-
-                const submitButton =
-                    form.querySelector(
-                        'button[type="submit"]'
-                    );
-
-                const originalButtonText =
-                    submitButton
-                        ? submitButton.textContent
-                        : '';
-
-                if (submitButton) {
-
-                    submitButton.disabled =
-                        true;
-
-                    submitButton.textContent =
-                        'Saving...';
-                }
-
-
-                // -----------------------------------------
-                // Send request
-                // -----------------------------------------
-
-                fetch('', {
-                    method: 'POST',
-                    body: formData
-                })
-
-                .then(function (res) {
-
-                    if (!res.ok) {
-                        throw new Error(
-                            'HTTP ' + res.status
-                        );
-                    }
-
-                    return res.json();
-                })
-
-                .then(function (data) {
-
-                    if (data.success) {
-
-                        location.reload();
-
-                    } else {
-
-                        errorBox.textContent =
-                            data.message ||
-                            'Could not save details.';
-
-                        errorBox.style.display =
-                            'block';
-                    }
-                })
-
-                .catch(function (error) {
-
-                    console.error(
-                        'Box details error:',
-                        error
-                    );
-
-                    errorBox.textContent =
-                        'Network error.';
-
-                    errorBox.style.display =
-                        'block';
-                })
-
-                .finally(function () {
-
-                    if (submitButton) {
-
-                        submitButton.disabled =
-                            false;
-
-                        submitButton.textContent =
-                            originalButtonText;
-                    }
-                });
-            }
+        formData.append(
+            'public_status',
+            publicStatusInput.checked ? '1' : '0'
         );
-    }
-);
+
+
+        // ---------------------------------------------
+        // Lockee social media profiles
+        // ---------------------------------------------
+
+        formData.append(
+            'social_x',
+            socialXInput.value.trim()
+        );
+
+        formData.append(
+            'social_instagram',
+            socialInstagramInput.value.trim()
+        );
+
+        formData.append(
+            'social_bluesky',
+            socialBlueskyInput.value.trim()
+        );
+
+
+        // ---------------------------------------------
+        // Avatar upload
+        // ---------------------------------------------
+
+        if (avatarInput && avatarInput.files.length > 0) {
+            formData.append(
+                'avatar',
+                avatarInput.files[0]
+            );
+        }
+
+
+        // ---------------------------------------------
+        // Disable save button while uploading
+        // ---------------------------------------------
+
+        const submitButton = form.querySelector('button[type="submit"]');
+
+        const originalButtonText = submitButton
+            ? submitButton.textContent
+            : '';
+
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent = 'Saving...';
+        }
+
+
+        // ---------------------------------------------
+        // Send request
+        // ---------------------------------------------
+
+        fetch(window.location.href, {
+            method: 'POST',
+            body: formData
+        })
+
+        .then(function (res) {
+
+            if (!res.ok) {
+                throw new Error('HTTP ' + res.status);
+            }
+
+            return res.json();
+        })
+
+        .then(function (data) {
+
+            if (data.success) {
+
+                // Reload to display the saved data.
+                window.location.reload();
+
+            } else {
+
+                if (errorBox) {
+                    errorBox.textContent =
+                        data.message || 'Could not save details.';
+
+                    errorBox.style.display = 'block';
+                }
+            }
+        })
+
+        .catch(function (error) {
+
+            console.error('Box details error:', error);
+
+            if (errorBox) {
+                errorBox.textContent =
+                    'Could not save the details. Please try again.';
+
+                errorBox.style.display = 'block';
+            }
+        })
+
+        .finally(function () {
+
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = originalButtonText;
+            }
+        });
+    });
+});
 
 
 // =========================================================

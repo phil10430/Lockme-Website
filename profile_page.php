@@ -839,40 +839,119 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <form id="boxDetailsForm" enctype="multipart/form-data">
 
         <div class="avatar-upload-row">
-            <img id="detailsAvatarPreview" class="avatar-preview" src="" alt="" style="display:none;">
-            <div id="detailsAvatarPlaceholder" class="avatar-placeholder"></div>
+            <img
+                id="detailsAvatarPreview"
+                class="avatar-preview"
+                src=""
+                alt="Lockee avatar preview"
+                style="display:none;"
+            >
+
+            <div
+                id="detailsAvatarPlaceholder"
+                class="avatar-placeholder"
+            ></div>
+
             <label class="btn-modern avatar-upload-btn">
                 Upload Image
-                <input type="file" id="detailsAvatar" name="avatar" accept="image/png, image/jpeg, image/webp" style="display:none;">
+                <input
+                    type="file"
+                    id="detailsAvatar"
+                    name="avatar"
+                    accept="image/png, image/jpeg, image/webp"
+                    style="display:none;"
+                >
             </label>
         </div>
-        <div class="input-group">
-            <input type="text" id="detailsNameSub" name="name_sub" placeholder=" ">
-            <label>Lockee name</label>
-        </div>
-        <div class="input-group">
-            <input type="text" id="detailsNameTop" name="name_top" placeholder=" " required>
-            <label>Keyholder name</label>
-        </div>
-
-      
 
         <div class="input-group">
-            <input type="text" id="detailsBoxContent" name="box_content" placeholder=" ">
-            <label>Keys for</label>
+            <input
+                type="text"
+                id="detailsNameSub"
+                name="name_sub"
+                placeholder=" "
+            >
+            <label for="detailsNameSub">Lockee name</label>
+        </div>
+
+        <div class="input-group">
+            <input
+                type="text"
+                id="detailsNameTop"
+                name="name_top"
+                placeholder=" "
+                required
+            >
+            <label for="detailsNameTop">Keyholder name</label>
+        </div>
+
+        <div class="input-group">
+            <input
+                type="text"
+                id="detailsBoxContent"
+                name="box_content"
+                placeholder=" "
+            >
+            <label for="detailsBoxContent">Keys for</label>
+        </div>
+
+        <div class="input-group">
+            <input
+                type="url"
+                id="detailsSocialX"
+                name="social_x"
+                placeholder=" "
+                maxlength="255"
+            >
+            <label for="detailsSocialX">X profile URL</label>
+        </div>
+
+        <div class="input-group">
+            <input
+                type="url"
+                id="detailsSocialInstagram"
+                name="social_instagram"
+                placeholder=" "
+                maxlength="255"
+            >
+            <label for="detailsSocialInstagram">Instagram profile URL</label>
+        </div>
+
+        <div class="input-group">
+            <input
+                type="url"
+                id="detailsSocialBluesky"
+                name="social_bluesky"
+                placeholder=" "
+                maxlength="255"
+            >
+            <label for="detailsSocialBluesky">Bluesky profile URL</label>
         </div>
 
         <label class="toggle-row">
-            <span>Show this box's status publicly</span>
-            <input type="checkbox" id="detailsPublicStatus" name="public_status_checkbox">
+            <span>Show Lockee status in public</span>
+            <input
+                type="checkbox"
+                id="detailsPublicStatus"
+                name="public_status_checkbox"
+            >
         </label>
 
-        <div id="detailsError" class="alert alert-danger" style="display:none;"></div>
+        <div
+            id="detailsError"
+            class="alert alert-danger"
+            style="display:none;"
+        ></div>
 
         <div class="dialog-actions">
-            <button type="button" class="btn-modern" onclick="document.getElementById('boxDetailsDialog').close()">
+            <button
+                type="button"
+                class="btn-modern"
+                onclick="document.getElementById('boxDetailsDialog').close()"
+            >
                 Cancel
             </button>
+
             <button type="submit" class="btn-modern">
                 Save
             </button>

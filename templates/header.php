@@ -20,18 +20,31 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script> 
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-        <script src="/assets/js/autorefresh_script.js"></script>    
-        <script src="/assets/js/open_dialog.js"></script>
-        <script src="/assets/js/lock_dialog.js"></script>
-        <script src="/assets/js/open_app_script.js"></script>
-        <script src="/assets/js/lock_dialog_random_time.js"></script>
-        <script> const boxHistoryData = <?php echo json_encode($boxHistory, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT); ?>; </script>
-        <script src="/assets/js/remove_box_script.js"></script>
-         <script> const boxHistoryData = <?php echo json_encode($boxHistory, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT); ?>; </script>
-        <script src="/assets/js/box_details_calendar.js"></script>
-        <script src="/assets/js/toggle_public_status.js"></script>
-        <script>  window.boxDetails = <?= json_encode($boxDetails, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) ?>;</script>
-        <script src="/assets/js/box_details.js"></script>
+      
+        <script>
+            const boxHistoryData = <?= json_encode(
+                $boxHistory,
+                JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT
+            ) ?>;
+
+            window.boxDetails = <?= json_encode(
+                $boxDetails,
+                JSON_UNESCAPED_UNICODE | JSON_HEX_TAG
+            ) ?>;
+        </script>
+
+        <script src="/assets/js/autorefresh_script.js" defer></script>
+        <script src="/assets/js/open_dialog.js" defer></script>
+        <script src="/assets/js/lock_dialog.js" defer></script>
+        <script src="/assets/js/open_app_script.js" defer></script>
+        <script src="/assets/js/lock_dialog_random_time.js" defer></script>
+        <script src="/assets/js/remove_box_script.js" defer></script>
+        <script src="/assets/js/box_details_calendar.js" defer></script>
+        <script src="/assets/js/toggle_public_status.js" defer></script>
+        <script src="/assets/js/box_details.js" defer></script>
+        <script src="/assets/js/lockees.js" defer></script>
+
+
     </head>
        
     <body class="<?= $bodyClass ?? '' ?>">   
