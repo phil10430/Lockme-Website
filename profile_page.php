@@ -115,23 +115,34 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                     <div class="box-title-row">
 
-                                        <?php if ($d && !empty($d['avatar_path'])): ?>
+                                       
+                                    <?php if ($d && !empty($d['avatar_path'])): ?>
 
-                                            <img
-                                                class="box-list-avatar"
-                                                src="<?= htmlspecialchars($d['avatar_path']) ?>"
-                                                alt=""
-                                                loading="lazy"
-                                            >
+                                        <img
+                                            class="box-list-avatar"
+                                            src="<?= htmlspecialchars($d['avatar_path']) ?>"
+                                            alt="Avatar"
+                                            loading="lazy"
+                                        >
 
-                                        <?php else: ?>
+                                    <?php else: ?>
 
-                                            <div
-                                                class="box-list-avatar-placeholder"
-                                                aria-hidden="true">
-                                            </div>
+                                        <div class="box-list-avatar-placeholder" aria-hidden="true">
+                                            <svg
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="1.7"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round">
 
-                                        <?php endif; ?>
+                                                <circle cx="12" cy="8" r="4"></circle>
+                                                <path d="M4 21v-2a8 8 0 0 1 16 0v2"></path>
+
+                                            </svg>
+                                        </div>
+
+                                    <?php endif; ?>
 
 
                                         <div class="box-title-content">
@@ -847,10 +858,25 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 style="display:none;"
             >
 
+            
             <div
                 id="detailsAvatarPlaceholder"
                 class="avatar-placeholder"
-            ></div>
+                aria-hidden="true">
+
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round">
+
+                    <circle cx="12" cy="8" r="4"></circle>
+                    <path d="M4 21v-2a8 8 0 0 1 16 0v2"></path>
+
+                </svg>
+            </div>
 
             <label class="btn-modern avatar-upload-btn">
                 Upload Image

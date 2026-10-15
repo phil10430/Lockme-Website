@@ -795,3 +795,24 @@
 .community-social-link svg { display: block; width: 18px; height: 18px; }
 .community-social-link .social-instagram-outline { fill: none; stroke: currentColor; stroke-width: 1.8; }
 .community-social-row[hidden] { display: none; }
+
+
+
+.community-lockee-avatar-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    background: #34343a;
+    border: 1px solid #414147;
+    color: #a1a1aa;
+}
+.community-lockee-avatar-placeholder svg {
+    display: block;
+    width: 24px;
+    height: 24px;
+}
