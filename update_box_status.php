@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $sql = "INSERT INTO box_data_actual
             (
-                box_name, 
+                box_id, 
                 firmware_version, 
                 log_openclosecycles, 
                 log_switchcycles, 
@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ) 
     VALUES 
             (
-                :box_name, 
+                :box_id, 
                 :firmware_version,
                 :log_openclosecycles, 
                 :log_switchcycles,
@@ -71,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
-        ':box_name'                  => $boxName,       
+        ':box_id'                  => $boxName,       
         ':firmware_version'          => $firmwareVersion,  
         ':log_openclosecycles'       => $rtc_logCountOpenCloseCycles_String,
         ':log_switchcycles'          => $rtc_logCountSwitchCycles_String,    
@@ -109,12 +109,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             lock_status, open_time,
                             protection_level_timer, protection_level_password, hardware_version, emergency_password_used
                     FROM box_data_history
-                    WHERE box_name = :box_name
+                    WHERE box_id = :box_id
                     ORDER BY id DESC
                     LIMIT 1
                     FOR UPDATE";
         $stmt_check = $pdo->prepare($sql_check);
-        $stmt_check->execute([':box_name' => $boxName]);
+        $stmt_check->execute([':box_id' => $boxName]);
         $last = $stmt_check->fetch(PDO::FETCH_ASSOC);
 
         // Normalisierte Vergleichsfunktion (NULL und '' gelten als gleich)
@@ -133,7 +133,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($hasChanged) {
             $sql_history = "INSERT INTO box_data_history
                             (
-                                box_name,
+                                box_id,
                                 firmware_version,
                                 log_openclosecycles,
                                 log_switchcycles,
@@ -147,7 +147,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             )
             VALUES
                             (
-                                :box_name,
+                                :box_id,
                                 :firmware_version,
                                 :log_openclosecycles,
                                 :log_switchcycles,
@@ -161,7 +161,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             )";
             $stmt_history = $pdo->prepare($sql_history);
             $stmt_history->execute([
-                ':box_name'                  => $boxName,
+                ':box_id'                  => $boxName,
                 ':firmware_version'          => $firmwareVersion,
                 ':log_openclosecycles'       => $rtc_logCountOpenCloseCycles_String,
                 ':log_switchcycles'          => $rtc_logCountSwitchCycles_String,
@@ -185,7 +185,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // ============================================
     // Box-Registrierung (user_boxes)
-    // box_name ist hier bereits als gültig 6-stellig
+    // box_id ist hier bereits als gültig 6-stellig
     // validiert (siehe oben)
     // ============================================
     $sql = "INSERT IGNORE INTO user_boxes (user_id, box_id, registered_at)

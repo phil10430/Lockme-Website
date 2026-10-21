@@ -21,7 +21,7 @@ if (isset($_GET['history_box'])) {
             exit;
         }
 
-        $historyStmt = $pdo->prepare("SELECT lock_status, open_time, created_at, protection_level_timer FROM box_data_history WHERE box_name = :box_id ORDER BY created_at DESC LIMIT 100");
+        $historyStmt = $pdo->prepare("SELECT lock_status, open_time, created_at, protection_level_timer FROM box_data_history WHERE box_id = :box_id ORDER BY created_at DESC LIMIT 100");
         $historyStmt->execute(['box_id' => $historyBoxId]);
         echo json_encode(['box_id' => $historyBoxId, 'history' => $historyStmt->fetchAll(PDO::FETCH_ASSOC)], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
     } catch (PDOException $e) {
@@ -309,7 +309,7 @@ if (!empty($boxIds)) {
 
         SELECT
 
-            box_name,
+            box_id,
 
             lock_status,
 
@@ -321,7 +321,7 @@ if (!empty($boxIds)) {
 
         FROM box_data_history
 
-        WHERE box_name IN ($placeholders)
+        WHERE box_id IN ($placeholders)
 
         ORDER BY created_at DESC
 
@@ -331,7 +331,7 @@ if (!empty($boxIds)) {
 
     foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $history) {
 
-        $boxName = $history['box_name'];
+        $boxName = $history['box_id'];
 
         if (!isset($historyByBox[$boxName])) {
 

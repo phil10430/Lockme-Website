@@ -12,19 +12,19 @@ $stmt = $pdo->prepare($query);
 $stmt->execute([':username' => $username]);
 $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$boxName = $userRow['box_name_con'];
+$boxName = $userRow['box_id_con'];
 
 // Query 2: box_data_actual Tabelle
-$query2 = "SELECT * FROM box_data_actual WHERE box_name = :box_name";
+$query2 = "SELECT * FROM box_data_actual WHERE box_id = :box_id";
 $stmt2 = $pdo->prepare($query2);
-$stmt2->execute([':box_name' => $boxName]);
+$stmt2->execute([':box_id' => $boxName]);
 $boxRow = $stmt2->fetch(PDO::FETCH_ASSOC);
 
 
 
 $jsonOutput = [
     // aus users
-    'boxName'           => $userRow['box_name_con'],   
+    'boxName'           => $userRow['box_id_con'],   
     'appLoggedIn'       => $userRow['app_logged_in'],
     'appActive'         => $userRow['app_active'],
 

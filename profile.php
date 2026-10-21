@@ -543,15 +543,15 @@ if (!empty($registeredBoxes)) {
     $placeholders = implode(',', array_fill(0, count($boxIds), '?'));
 
     $stmt = $pdo->prepare("
-        SELECT box_name, lock_status, open_time, created_at, protection_level_timer, protection_level_password
+        SELECT box_id, lock_status, open_time, created_at, protection_level_timer, protection_level_password
         FROM box_data_history
-        WHERE box_name IN ($placeholders)
+        WHERE box_id IN ($placeholders)
         ORDER BY created_at DESC
     ");
     $stmt->execute($boxIds);
 
     foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
-        $boxHistory[$row['box_name']][] = $row;
+        $boxHistory[$row['box_id']][] = $row;
     }
 }
 

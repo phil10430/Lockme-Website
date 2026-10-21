@@ -27,8 +27,14 @@ require_once __DIR__ . '/templates/header.php';
                 require "box_control.php";
             ?>
             
-            <script>
-                refreshData("<?php echo $_SESSION["username"]; ?>");
+           <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                if (typeof window.refreshData === "function") {
+                    window.refreshData(<?= json_encode($_SESSION["username"]) ?>);
+                } else {
+                    console.error("refreshData wurde nicht geladen.");
+                }
+            });
             </script>
         </div>
 

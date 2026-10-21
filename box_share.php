@@ -42,7 +42,7 @@ if ($box) {
             lock_status,
             created_at
         FROM box_data_history
-        WHERE box_name = :box_id
+        WHERE box_id = :box_id
         ORDER BY created_at DESC
         LIMIT 1
     ");

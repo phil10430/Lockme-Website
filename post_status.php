@@ -23,12 +23,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $sql = "UPDATE users SET 
     app_active = :app_active,
-    box_name_con = :box_name_con
+    box_id_con = :box_id_con
     WHERE username = :username";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
         ':app_active' => $appActive,
-        ':box_name_con' => $boxName,
+        ':box_id_con' => $boxName,
         ':username' => $username
     ]);
 

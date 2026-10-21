@@ -16,11 +16,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
 $appLoggedIn = $row['app_logged_in'];
 $appActive = $row['app_active'];
 $proVersion = $row['pro_version'];
-$boxName = $row['box_name_con'];
+$boxName = $row['box_id_con'];
 
-$sql = "SELECT * FROM box_data_actual WHERE box_name = :box_name";
+$sql = "SELECT * FROM box_data_actual WHERE box_id = :box_id";
 $stmt = $pdo->prepare($sql);
-$stmt->execute([':box_name' => $boxName]);
+$stmt->execute([':box_id' => $boxName]);
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
 $lockStatus = $row['lock_status'];
 $protectionLevelTimer    = $row['protection_level_timer'];
@@ -126,7 +126,9 @@ echo '</div>'; // card-content
 echo '</div>'; // overlay-card
 
   
-} else {
+} 
+
+else {
 
 echo '<div class="overlay-card">'; // Hintergrundbild 
 echo '<img id="bg-image" class="bg-image" alt="Background" src="/assets/images/lmb_start.png">';
