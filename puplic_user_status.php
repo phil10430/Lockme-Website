@@ -16,7 +16,7 @@ require_once __DIR__ . '/templates/header.php';
 $stmt = $pdo->prepare("
     SELECT ub.box_id, ub.registered_at
     FROM user_boxes ub
-    JOIN user_details ud ON ud.box_id = ub.box_id
+    JOIN box_details ud ON ud.box_id = ub.box_id
     WHERE ud.public_status = 1
     ORDER BY ub.registered_at DESC
 ");
@@ -202,7 +202,7 @@ if (!empty($registeredBoxes)) {
             box_content,
             avatar_path,
             public_status
-        FROM user_details
+        FROM box_details
         WHERE box_id IN ($placeholders)
     ");
 

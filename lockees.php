@@ -12,7 +12,7 @@ if (isset($_GET['history_box'])) {
     $historyBoxId = trim((string) $_GET['history_box']);
 
     try {
-        $publicCheck = $pdo->prepare("SELECT 1 FROM user_boxes ub JOIN user_details ud ON ud.box_id = ub.box_id WHERE ub.box_id = :box_id AND ud.public_status = 1 LIMIT 1");
+        $publicCheck = $pdo->prepare("SELECT 1 FROM user_boxes ub JOIN box_details ud ON ud.box_id = ub.box_id WHERE ub.box_id = :box_id AND ud.public_status = 1 LIMIT 1");
         $publicCheck->execute(['box_id' => $historyBoxId]);
 
         if (!$publicCheck->fetchColumn()) {
@@ -229,7 +229,7 @@ $stmt = $pdo->prepare("
 
     FROM user_boxes ub
 
-    JOIN user_details ud
+    JOIN box_details ud
 
         ON ud.box_id = ub.box_id
 
@@ -421,7 +421,7 @@ if (!empty($boxIds)) {
 
             social_bluesky
 
-        FROM user_details
+        FROM box_details
 
         WHERE box_id IN ($placeholders)
 

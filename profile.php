@@ -293,7 +293,7 @@ if (isset($_POST['saveBoxDetails'])) {
     try {
         $stmt = $pdo->prepare(
             "SELECT avatar_path
-             FROM user_details
+             FROM box_details
              WHERE user_id = ? AND box_id = ?"
         );
 
@@ -315,7 +315,7 @@ if (isset($_POST['saveBoxDetails'])) {
         if ($newAvatarUploaded) {
 
             $stmt = $pdo->prepare("
-                INSERT INTO user_details (
+                INSERT INTO box_details (
                     user_id,
                     box_id,
                     name_top,
@@ -358,7 +358,7 @@ if (isset($_POST['saveBoxDetails'])) {
         } else {
 
             $stmt = $pdo->prepare("
-                INSERT INTO user_details (
+                INSERT INTO box_details (
                     user_id,
                     box_id,
                     name_top,
@@ -579,7 +579,7 @@ if (!empty($registeredBoxes)) {
             social_x,
             social_instagram,
             social_bluesky
-        FROM user_details
+        FROM box_details
         WHERE box_id IN ($placeholders)
     ");
 
