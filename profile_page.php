@@ -9,24 +9,13 @@ $bodyClass = "";
 require_once __DIR__ . '/templates/header.php';
 
 
-$username = $_SESSION["username"];
-$sql = "SELECT * FROM users WHERE username = :username";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([':username' => $username]);
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
-$proVersion = $row['pro_version'];
-
-// Load user data
-$stmt = $pdo->prepare("SELECT username, email, created_at FROM users WHERE id = ?");
+$username = $user['username'];
+$profileVisibility = (($user['profile_visibility'] ?? 'private') === 'public') ? 'public' : 'private';
+$stmt = $pdo->prepare('SELECT pro_version FROM users WHERE id=?');
 $stmt->execute([$user_id]);
-$user = $stmt->fetch();
-
-// Registrierte Boxen abrufen
-$sql = "SELECT box_id, registered_at FROM user_boxes 
-        WHERE user_id = :user_id 
-        ORDER BY registered_at DESC";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([':user_id' => $row['id']]);
+$proVersion = (bool)$stmt->fetchColumn();
+$stmt = $pdo->prepare('SELECT box_id, registered_at FROM user_boxes WHERE user_id=? ORDER BY registered_at DESC');
+$stmt->execute([$user_id]);
 $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
@@ -37,6 +26,11 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <!-- HEADER -->
 
         <div class="settings-hero">
+            <div class="profile-hero-avatar">
+                <?php if (!empty($user['avatar_path'])): ?>
+                    <img src="<?= htmlspecialchars($user['avatar_path'], ENT_QUOTES) ?>" alt="Profile avatar" class="box-list-avatar" style="width:72px;height:72px;object-fit:cover;border-radius:50%;">
+                <?php else: ?><div class="box-list-avatar-placeholder" style="width:72px;height:72px;border-radius:50%;">👤</div><?php endif; ?>
+            </div>
 
             <div>
                 <h1>
@@ -68,6 +62,24 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
   
+        <!-- USER PROFILE -->
+        <div class="settings-card">
+            <div class="settings-card-header profile-heading">
+                <span>My Profile</span>
+                <span id="profileVisibilityBadge" class="profile-visibility-badge <?= $profileVisibility === 'public' ? 'is-public' : 'is-private' ?>" aria-label="Profile visibility: <?= $profileVisibility ?>">
+                    <svg id="profileVisibilityIcon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                        <path id="profileVisibilitySlash" d="M3 3l18 18" <?= $profileVisibility === 'public' ? 'style="display:none"' : '' ?>/>
+                    </svg>
+                    <span id="profileVisibilityLabel"><?= $profileVisibility === 'public' ? 'Public' : 'Private' ?></span>
+                </span>
+            </div>
+            <div class="settings-card-body">
+                <button type="button" class="btn-modern" onclick="document.getElementById('userDetailsDialog').showModal()">Edit Profile</button>
+            </div>
+        </div>
+
        <!-- REGISTERED BOXES -->
         <div class="settings-card">
 
@@ -105,7 +117,7 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         ?>
 
                        
-                            <div class="box-item">
+                            <div class="box-item" data-box-id="<?= htmlspecialchars((string)$bid, ENT_QUOTES) ?>">
 
                                 <div class="box-item-main">
 
@@ -115,35 +127,6 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                     <div class="box-title-row">
 
-                                       
-                                    <?php if ($d && !empty($d['avatar_path'])): ?>
-
-                                        <img
-                                            class="box-list-avatar"
-                                            src="<?= htmlspecialchars($d['avatar_path']) ?>"
-                                            alt="Avatar"
-                                            loading="lazy"
-                                        >
-
-                                    <?php else: ?>
-
-                                        <div class="box-list-avatar-placeholder" aria-hidden="true">
-                                            <svg
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                stroke-width="1.7"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round">
-
-                                                <circle cx="12" cy="8" r="4"></circle>
-                                                <path d="M4 21v-2a8 8 0 0 1 16 0v2"></path>
-
-                                            </svg>
-                                        </div>
-
-                                    <?php endif; ?>
-
 
                                         <div class="box-title-content">
 
@@ -152,45 +135,6 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             </span>
 
 
-                                            <?php if ($d): ?>
-
-                                                <span
-                                                    class="box-public-badge"
-                                                    title="<?= (int)($d['public_status'] ?? 0) === 1
-                                                        ? 'Profile is publicly visible'
-                                                        : 'Profile is not public' ?>"
-                                                    aria-label="<?= (int)($d['public_status'] ?? 0) === 1
-                                                        ? 'Public profile'
-                                                        : 'Private profile' ?>">
-
-                                                    <svg
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        stroke-width="1.8"
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
-                                                        aria-hidden="true">
-
-                                                        <?php if ((int)($d['public_status'] ?? 0) === 1): ?>
-
-                                                            <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"></path>
-                                                            <circle cx="12" cy="12" r="3"></circle>
-
-                                                        <?php else: ?>
-
-                                                            <path d="M3 3l18 18"></path>
-                                                            <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"></path>
-                                                            <path d="M9.9 5.2A11.4 11.4 0 0 1 12 5c6.4 0 10 7 10 7a15.7 15.7 0 0 1-3 3.8"></path>
-                                                            <path d="M6.2 6.2C3.5 8 2 12 2 12s3.6 7 10 7c1.1 0 2.1-.2 3-.5"></path>
-
-                                                        <?php endif; ?>
-
-                                                    </svg>
-
-                                                </span>
-
-                                            <?php endif; ?>
 
                                         </div>
 
@@ -201,37 +145,29 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         RELATIONSHIP
                                     ====================================================== -->
 
-                                    <?php if ($d && (!empty($d['name_top']) || !empty($d['name_sub']))): ?>
+                                    <?php if (true): ?>
+
+                                      <?php if ($isLocked): ?>
 
                                         <div class="box-lock-relation">
 
-                                            <?php if (!empty($d['name_sub'])): ?>
+                                            <span class="lockee-name">
+                                                <?= htmlspecialchars($username) ?>
+                                            </span>
 
-                                                <span class="lockee-name">
-                                                    <?= htmlspecialchars($d['name_sub']) ?>
-                                                </span>
-
-                                            <?php endif; ?>
-
-
-                                            <?php if (!empty($d['name_sub']) && !empty($d['name_top'])): ?>
-
+                                            <?php if (!empty($d['name_top'])): ?>
                                                 <span class="relation-text">
                                                     is locked by
                                                 </span>
 
-                                            <?php endif; ?>
-
-
-                                            <?php if (!empty($d['name_top'])): ?>
-
                                                 <span class="keyholder-name">
                                                     <?= htmlspecialchars($d['name_top']) ?>
                                                 </span>
-
                                             <?php endif; ?>
 
                                         </div>
+
+                                    <?php endif; ?>
 
                                     <?php endif; ?>
 
@@ -589,6 +525,54 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 </div>
 
+<dialog id="userDetailsDialog" class="modern-dialog">
+    <h3>Edit Profile</h3>
+    <form id="userDetailsForm" enctype="multipart/form-data">
+        <div class="avatar-upload-row">
+            <img id="userAvatarPreview" class="avatar-preview" alt="Profile avatar" src="<?= htmlspecialchars($user['avatar_path'] ?? '', ENT_QUOTES) ?>" style="<?= empty($user['avatar_path'])?'display:none;':'' ?>">
+            <label class="btn-modern avatar-upload-btn">Upload Avatar
+                <input type="file" name="avatar" id="userAvatar" accept="image/jpeg,image/png,image/webp" style="display:none;">
+            </label>
+        </div>
+        <div class="input-group"><input type="text" name="username" id="profileUsername" value="<?= htmlspecialchars($username, ENT_QUOTES) ?>" required maxlength="50" placeholder=" "><label for="profileUsername">Username</label></div>
+        <div class="input-group"><input type="date" name="birth_date" id="profileBirthDate" value="<?= htmlspecialchars($user['birth_date'] ?? '', ENT_QUOTES) ?>"><label for="profileBirthDate">Date of birth</label></div>
+        <div class="input-group"><input type="url" name="social_x" id="profileSocialX" value="<?= htmlspecialchars($user['social_x'] ?? '', ENT_QUOTES) ?>" maxlength="255" placeholder=" "><label for="profileSocialX">X profile URL</label></div>
+        <div class="input-group"><input type="url" name="social_instagram" id="profileSocialInstagram" value="<?= htmlspecialchars($user['social_instagram'] ?? '', ENT_QUOTES) ?>" maxlength="255" placeholder=" "><label for="profileSocialInstagram">Instagram profile URL</label></div>
+        <div class="input-group"><input type="url" name="social_bluesky" id="profileSocialBluesky" value="<?= htmlspecialchars($user['social_bluesky'] ?? '', ENT_QUOTES) ?>" maxlength="255" placeholder=" "><label for="profileSocialBluesky">Bluesky profile URL</label></div>
+        <div class="profile-visibility-setting">
+            <div class="profile-visibility-info">
+                <label for="profileVisibilityToggle">
+                    Profile visibility
+                </label>
+                <small>
+                    Allow other users to view your public profile.
+                </small>
+            </div>
+
+            <label class="switch">
+                <input
+                    type="checkbox"
+                    id="profileVisibilityToggle"
+                    name="profile_visibility_toggle"
+                    value="1"
+                    <?= $profileVisibility === 'public' ? 'checked' : '' ?>
+                >
+                <span class="slider round"></span>
+            </label>
+
+            <input
+                type="hidden"
+                id="profileVisibilityValue"
+                name="profile_visibility"
+                value="<?= htmlspecialchars($profileVisibility, ENT_QUOTES, 'UTF-8') ?>"
+            >
+        </div>
+        <div id="userDetailsError" class="alert alert-danger" style="display:none"></div>
+        <div class="dialog-actions"><button type="button" class="btn-modern" onclick="document.getElementById('userDetailsDialog').close()">Cancel</button><button type="submit" class="btn-modern">Save</button></div>
+                                            
+    </form>
+</dialog>
+
 <!-- =========================
      PASSWORD DIALOG
 ========================= -->
@@ -847,122 +831,15 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <h3>Box Details – <span id="detailsBoxName"></span></h3>
 
-    <form id="boxDetailsForm" enctype="multipart/form-data">
-
-        <div class="avatar-upload-row">
-            <img
-                id="detailsAvatarPreview"
-                class="avatar-preview"
-                src=""
-                alt="Lockee avatar preview"
-                style="display:none;"
-            >
-
-            
-            <div
-                id="detailsAvatarPlaceholder"
-                class="avatar-placeholder"
-                aria-hidden="true">
-
-                <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.7"
-                    stroke-linecap="round"
-                    stroke-linejoin="round">
-
-                    <circle cx="12" cy="8" r="4"></circle>
-                    <path d="M4 21v-2a8 8 0 0 1 16 0v2"></path>
-
-                </svg>
-            </div>
-
-            <label class="btn-modern avatar-upload-btn">
-                Upload Image
-                <input
-                    type="file"
-                    id="detailsAvatar"
-                    name="avatar"
-                    accept="image/png, image/jpeg, image/webp"
-                    style="display:none;"
-                >
-            </label>
-        </div>
-
+    <form id="boxDetailsForm">
         <div class="input-group">
-            <input
-                type="text"
-                id="detailsNameSub"
-                name="name_sub"
-                placeholder=" "
-            >
-            <label for="detailsNameSub">Lockee name</label>
-        </div>
-
-        <div class="input-group">
-            <input
-                type="text"
-                id="detailsNameTop"
-                name="name_top"
-                placeholder=" "
-                required
-            >
+            <input type="text" id="detailsNameTop" name="name_top" placeholder=" " maxlength="255" required>
             <label for="detailsNameTop">Keyholder name</label>
         </div>
-
         <div class="input-group">
-            <input
-                type="text"
-                id="detailsBoxContent"
-                name="box_content"
-                placeholder=" "
-            >
+            <input type="text" id="detailsBoxContent" name="box_content" placeholder=" " maxlength="255">
             <label for="detailsBoxContent">Keys for</label>
         </div>
-
-        <div class="input-group">
-            <input
-                type="url"
-                id="detailsSocialX"
-                name="social_x"
-                placeholder=" "
-                maxlength="255"
-            >
-            <label for="detailsSocialX">X profile URL</label>
-        </div>
-
-        <div class="input-group">
-            <input
-                type="url"
-                id="detailsSocialInstagram"
-                name="social_instagram"
-                placeholder=" "
-                maxlength="255"
-            >
-            <label for="detailsSocialInstagram">Instagram profile URL</label>
-        </div>
-
-        <div class="input-group">
-            <input
-                type="url"
-                id="detailsSocialBluesky"
-                name="social_bluesky"
-                placeholder=" "
-                maxlength="255"
-            >
-            <label for="detailsSocialBluesky">Bluesky profile URL</label>
-        </div>
-
-        <label class="toggle-row">
-            <span>Show Lockee status in public</span>
-            <input
-                type="checkbox"
-                id="detailsPublicStatus"
-                name="public_status_checkbox"
-            >
-        </label>
-
         <div
             id="detailsError"
             class="alert alert-danger"
@@ -996,7 +873,7 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <h4>Share Status of LockMeBox <span id="shareBoxName"></span></h4>
 
     <div id="sharePublicWarning" class="alert alert-danger" style="display:none;">
-        This box's status is currently private. Enable "Show this box's status publicly" in Set Details so this link actually shows something.
+        Your profile is private. Change profile visibility under Edit Profile to make it public.
     </div>
 
 
@@ -1039,4 +916,56 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
 </dialog>
+<script>
+window.boxDetails = <?= json_encode($boxDetails, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
+window.boxHistoryData = <?= json_encode($boxHistory, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
+window.profileVisibility = <?= json_encode($profileVisibility, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
+</script>
+
+<style>
+.profile-heading { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.profile-visibility-badge { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:600; white-space:nowrap; }
+.profile-visibility-badge.is-public { color:#4ade80; background:rgba(74,222,128,.12); }
+.profile-visibility-badge.is-private { color:#fbbf24; background:rgba(251,191,36,.12); }
+</style>
+<script>
+(function () {
+    const dialog = document.getElementById('userDetailsDialog');
+    const toggle = document.getElementById('profileVisibilityToggle');
+    const hidden = document.getElementById('profileVisibilityValue');
+    const badge = document.getElementById('profileVisibilityBadge');
+    const label = document.getElementById('profileVisibilityLabel');
+    const slash = document.getElementById('profileVisibilitySlash');
+    if (!dialog || !toggle || !hidden) return;
+
+    function syncDialog() {
+        const visibility = window.profileVisibility === 'public' ? 'public' : 'private';
+        toggle.checked = visibility === 'public';
+        hidden.value = visibility;
+    }
+
+    toggle.addEventListener('change', function () {
+        hidden.value = toggle.checked ? 'public' : 'private';
+    });
+    dialog.addEventListener('close', syncDialog);
+    // showModal() triggers no native open event; watch the open attribute.
+    new MutationObserver(function () {
+        if (dialog.open) syncDialog();
+    }).observe(dialog, { attributes: true, attributeFilter: ['open'] });
+
+    window.updateProfileVisibilityBadge = function (visibility) {
+        const normalized = visibility === 'public' ? 'public' : 'private';
+        window.profileVisibility = normalized;
+        if (badge) {
+            badge.classList.toggle('is-public', normalized === 'public');
+            badge.classList.toggle('is-private', normalized !== 'public');
+            badge.setAttribute('aria-label', 'Profile visibility: ' + normalized);
+        }
+        if (label) label.textContent = normalized === 'public' ? 'Public' : 'Private';
+        if (slash) slash.style.display = normalized === 'public' ? 'none' : '';
+        syncDialog();
+    };
+    syncDialog();
+})();
+</script>
 <?php require_once __DIR__ . '/templates/footer.php'; ?>

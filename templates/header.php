@@ -38,9 +38,11 @@
         <script src="/assets/js/lock_dialog.js" defer></script>
         <script src="/assets/js/open_app_script.js" defer></script>
         <script src="/assets/js/lock_dialog_random_time.js" defer></script>
-        <script src="/assets/js/remove_box_script.js" defer></script>
-        <script src="/assets/js/box_details_calendar.js" defer></script>
-        <script src="/assets/js/toggle_public_status.js" defer></script>
+        <script src="/assets/js/box_details_calendar.js" defer></script> 
+        <script src="/assets/js/box_actions.js" defer></script>
+        <script src="/assets/js/box_share.js" defer></script>
+        <script src="/assets/js/box_status.js" defer></script>
+        <script src="/assets/js/user_profile.js" defer></script>
         <script src="/assets/js/box_details.js" defer></script>
         <script src="/assets/js/lockees.js" defer></script>
 
