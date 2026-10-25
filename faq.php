@@ -16,9 +16,17 @@ require_once __DIR__ . '/templates/header.php';
         </div>
 
         <div class="faq-item">
-            <button class="faq-question">Is there a way to open the box when you loose your password?</button>
+            <button class="faq-question">
+                Is there a way to open the box if you lose your password?
+            </button>
             <div class="faq-answer">
-                No, there is no recovery.
+                Yes! If you forget your password, you can purchase an
+                Emergency Password to regain access to your LockMeBox.
+                A maximum of 3 Emergency Passwords are available per box.
+                <br><br>
+                <a href="https://kinkystuffmade.com/product/lockmebox-emergency-password/" class="faq-link">
+                    Get your LockMeBox Emergency Password →
+                </a>
             </div>
         </div>
 

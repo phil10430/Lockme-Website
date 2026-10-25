@@ -709,7 +709,7 @@ $recentActivity = array_slice($recentActivity, 0, 3);
         <!-- Public profile directory -->
         <section class="community-section">
             <div class="community-section-header">
-                <h2 class="community-section-title">Public LockMeBoxes</h2>
+                <h2 class="community-section-title">Public Lockees</h2>
                 <span class="community-section-meta"><?= count($publicProfiles) ?> boxes · <?= $publicUserCount ?> users</span>
             </div>
 
