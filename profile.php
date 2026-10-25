@@ -1,37 +1,26 @@
 <?php
-
 require_once __DIR__ . '/includes/config.php';
-
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     header("location: index.php");
     exit;
 }
-
 $user_id  = $_SESSION["id"];
 $username = $_SESSION["username"];
-
 $errors  = [];
 $success = [];
-
-
 // =========================================================
 // REMOVE BOX
 // =========================================================
-
 if (isset($_POST['removeBox'])) {
     $boxId = trim($_POST["boxId"] ?? '');
-
     header('Content-Type: application/json');
-
     if (!preg_match('/^\d{6}$/', $boxId)) {
         echo json_encode(['success' => false, 'message' => 'Invalid box ID.']);
         exit;
     }
-
     try {
         $stmt = $pdo->prepare("DELETE FROM user_boxes WHERE user_id = :user_id AND box_id = :box_id");
         $stmt->execute([':user_id' => $user_id, ':box_id' => $boxId]);
-
         echo json_encode($stmt->rowCount() > 0
             ? ['success' => true, 'message' => 'Box removed.']
             : ['success' => false, 'message' => 'Box not found.']);
@@ -42,36 +31,26 @@ if (isset($_POST['removeBox'])) {
     }
     exit;
 }
-
-
-
 // =========================================================
 // SAVE BOX DETAILS
 // =========================================================
-
 if (isset($_POST['saveBoxDetails'])) {
-
     header('Content-Type: application/json; charset=utf-8');
-
     $boxId = trim((string)($_POST['boxId'] ?? ''));
     $nameTop = trim((string)($_POST['name_top'] ?? ''));
     $nameSub = trim((string)($_POST['name_sub'] ?? ''));
     $boxContent = trim((string)($_POST['box_content'] ?? ''));
-
     $publicStatus = (
         isset($_POST['public_status']) &&
         $_POST['public_status'] === '1'
     ) ? 1 : 0;
-
     // Social profiles belong to the Lockee.
     $socialX = trim((string)($_POST['social_x'] ?? ''));
     $socialInstagram = trim((string)($_POST['social_instagram'] ?? ''));
     $socialBluesky = trim((string)($_POST['social_bluesky'] ?? ''));
-
     // -----------------------------------------------------
     // Validate social profile URLs
     // -----------------------------------------------------
-
     if (!function_exists('validateSocialProfileUrl')) {
         function validateSocialProfileUrl(
             string $url,
@@ -80,16 +59,13 @@ if (isset($_POST['saveBoxDetails'])) {
             if ($url === '') {
                 return true;
             }
-
             if (
                 strlen($url) > 255 ||
                 filter_var($url, FILTER_VALIDATE_URL) === false
             ) {
                 return false;
             }
-
             $parts = parse_url($url);
-
             if (
                 !is_array($parts) ||
                 strtolower($parts['scheme'] ?? '') !== 'https' ||
@@ -102,7 +78,6 @@ if (isset($_POST['saveBoxDetails'])) {
             ) {
                 return false;
             }
-
             return in_array(
                 strtolower($parts['host']),
                 $allowedHosts,
@@ -110,7 +85,6 @@ if (isset($_POST['saveBoxDetails'])) {
             );
         }
     }
-
     if (!validateSocialProfileUrl(
         $socialX,
         ['x.com', 'www.x.com', 'twitter.com', 'www.twitter.com']
@@ -121,7 +95,6 @@ if (isset($_POST['saveBoxDetails'])) {
         ]);
         exit;
     }
-
     if (!validateSocialProfileUrl(
         $socialInstagram,
         ['instagram.com', 'www.instagram.com']
@@ -132,7 +105,6 @@ if (isset($_POST['saveBoxDetails'])) {
         ]);
         exit;
     }
-
     if (!validateSocialProfileUrl(
         $socialBluesky,
         ['bsky.app', 'www.bsky.app']
@@ -143,11 +115,9 @@ if (isset($_POST['saveBoxDetails'])) {
         ]);
         exit;
     }
-
     // -----------------------------------------------------
     // Validate input
     // -----------------------------------------------------
-
     if (!preg_match('/^\d+$/', $boxId)) {
         echo json_encode([
             'success' => false,
@@ -155,7 +125,6 @@ if (isset($_POST['saveBoxDetails'])) {
         ]);
         exit;
     }
-
     if ($nameTop === '') {
         echo json_encode([
             'success' => false,
@@ -163,42 +132,33 @@ if (isset($_POST['saveBoxDetails'])) {
         ]);
         exit;
     }
-
     // -----------------------------------------------------
     // Ownership check
     // -----------------------------------------------------
-
     $stmt = $pdo->prepare(
         "SELECT 1
          FROM user_boxes
          WHERE user_id = ? AND box_id = ?"
     );
-
     $stmt->execute([$user_id, $boxId]);
-
     if (!$stmt->fetchColumn()) {
         http_response_code(403);
-
         echo json_encode([
             'success' => false,
             'message' => 'Box not found.'
         ]);
         exit;
     }
-
     // -----------------------------------------------------
     // Optional avatar upload
     // -----------------------------------------------------
-
     $avatarPath = null;
     $newAvatarUploaded = false;
-
     if (
         isset($_FILES['avatar']) &&
         $_FILES['avatar']['error'] !== UPLOAD_ERR_NO_FILE
     ) {
         $file = $_FILES['avatar'];
-
         if ($file['error'] !== UPLOAD_ERR_OK) {
             echo json_encode([
                 'success' => false,
@@ -206,7 +166,6 @@ if (isset($_POST['saveBoxDetails'])) {
             ]);
             exit;
         }
-
         if ($file['size'] > 2 * 1024 * 1024) {
             echo json_encode([
                 'success' => false,
@@ -214,7 +173,6 @@ if (isset($_POST['saveBoxDetails'])) {
             ]);
             exit;
         }
-
         if (
             !is_uploaded_file($file['tmp_name']) ||
             @getimagesize($file['tmp_name']) === false
@@ -225,16 +183,13 @@ if (isset($_POST['saveBoxDetails'])) {
             ]);
             exit;
         }
-
         $finfo = new finfo(FILEINFO_MIME_TYPE);
         $mime = $finfo->file($file['tmp_name']);
-
         $allowedTypes = [
             'image/jpeg' => 'jpg',
             'image/png'  => 'png',
             'image/webp' => 'webp'
         ];
-
         if (!isset($allowedTypes[$mime])) {
             echo json_encode([
                 'success' => false,
@@ -242,9 +197,7 @@ if (isset($_POST['saveBoxDetails'])) {
             ]);
             exit;
         }
-
         $uploadDir = __DIR__ . '/uploads/box_avatars/';
-
         if (
             !is_dir($uploadDir) &&
             !mkdir($uploadDir, 0755, true) &&
@@ -256,21 +209,18 @@ if (isset($_POST['saveBoxDetails'])) {
             ]);
             exit;
         }
-
         try {
             $fileName = bin2hex(random_bytes(16))
                 . '.'
                 . $allowedTypes[$mime];
         } catch (Throwable $e) {
             error_log($e->getMessage());
-
             echo json_encode([
                 'success' => false,
                 'message' => 'Could not generate avatar filename.'
             ]);
             exit;
         }
-
         if (!move_uploaded_file(
             $file['tmp_name'],
             $uploadDir . $fileName
@@ -281,27 +231,21 @@ if (isset($_POST['saveBoxDetails'])) {
             ]);
             exit;
         }
-
         $avatarPath = 'uploads/box_avatars/' . $fileName;
         $newAvatarUploaded = true;
     }
-
     // -----------------------------------------------------
     // Save box details
     // -----------------------------------------------------
-
     try {
         $stmt = $pdo->prepare(
             "SELECT avatar_path
              FROM box_details
-             WHERE user_id = ? AND box_id = ?"
+             WHERE box_id = ?"
         );
-
-        $stmt->execute([$user_id, $boxId]);
+        $stmt->execute([$boxId]);
         $oldAvatarPath = $stmt->fetchColumn() ?: null;
-
         $baseParams = [
-            ':user_id'          => $user_id,
             ':box_id'           => $boxId,
             ':name_top'         => $nameTop,
             ':name_sub'         => $nameSub !== '' ? $nameSub : null,
@@ -311,12 +255,9 @@ if (isset($_POST['saveBoxDetails'])) {
             ':social_instagram' => $socialInstagram !== '' ? $socialInstagram : null,
             ':social_bluesky'   => $socialBluesky !== '' ? $socialBluesky : null
         ];
-
         if ($newAvatarUploaded) {
-
             $stmt = $pdo->prepare("
                 INSERT INTO box_details (
-                    user_id,
                     box_id,
                     name_top,
                     name_sub,
@@ -327,7 +268,6 @@ if (isset($_POST['saveBoxDetails'])) {
                     social_instagram,
                     social_bluesky
                 ) VALUES (
-                    :user_id,
                     :box_id,
                     :name_top,
                     :name_sub,
@@ -348,18 +288,14 @@ if (isset($_POST['saveBoxDetails'])) {
                     social_instagram = VALUES(social_instagram),
                     social_bluesky = VALUES(social_bluesky)
             ");
-
             $stmt->execute(
                 $baseParams + [
                     ':avatar_path' => $avatarPath
                 ]
             );
-
         } else {
-
             $stmt = $pdo->prepare("
                 INSERT INTO box_details (
-                    user_id,
                     box_id,
                     name_top,
                     name_sub,
@@ -369,7 +305,6 @@ if (isset($_POST['saveBoxDetails'])) {
                     social_instagram,
                     social_bluesky
                 ) VALUES (
-                    :user_id,
                     :box_id,
                     :name_top,
                     :name_sub,
@@ -388,10 +323,8 @@ if (isset($_POST['saveBoxDetails'])) {
                     social_instagram = VALUES(social_instagram),
                     social_bluesky = VALUES(social_bluesky)
             ");
-
             $stmt->execute($baseParams);
         }
-
         // Delete the old avatar only after the database save succeeds.
         if (
             $newAvatarUploaded &&
@@ -400,66 +333,50 @@ if (isset($_POST['saveBoxDetails'])) {
         ) {
             $oldFile = __DIR__ . '/'
                 . ltrim($oldAvatarPath, '/');
-
             if (is_file($oldFile)) {
                 @unlink($oldFile);
             }
         }
-
         echo json_encode([
             'success' => true,
             'avatar_path' => $newAvatarUploaded
                 ? $avatarPath
                 : $oldAvatarPath
         ]);
-
     } catch (Throwable $e) {
-
         // Remove the newly uploaded file if saving failed.
         if ($newAvatarUploaded && !empty($avatarPath)) {
             $newFile = __DIR__ . '/'
                 . ltrim($avatarPath, '/');
-
             if (is_file($newFile)) {
                 @unlink($newFile);
             }
         }
-
         error_log($e->getMessage());
-
         http_response_code(500);
-
         echo json_encode([
             'success' => false,
             'message' => 'An error occurred while saving the box details.'
         ]);
     }
-
     exit;
 }
-
 // =========================================================
 // LOAD USER DATA
 // =========================================================
-
 $stmt = $pdo->prepare("SELECT username, email, created_at FROM users WHERE id = ?");
 $stmt->execute([$user_id]);
 $user = $stmt->fetch();
-
-
 // =========================================================
 // CHANGE PASSWORD
 // =========================================================
-
 if (isset($_POST['changePassword'])) {
     $current_pw = $_POST['current_password'];
     $new_pw     = $_POST['new_password'];
     $confirm_pw = $_POST['confirm_new_password'];
-
     $stmt = $pdo->prepare("SELECT password FROM users WHERE id = ?");
     $stmt->execute([$user_id]);
     $row = $stmt->fetch();
-
     if (!$row || !password_verify($current_pw, $row['password'])) {
         $errors['password'] = "Current password is incorrect.";
     } elseif (strlen($new_pw) < 6) {
@@ -473,20 +390,15 @@ if (isset($_POST['changePassword'])) {
         $success['password'] = "Password updated successfully.";
     }
 }
-
-
 // =========================================================
 // CHANGE EMAIL
 // =========================================================
-
 if (isset($_POST['changeEmail'])) {
     $new_email  = trim($_POST['new_email']);
     $current_pw = $_POST['email_password'];
-
     $stmt = $pdo->prepare("SELECT password FROM users WHERE id = ?");
     $stmt->execute([$user_id]);
     $row = $stmt->fetch();
-
     if (!$row || !password_verify($current_pw, $row['password'])) {
         $errors['email'] = "Password is incorrect.";
     } elseif (!filter_var($new_email, FILTER_VALIDATE_EMAIL)) {
@@ -498,19 +410,14 @@ if (isset($_POST['changeEmail'])) {
         $success['email'] = "E-Mail updated successfully.";
     }
 }
-
-
 // =========================================================
 // DELETE ACCOUNT
 // =========================================================
-
 if (isset($_POST['deleteAccount'])) {
     $current_pw = $_POST['delete_password'];
-
     $stmt = $pdo->prepare("SELECT password FROM users WHERE id = ?");
     $stmt->execute([$user_id]);
     $row = $stmt->fetch();
-
     if (!$row || !password_verify($current_pw, $row['password'])) {
         $errors['delete'] = "Password is incorrect.";
     } else {
@@ -521,27 +428,19 @@ if (isset($_POST['deleteAccount'])) {
         exit;
     }
 }
-
-
 // =========================================================
 // LOAD REGISTERED BOXES
 // =========================================================
-
 $stmt = $pdo->prepare("SELECT box_id FROM user_boxes WHERE user_id = ? ORDER BY registered_at DESC");
 $stmt->execute([$user_id]);
 $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
 // =========================================================
 // LOAD BOX HISTORY
 // =========================================================
-
 $boxHistory = [];
-
 if (!empty($registeredBoxes)) {
     $boxIds = array_column($registeredBoxes, 'box_id');
     $placeholders = implode(',', array_fill(0, count($boxIds), '?'));
-
     $stmt = $pdo->prepare("
         SELECT box_id, lock_status, open_time, created_at, protection_level_timer, protection_level_password
         FROM box_data_history
@@ -549,25 +448,17 @@ if (!empty($registeredBoxes)) {
         ORDER BY created_at DESC
     ");
     $stmt->execute($boxIds);
-
     foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
         $boxHistory[$row['box_id']][] = $row;
     }
 }
-
-
-
-
 // =========================================================
 // LOAD PER-BOX DETAILS (including social profiles)
 // =========================================================
-
 $boxDetails = [];
-
 if (!empty($registeredBoxes)) {
     $boxIds = array_column($registeredBoxes, 'box_id');
     $placeholders = implode(',', array_fill(0, count($boxIds), '?'));
-
     $stmt = $pdo->prepare("
         SELECT
             box_id,
@@ -582,47 +473,35 @@ if (!empty($registeredBoxes)) {
         FROM box_details
         WHERE box_id IN ($placeholders)
     ");
-
     $stmt->execute($boxIds);
-
     foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $d) {
         $boxDetails[$d['box_id']] = $d;
     }
 }
-
-
 // =========================================================
 // EFFECTIVE LOCK STATE
 // (a box with lock_status = 1 counts as open once its timer
 //  has expired, even if no new history row has arrived yet)
 // =========================================================
-
 function is_effectively_locked(?array $status): bool
 {
     if ($status === null || (int)$status['lock_status'] !== 1) {
         return false;
     }
-
     if (!empty($status['protection_level_timer']) && !empty($status['open_time'])) {
         $openTime = strtotime($status['open_time']);
         if ($openTime !== false && $openTime <= time()) {
             return false; // timer expired - box is effectively open
         }
     }
-
     return true;
 }
-
-
 // =========================================================
 // DERIVE CURRENT STATUS
 // =========================================================
-
 $boxActual = [];
-
 foreach ($boxHistory as $boxName => $entries) {
     if (empty($entries)) continue;
-
     $boxActual[$boxName] = [
         'lock_status'               => $entries[0]['lock_status'],
         'locked_since'              => $entries[0]['created_at'],
@@ -632,28 +511,20 @@ foreach ($boxHistory as $boxName => $entries) {
         'effectively_locked'        => is_effectively_locked($entries[0]),
     ];
 }
-
-
 // =========================================================
 // LOCKED DURATION
 // =========================================================
-
 function locked_duration(?string $lockedSince): string
 {
     if (!$lockedSince) return '';
-
     $diff = max(0, time() - strtotime($lockedSince));
-
     $days    = intdiv($diff, 86400);
     $hours   = intdiv($diff % 86400, 3600);
     $minutes = intdiv($diff % 3600, 60);
-
     $parts = [];
     if ($days > 0)  $parts[] = $days . 'd';
     if ($hours > 0) $parts[] = $hours . 'h';
     if ($minutes > 0 || empty($parts)) $parts[] = $minutes . 'm';
-
     return implode(' ', $parts);
 }
-
 ?>
