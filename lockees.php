@@ -12,7 +12,7 @@ if (isset($_GET['history_box'])) {
     $historyBoxId = trim((string) $_GET['history_box']);
 
     try {
-        $publicCheck = $pdo->prepare("SELECT 1 FROM user_boxes ub JOIN box_details ud ON ud.box_id = ub.box_id WHERE ub.box_id = :box_id AND ud.public_status = 1 LIMIT 1");
+        $publicCheck = $pdo->prepare("SELECT 1 FROM user_boxes ub JOIN user_details ud ON ud.user_id = ub.user_id WHERE ub.box_id = :box_id AND ud.profile_visibility = 'public' LIMIT 1");
         $publicCheck->execute(['box_id' => $historyBoxId]);
 
         if (!$publicCheck->fetchColumn()) {
@@ -215,35 +215,25 @@ function community_relative_time(?string $date): string
 
 // =========================================================
 
-// PUBLIC BOXES
+// PUBLIC BOXES (visibility belongs to the user, not the box)
 
 // =========================================================
 
 $stmt = $pdo->prepare("
-
-    SELECT
-
-        ub.box_id,
-
-        ub.registered_at
-
+    SELECT ub.box_id, ub.user_id, ub.registered_at,
+           u.username, ud.avatar_path,
+           ud.social_x, ud.social_instagram, ud.social_bluesky
     FROM user_boxes ub
-
-    JOIN box_details ud
-
-        ON ud.box_id = ub.box_id
-
-    WHERE ud.public_status = 1
-
+    JOIN users u ON u.id = ub.user_id
+    JOIN user_details ud ON ud.user_id = u.id
+    WHERE ud.profile_visibility = 'public'
     ORDER BY ub.registered_at DESC
-
 ");
-
 $stmt->execute();
-
 $publicBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
+// One user may own multiple boxes. Count distinct public users.
+$publicUserCount = count(array_unique(array_column($publicBoxes, 'user_id')));
 
 // =========================================================
 
@@ -383,61 +373,29 @@ foreach ($historyByBox as $boxId => $history) {
 
 // =========================================================
 
-// LOAD BOX DETAILS
+// LOAD BOX-SPECIFIC DETAILS (user fields are already loaded above)
 
 // =========================================================
 
 $boxDetails = [];
-
 if (!empty($boxIds)) {
-
-    $placeholders = implode(
-
-        ',',
-
-        array_fill(0, count($boxIds), '?')
-
-    );
-
+    $placeholders = implode(',', array_fill(0, count($boxIds), '?'));
     $stmt = $pdo->prepare("
-
-        SELECT
-
-            box_id,
-
-            name_top,
-
-            name_sub,
-
-            box_content,
-
-            avatar_path,
-
-            public_status,
-
-            social_x,
-
-            social_instagram,
-
-            social_bluesky
-
+        SELECT box_id, name_top, box_content
         FROM box_details
-
         WHERE box_id IN ($placeholders)
-
     ");
-
     $stmt->execute($boxIds);
-
     foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $details) {
-
         $boxDetails[$details['box_id']] = $details;
-
     }
-
 }
 
-
+// Associate each box with its owner's user-level profile.
+$ownersByBox = [];
+foreach ($publicBoxes as $box) {
+    $ownersByBox[$box['box_id']] = $box;
+}
 
 // =========================================================
 // PUBLIC PROFILES AND LOCKED COUNT
@@ -468,7 +426,8 @@ foreach ($historyByBox as $boxId => $history) {
 
     if (!$details) continue;
 
-    $lockeeName = trim((string) ($details['name_sub'] ?? ''));
+    $owner = $ownersByBox[$boxId] ?? null;
+    $lockeeName = trim((string) ($owner['username'] ?? ''));
 
     if ($lockeeName === '') {
 
@@ -492,7 +451,7 @@ foreach ($historyByBox as $boxId => $history) {
 
             'name' => $lockeeName,
 
-            'avatar' => $details['avatar_path'] ?? '',
+            'avatar' => $owner['avatar_path'] ?? '',
 
             'status' => $state,
 
@@ -504,13 +463,13 @@ foreach ($historyByBox as $boxId => $history) {
 
         ];
 
-        if ($state === 'locked' && isset($history[$index + 1])) {
+        if ($state === 'unlocked' && isset($history[$index + 1]) && community_box_state($history[$index + 1]) === 'locked') {
 
             $olderEvent = $history[$index + 1];
 
-            $start = strtotime($event['created_at']);
+            $start = strtotime($olderEvent['created_at']);
 
-            $end = strtotime($olderEvent['created_at']);
+            $end = strtotime($event['created_at']);
 
             if ($start !== false && $end !== false && $end > $start) {
 
@@ -608,7 +567,7 @@ $recentActivity = array_slice($recentActivity, 0, 3);
 
             <p>
 
-                <?= count($publicProfiles) ?> public profiles
+                <?= $publicUserCount ?> public profiles
 
                 &middot;
 
@@ -750,8 +709,8 @@ $recentActivity = array_slice($recentActivity, 0, 3);
         <!-- Public profile directory -->
         <section class="community-section">
             <div class="community-section-header">
-                <h2 class="community-section-title">Public Profiles</h2>
-                <span class="community-section-meta"><?= count($publicProfiles) ?> profiles</span>
+                <h2 class="community-section-title">Public LockMeBoxes</h2>
+                <span class="community-section-meta"><?= count($publicProfiles) ?> boxes · <?= $publicUserCount ?> users</span>
             </div>
 
             <?php if (empty($publicProfiles)): ?>
@@ -769,13 +728,13 @@ $recentActivity = array_slice($recentActivity, 0, 3);
                             $isLocked = community_is_effectively_locked($status);
                             $statusLabel = $state === 'unknown' ? 'Unknown' : ($isLocked ? 'Locked' : 'Open');
                             $statusClass = $statusLabel === 'Locked' ? 'is-locked' : ($statusLabel === 'Open' ? 'is-open' : 'is-unknown');
-                            $lockeeName = trim((string) ($details['name_sub'] ?? '')) ?: 'Lockee';
-                            $avatarPath = (string) ($details['avatar_path'] ?? '');
+                            $lockeeName = trim((string) ($box['username'] ?? '')) ?: 'Lockee';
+                            $avatarPath = (string) ($box['avatar_path'] ?? '');
                             $keyholderName = (string) ($details['name_top'] ?? '');
                             $boxContent = (string) ($details['box_content'] ?? '');
-                            $socialX = trim((string) ($details['social_x'] ?? ''));
-                            $socialInstagram = trim((string) ($details['social_instagram'] ?? ''));
-                            $socialBluesky = trim((string) ($details['social_bluesky'] ?? ''));
+                            $socialX = trim((string) ($box['social_x'] ?? ''));
+                            $socialInstagram = trim((string) ($box['social_instagram'] ?? ''));
+                            $socialBluesky = trim((string) ($box['social_bluesky'] ?? ''));
                             $duration = ($isLocked && !empty($status['created_at'])) ? community_locked_duration($status['created_at']) : '';
                         ?>
                         <button
