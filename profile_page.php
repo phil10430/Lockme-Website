@@ -155,13 +155,13 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 <?= htmlspecialchars($username) ?>
                                             </span>
 
-                                            <?php if (!empty($d['name_top'])): ?>
+                                            <?php if (!empty($d['keyholder'])): ?>
                                                 <span class="relation-text">
                                                     is locked by
                                                 </span>
 
                                                 <span class="keyholder-name">
-                                                    <?= htmlspecialchars($d['name_top']) ?>
+                                                    <?= htmlspecialchars($d['keyholder']) ?>
                                                 </span>
                                             <?php endif; ?>
 
@@ -833,7 +833,7 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <form id="boxDetailsForm">
         <div class="input-group">
-            <input type="text" id="detailsNameTop" name="name_top" placeholder=" " maxlength="255" required>
+            <input type="text" id="detailsNameTop" name="keyholder" placeholder=" " maxlength="255" required>
             <label for="detailsNameTop">Keyholder name</label>
         </div>
         <div class="input-group">

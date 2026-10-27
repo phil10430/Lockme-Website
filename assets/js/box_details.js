@@ -3,7 +3,7 @@ window.openBoxDetailsDialog = function(boxId) {
   currentDetailsBoxId = String(boxId);
   const d = (window.boxDetails && window.boxDetails[currentDetailsBoxId]) || {};
   document.getElementById('detailsBoxName').textContent = currentDetailsBoxId;
-  document.getElementById('detailsNameTop').value = d.name_top || '';
+  document.getElementById('detailsNameTop').value = d.keyholder || '';
   document.getElementById('detailsBoxContent').value = d.box_content || '';
   document.getElementById('detailsError').style.display = 'none';
   document.getElementById('boxDetailsDialog').showModal();

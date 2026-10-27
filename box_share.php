@@ -11,7 +11,7 @@ if (preg_match('/^\d+$/D', $boxId)) {
     // Visibility is user-wide. Private profiles must not expose box details.
     $stmt = $pdo->prepare("
         SELECT ub.box_id, u.username, ud.avatar_path,
-               bd.name_top, bd.box_content
+               bd.keyholder, bd.box_content
         FROM user_boxes ub
         JOIN users u ON u.id = ub.user_id
         JOIN user_details ud ON ud.user_id = u.id
@@ -574,11 +574,11 @@ require_once __DIR__ . '/templates/header.php';
                                 <span class="box-id">LockMeBox #<?= htmlspecialchars($boxId, ENT_QUOTES, 'UTF-8') ?></span>
                             </div>
 
-                            <?php if ($isLocked && !empty($box['name_top'])): ?>
+                            <?php if ($isLocked && !empty($box['keyholder'])): ?>
                                 <div class="box-lock-relation">
                                     <span class="lockee-name"><?= htmlspecialchars((string) $box['username'], ENT_QUOTES, 'UTF-8') ?></span>
                                     <span class="relation-text">is locked by</span>
-                                    <span class="keyholder-name"><?= htmlspecialchars((string) $box['name_top'], ENT_QUOTES, 'UTF-8') ?></span>
+                                    <span class="keyholder-name"><?= htmlspecialchars((string) $box['keyholder'], ENT_QUOTES, 'UTF-8') ?></span>
                                 </div>
                             <?php endif; ?>
 

@@ -58,7 +58,7 @@ if (isset($_POST['removeBox'])) {
 
 if (isset($_POST['saveBoxDetails'])) {
     $boxId=trim((string)($_POST['boxId']??''));
-    $top=trim((string)($_POST['name_top']??''));
+    $top=trim((string)($_POST['keyholder']??''));
     $content=trim((string)($_POST['box_content']??''));
     if (!preg_match('/^\d{6}$/',$boxId) || $top === '' || mb_strlen($top)>255 || mb_strlen($content)>255)
         profileJson(['success'=>false,'message'=>'Invalid box details.'],400);
@@ -66,7 +66,7 @@ if (isset($_POST['saveBoxDetails'])) {
         $stmt=$pdo->prepare('SELECT 1 FROM user_boxes WHERE user_id=? AND box_id=?');
         $stmt->execute([$user_id,$boxId]);
         if (!$stmt->fetchColumn()) profileJson(['success'=>false,'message'=>'Box not found.'],403);
-        $stmt=$pdo->prepare('INSERT INTO box_details (box_id,name_top,box_content) VALUES (?,?,?) ON DUPLICATE KEY UPDATE name_top=VALUES(name_top),box_content=VALUES(box_content)');
+        $stmt=$pdo->prepare('INSERT INTO box_details (box_id,keyholder,box_content) VALUES (?,?,?) ON DUPLICATE KEY UPDATE keyholder=VALUES(keyholder),box_content=VALUES(box_content)');
         $stmt->execute([$boxId,$top,$content!==''?$content:null]);
         profileJson(['success'=>true]);
     } catch(Throwable $e) {error_log($e->getMessage());profileJson(['success'=>false,'message'=>'Could not save box details.'],500);}
@@ -283,7 +283,7 @@ if (!empty($registeredBoxes)) {
 
     $stmt = $pdo->prepare("
 
-        SELECT box_id, name_top, box_content FROM box_details
+        SELECT box_id, keyholder, box_content FROM box_details
 
         WHERE box_id IN ($placeholders)
 

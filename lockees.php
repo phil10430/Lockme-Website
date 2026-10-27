@@ -381,7 +381,7 @@ $boxDetails = [];
 if (!empty($boxIds)) {
     $placeholders = implode(',', array_fill(0, count($boxIds), '?'));
     $stmt = $pdo->prepare("
-        SELECT box_id, name_top, box_content
+        SELECT box_id, keyholder, box_content
         FROM box_details
         WHERE box_id IN ($placeholders)
     ");
@@ -730,7 +730,7 @@ $recentActivity = array_slice($recentActivity, 0, 3);
                             $statusClass = $statusLabel === 'Locked' ? 'is-locked' : ($statusLabel === 'Open' ? 'is-open' : 'is-unknown');
                             $lockeeName = trim((string) ($box['username'] ?? '')) ?: 'Lockee';
                             $avatarPath = (string) ($box['avatar_path'] ?? '');
-                            $keyholderName = (string) ($details['name_top'] ?? '');
+                            $keyholderName = (string) ($details['keyholder'] ?? '');
                             $boxContent = (string) ($details['box_content'] ?? '');
                             $socialX = trim((string) ($box['social_x'] ?? ''));
                             $socialInstagram = trim((string) ($box['social_instagram'] ?? ''));
