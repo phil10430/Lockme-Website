@@ -193,7 +193,7 @@ if (isset($_POST['saveUserDetails'])) {
     }
 }
 
-$stmt=$pdo->prepare('SELECT u.username,u.email,u.created_at,d.avatar_path,d.social_x,d.social_instagram,d.social_bluesky,d.birth_date,d.relationship_status,d.profile_visibility FROM users u LEFT JOIN user_details d ON d.user_id=u.id WHERE u.id=?');
+$stmt=$pdo->prepare('SELECT u.username,u.email,u.created_at,d.avatar_path,d.social_x,d.social_instagram,d.social_bluesky,d.birth_date,d.profile_visibility FROM users u LEFT JOIN user_details d ON d.user_id=u.id WHERE u.id=?');
 $stmt->execute([$user_id]);
 $user=$stmt->fetch(PDO::FETCH_ASSOC);
 if (!$user) {header('Location: index.php');exit;}
