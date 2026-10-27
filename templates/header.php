@@ -45,8 +45,7 @@
         <script src="/assets/js/user_profile.js" defer></script>
         <script src="/assets/js/box_details.js" defer></script>
         <script src="/assets/js/lockees.js" defer></script>
-
-
+        <script src="/assets/js/remote_access.js" defer></script>
     </head>
        
     <body class="<?= $bodyClass ?? '' ?>">   

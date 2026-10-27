@@ -269,6 +269,16 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <div class="box-item-actions">
 
                                     <div class="box-action-icons">
+                                        <!-- Owner-only remote access management -->
+                                        <button type="button" class="box-icon-btn" title="Manage Remote Access"
+                                            aria-label="Manage Remote Access for box <?= htmlspecialchars((string)$bid, ENT_QUOTES, 'UTF-8') ?>"
+                                            data-remote-manage-box="<?= htmlspecialchars((string)$bid, ENT_QUOTES, 'UTF-8') ?>">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="22" height="22">
+                                                <circle cx="9" cy="8" r="3"></circle>
+                                                <path d="M3 20v-2a6 6 0 0 1 12 0v2"></path>
+                                                <path d="M18 9v6m-3-3h6"></path>
+                                            </svg>
+                                        </button>
 
                                         <!-- History -->
                                         <button
@@ -451,6 +461,70 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     
 
+        <!-- BOXES SHARED WITH ME -->
+        <div class="settings-card">
+            <div class="settings-card-header">Shared with Me</div>
+            <div class="settings-card-body">
+                <?php if (empty($sharedWithMe)): ?>
+                    <p class="box-empty">No boxes have been shared with you yet.</p>
+                <?php else: ?>
+                    <div class="box-list">
+                        <?php foreach ($sharedWithMe as $shared):
+                            $sharedId = (int)$shared['box_id'];
+                            $sharedDetails = $boxDetails[$sharedId] ?? null;
+                            $sharedActual = $boxActual[$sharedId] ?? null;
+                            $sharedLocked = $sharedActual && !empty($sharedActual['effectively_locked']);
+                        ?>
+                            <div class="box-item" data-box-id="<?= htmlspecialchars((string)$sharedId, ENT_QUOTES, 'UTF-8') ?>">
+                                <div class="box-item-main">
+                                    <div class="box-title-row">
+                                        <div class="box-title-content">
+                                            <span class="box-id">LockMeBox <?= htmlspecialchars((string)$sharedId, ENT_QUOTES, 'UTF-8') ?></span>
+                                        </div>
+                                    </div>
+
+                                    <?php if ($sharedLocked && !empty($sharedDetails['keyholder'])): ?>
+                                        <div class="box-lock-relation">
+                                            <span class="lockee-name"><?= htmlspecialchars((string)$shared['owner_username'], ENT_QUOTES, 'UTF-8') ?></span>
+                                            <span class="relation-text">is locked by</span>
+                                            <span class="keyholder-name"><?= htmlspecialchars((string)$sharedDetails['keyholder'], ENT_QUOTES, 'UTF-8') ?></span>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <?php if ($sharedDetails && !empty($sharedDetails['box_content'])): ?>
+                                        <div class="box-content-tag">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                                <circle cx="7.5" cy="15.5" r="5.5"></circle>
+                                                <path d="m21 2-9.6 9.6"></path>
+                                                <path d="m15.5 7.5 3 3"></path>
+                                                <path d="m18.5 4.5 3 3"></path>
+                                            </svg>
+                                            <span><?= htmlspecialchars((string)$sharedDetails['box_content'], ENT_QUOTES, 'UTF-8') ?></span>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <div class="box-lock-status">
+                                        <?php if ($sharedLocked && !empty($sharedActual['locked_since'])): ?>
+                                            <svg class="box-lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                                <rect x="5" y="11" width="14" height="10" rx="2"></rect>
+                                                <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+                                            </svg>
+                                            <span class="box-lock-duration">Locked since <?= htmlspecialchars(locked_duration((string)$sharedActual['locked_since']), ENT_QUOTES, 'UTF-8') ?></span>
+                                        <?php endif; ?>
+                                        <span class="box-status" id="box-status-<?= htmlspecialchars((string)$sharedId, ENT_QUOTES, 'UTF-8') ?>">
+                                            <?= $sharedActual ? ($sharedLocked ? 'Locked' : 'Open') : 'Status unavailable' ?>
+                                        </span>
+                                    </div>
+                                    <div class="settings-muted">Owner: <?= htmlspecialchars((string)$shared['owner_username'], ENT_QUOTES, 'UTF-8') ?></div>
+                                </div>
+                                <div class="box-item-actions"><span class="remote-access-pill">Remote access</span></div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+
         <!-- SECURITY -->
 
         <div class="settings-card">
@@ -524,6 +598,30 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
 </div>
+
+<!-- REMOTE ACCESS MANAGEMENT -->
+<dialog id="remoteAccessDialog" class="modern-dialog" aria-labelledby="remoteAccessTitle">
+    <h3 id="remoteAccessTitle">Manage Remote Access</h3>
+    <p class="settings-muted">LockMeBox #<span id="remoteAccessBoxLabel"></span></p>
+    <p class="settings-muted">Users with access can view the box status and use its available remote controls. Only the owner can manage access.</p>
+
+    <form id="remoteGrantForm" autocomplete="off">
+        <div class="input-group">
+            <input type="text" name="username" id="remoteGrantUsername" placeholder=" " maxlength="255" required>
+            <label for="remoteGrantUsername">Username to grant access</label>
+        </div>
+        <div class="dialog-actions">
+            <button type="submit" class="btn-modern">Grant Access</button>
+        </div>
+    </form>
+    <div id="remoteAccessError" class="alert alert-danger" role="alert" style="display:none"></div>
+    <div id="remoteAccessSuccess" class="alert alert-success" role="status" style="display:none"></div>
+    <h4>Users with access</h4>
+    <div id="remoteAccessUsers" class="remote-access-users"></div>
+    <div class="dialog-actions">
+        <button type="button" class="btn-modern" id="remoteAccessClose">Close</button>
+    </div>
+</dialog>
 
 <dialog id="userDetailsDialog" class="modern-dialog">
     <h3>Edit Profile</h3>
@@ -920,6 +1018,10 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 window.boxDetails = <?= json_encode($boxDetails, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
 window.boxHistoryData = <?= json_encode($boxHistory, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
 window.profileVisibility = <?= json_encode($profileVisibility, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
+window.remoteAccessConfig = <?= json_encode([
+    'csrfToken' => $remoteAccessCsrf,
+    'permissions' => $remoteAccessByBox,
+], JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT) ?>;
 </script>
 
 <style>
@@ -927,6 +1029,11 @@ window.profileVisibility = <?= json_encode($profileVisibility, JSON_HEX_TAG|JSON
 .profile-visibility-badge { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:600; white-space:nowrap; }
 .profile-visibility-badge.is-public { color:#4ade80; background:rgba(74,222,128,.12); }
 .profile-visibility-badge.is-private { color:#fbbf24; background:rgba(251,191,36,.12); }
+
+.remote-shared-list, .remote-access-users { display:flex; flex-direction:column; gap:10px; }
+.remote-shared-item, .remote-access-user { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px; border-radius:10px; background:rgba(127,127,127,.07); }
+.remote-access-pill { font-size:12px; font-weight:600; color:#4ade80; }
+.remote-access-user button { flex-shrink:0; }
 </style>
 <script>
 (function () {
