@@ -1,43 +1,32 @@
 <?php
-
-// get lock/con-status from database and send it back to ajax script
 require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/box_access.php';
 
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+if (session_status() === PHP_SESSION_NONE) session_start();
 
-// Query 1: users Tabelle
-$username = trim($_POST['username']);
-$query = "SELECT * FROM users WHERE username = :username";
-$stmt = $pdo->prepare($query);
-$stmt->execute([':username' => $username]);
-$userRow = $stmt->fetch(PDO::FETCH_ASSOC);
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_SESSION['username'])) {
 
-$boxName = $userRow['box_id_con'];
+    $ctx = getBoxContext($pdo, $_SESSION['username']);
+    if (!$ctx) { http_response_code(403); exit; }
 
-// Query 2: box_data_actual Tabelle
-$query2 = "SELECT * FROM box_data_actual WHERE box_id = :box_id";
-$stmt2 = $pdo->prepare($query2);
-$stmt2->execute([':box_id' => $boxName]);
-$boxRow = $stmt2->fetch(PDO::FETCH_ASSOC);
+    $state = $ctx['state'];
+    $box   = $ctx['boxRow'];
 
+    echo json_encode([
+        'isRemote'      => $ctx['isRemote'],
+        'proVersion'    => $state['pro_version'],
+        'boxName'       => $ctx['boxName'],
+        'appLoggedIn'   => $state['app_logged_in'],
+        'appActive'     => $state['app_active'],
 
-
-$jsonOutput = [
-    // aus users
-    'boxName'           => $userRow['box_id_con'],   
-    'appLoggedIn'       => $userRow['app_logged_in'],
-    'appActive'         => $userRow['app_active'],
-
-    // aus box_data_actual
-    'lockStatus'                => $boxRow['lock_status'],
-    'protectionLevelPassword'   => $boxRow['protection_level_password'],
-    'protectionLevelTimer'      => $boxRow['protection_level_timer'],
-    'openTime'                  => $boxRow['open_time'],
-    'timeLeft'                  => $boxRow['time_left'],
-    'lockedSince'               => $boxRow['locked_since']
-];
-
-echo json_encode($jsonOutput);
-
+        'lockStatus'              => $box['lock_status']               ?? 0,
+        'protectionLevelPassword' => $box['protection_level_password'] ?? 0,
+        'protectionLevelTimer'    => $box['protection_level_timer']    ?? 0,
+        'openTime'                => !empty($box['open_time'])
+                                        ? date("Y-m-d H:i", strtotime($box['open_time'])) : '',
+        'timeLeft'                => $box['time_left']    ?? '',
+        'lockedSince'             => $box['locked_since'] ?? '',
+    ]);
+} else {
+    http_response_code(403);
 }
-?>

@@ -1,15 +1,30 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/helper_functions.php';
+require_once __DIR__ . '/includes/box_access.php';
 
 $boxControlError = "";
 $wishedAction = "";
-$username = $_SESSION["username"];
 
+// Berechtigung serverseitig bestimmen (Besitzer ODER Remote Controller)
+$ctx = getBoxContext($pdo, $_SESSION["username"]);
+if (!$ctx) { http_response_code(403); exit; }
 
-if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1))
+$state       = $ctx['state'];                       // Besitzer-Zeile (bei Remote) bzw. eigene Zeile
+$boxName     = $ctx['boxName'];
+$appLoggedIn = $state['app_logged_in'];
+$appActive   = $state['app_active'];
+$lockStatus  = $ctx['boxRow']['lock_status'] ?? 0;
+$targetUserId = (int)$state['id'];                  // dessen wished_action wird beschrieben
+
+$allowed = ($boxName != 0
+         && $appLoggedIn == 1
+         && $appActive == 1
+         && $state['pro_version'] == "1");
+
+if ($allowed)
 {
    
     if ($_SERVER["REQUEST_METHOD"] == "POST") {  // Processing form data when form is submitted
@@ -123,11 +138,11 @@ if (($boxName != 0) && ($appLoggedIn == 1)  && ($appActive == 1))
         
      
      
-        $sql = "UPDATE users SET wished_action = :wished_action WHERE username = :username";
+        $sql = "UPDATE users SET wished_action = :wished_action WHERE id = :id";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             ':wished_action' => $wishedAction,
-            ':username' => $username
+            ':id'            => $targetUserId
         ]);
 
     }
