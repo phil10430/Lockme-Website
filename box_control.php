@@ -136,7 +136,14 @@ if ($allowed)
             }
         } 
         
-     
+         // Keyholder nur vormerken. Gesetzt wird er, wenn die Box wirklich verschlossen meldet.
+        if ($closeBoxIntent && empty($boxControlError) && $wishedAction !== '') {
+            $stmt = $pdo->prepare("INSERT INTO box_details (box_id, keyholder, box_content, pending_keyholder, pending_keyholder_at)
+                                   VALUES (?, '', NULL, ?, NOW())
+                                   ON DUPLICATE KEY UPDATE pending_keyholder = VALUES(pending_keyholder),
+                                                           pending_keyholder_at = VALUES(pending_keyholder_at)");
+            $stmt->execute([$boxName, $_SESSION['username']]);
+        }
      
         $sql = "UPDATE users SET wished_action = :wished_action WHERE id = :id";
         $stmt = $pdo->prepare($sql);

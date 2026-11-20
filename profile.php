@@ -136,19 +136,32 @@ if (isset($_POST['removeBox'])) {
 }
 
 if (isset($_POST['saveBoxDetails'])) {
-    $boxId=trim((string)($_POST['boxId']??''));
-    $top=trim((string)($_POST['keyholder']??''));
-    $content=trim((string)($_POST['box_content']??''));
-    if (!preg_match('/^\d{6}$/',$boxId) || $top === '' || mb_strlen($top)>255 || mb_strlen($content)>255)
+    $boxId   = trim((string)($_POST['boxId'] ?? ''));
+    $content = trim((string)($_POST['box_content'] ?? ''));
+    if (!preg_match('/^\d{6}$/', $boxId) || mb_strlen($content) > 255)
         profileJson(['success'=>false,'message'=>'Invalid box details.'],400);
     try {
-        $stmt=$pdo->prepare('SELECT 1 FROM user_boxes WHERE user_id=? AND box_id=?');
-        $stmt->execute([$user_id,$boxId]);
+        // nur der Besitzer
+        $stmt = $pdo->prepare('SELECT 1 FROM user_boxes WHERE user_id=? AND box_id=?');
+        $stmt->execute([$user_id, $boxId]);
         if (!$stmt->fetchColumn()) profileJson(['success'=>false,'message'=>'Box not found.'],403);
-        $stmt=$pdo->prepare('INSERT INTO box_details (box_id,keyholder,box_content) VALUES (?,?,?) ON DUPLICATE KEY UPDATE keyholder=VALUES(keyholder),box_content=VALUES(box_content)');
-        $stmt->execute([$boxId,$top,$content!==''?$content:null]);
+
+        // nur bei offener Box
+        $stmt = $pdo->prepare('SELECT lock_status, open_time, protection_level_timer FROM box_data_actual WHERE box_id = ? ORDER BY id DESC LIMIT 1');
+        $stmt->execute([$boxId]);
+        $current = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        if (is_effectively_locked($current))
+            profileJson(['success'=>false,'message'=>'Box details can only be changed while the box is open.'],409);
+
+        // keyholder wird hier bewusst NICHT angefasst
+        $stmt = $pdo->prepare("INSERT INTO box_details (box_id, keyholder, box_content) VALUES (?, '', ?)
+                               ON DUPLICATE KEY UPDATE box_content = VALUES(box_content)");
+        $stmt->execute([$boxId, $content !== '' ? $content : null]);
         profileJson(['success'=>true]);
-    } catch(Throwable $e) {error_log($e->getMessage());profileJson(['success'=>false,'message'=>'Could not save box details.'],500);}
+    } catch (Throwable $e) {
+        error_log($e->getMessage());
+        profileJson(['success'=>false,'message'=>'Could not save box details.'],500);
+    }
 }
 
 if (isset($_POST['saveUserDetails'])) {

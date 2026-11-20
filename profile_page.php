@@ -315,12 +315,11 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
                                         <!-- Box Details -->
-                                        <button
-                                            type="button"
-                                            class="box-icon-btn"
-                                            title="Set Details"
-                                            aria-label="Set Details"
-                                            onclick="openBoxDetailsDialog('<?= htmlspecialchars($bid) ?>')">
+                                        <button type="button" class="box-icon-btn"
+                                        title="<?= $isLocked ? 'Box details can only be changed while the box is open' : 'Set Details' ?>"
+                                        aria-label="Set Details"
+                                        <?= $isLocked ? 'disabled style="opacity:.4;cursor:not-allowed;"' : '' ?>
+                                        onclick="openBoxDetailsDialog('<?= htmlspecialchars($bid) ?>')">
 
                                             <svg
                                                 viewBox="0 0 24 24"
@@ -930,10 +929,7 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <h3>Box Details – <span id="detailsBoxName"></span></h3>
 
     <form id="boxDetailsForm">
-        <div class="input-group">
-            <input type="text" id="detailsNameTop" name="keyholder" placeholder=" " maxlength="255" required>
-            <label for="detailsNameTop">Keyholder name</label>
-        </div>
+        
         <div class="input-group">
             <input type="text" id="detailsBoxContent" name="box_content" placeholder=" " maxlength="255">
             <label for="detailsBoxContent">Keys for</label>
