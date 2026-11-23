@@ -33,14 +33,11 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <div>
-                <h1>
-                    <?php echo htmlspecialchars($username); ?>
-                </h1>
-
-                <p>
-                    Member since
-                    <?php echo date("d.m.Y", strtotime($user['created_at'])); ?>
-                </p>
+                <h1><?php echo htmlspecialchars($username); ?></h1>
+                <?php if (!empty($user['headline'])): ?>
+                    <p class="profile-headline"><?= htmlspecialchars($user['headline']) ?></p>
+                <?php endif; ?>
+                <p>Member since <?php echo date("d.m.Y", strtotime($user['created_at'])); ?></p>
             </div>
 
             <!-- PRO STATUS -->
@@ -76,6 +73,22 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </span>
             </div>
             <div class="settings-card-body">
+                <?php if (!empty($user['location'])): ?>
+                    <p class="settings-muted">📍 <?= htmlspecialchars($user['location']) ?></p>
+                <?php endif; ?>
+
+                <div class="profile-chips">
+                    <?php foreach (profileFieldDefs() as $key => $def):
+                        if ($def['type'] !== 'select') continue;
+                        $label = profileOptionLabel($key, $user[$key] ?? null);
+                        if ($label === '') continue; ?>
+                        <span class="profile-chip">
+                            <small><?= htmlspecialchars($def['label']) ?></small>
+                            <?= htmlspecialchars($label) ?>
+                        </span>
+                    <?php endforeach; ?>
+                </div>
+
                 <button type="button" class="btn-modern" onclick="document.getElementById('userDetailsDialog').showModal()">Edit Profile</button>
             </div>
         </div>
@@ -622,51 +635,68 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </dialog>
 
-<dialog id="userDetailsDialog" class="modern-dialog">
+<dialog id="userDetailsDialog" class="modern-dialog profile-edit-dialog">
     <h3>Edit Profile</h3>
     <form id="userDetailsForm" enctype="multipart/form-data">
+
         <div class="avatar-upload-row">
-            <img id="userAvatarPreview" class="avatar-preview" alt="Profile avatar" src="<?= htmlspecialchars($user['avatar_path'] ?? '', ENT_QUOTES) ?>" style="<?= empty($user['avatar_path'])?'display:none;':'' ?>">
+            <img id="userAvatarPreview" class="avatar-preview" alt="Profile avatar" src="<?= htmlspecialchars($user['avatar_path'] ?? '', ENT_QUOTES) ?>" style="<?= empty($user['avatar_path']) ? 'display:none;' : '' ?>">
             <label class="btn-modern avatar-upload-btn">Upload Avatar
                 <input type="file" name="avatar" id="userAvatar" accept="image/jpeg,image/png,image/webp" style="display:none;">
             </label>
         </div>
-        <div class="input-group"><input type="text" name="username" id="profileUsername" value="<?= htmlspecialchars($username, ENT_QUOTES) ?>" required maxlength="50" placeholder=" "><label for="profileUsername">Username</label></div>
-        <div class="input-group"><input type="date" name="birth_date" id="profileBirthDate" value="<?= htmlspecialchars($user['birth_date'] ?? '', ENT_QUOTES) ?>"><label for="profileBirthDate">Date of birth</label></div>
-        <div class="input-group"><input type="url" name="social_x" id="profileSocialX" value="<?= htmlspecialchars($user['social_x'] ?? '', ENT_QUOTES) ?>" maxlength="255" placeholder=" "><label for="profileSocialX">X profile URL</label></div>
-        <div class="input-group"><input type="url" name="social_instagram" id="profileSocialInstagram" value="<?= htmlspecialchars($user['social_instagram'] ?? '', ENT_QUOTES) ?>" maxlength="255" placeholder=" "><label for="profileSocialInstagram">Instagram profile URL</label></div>
-        <div class="input-group"><input type="url" name="social_bluesky" id="profileSocialBluesky" value="<?= htmlspecialchars($user['social_bluesky'] ?? '', ENT_QUOTES) ?>" maxlength="255" placeholder=" "><label for="profileSocialBluesky">Bluesky profile URL</label></div>
+
+        <fieldset class="pf-section">
+            <legend>Account</legend>
+            <div class="pf-grid">
+                <div class="pf-field">
+                    <label for="profileUsername">Username</label>
+                    <input type="text" name="username" id="profileUsername" value="<?= htmlspecialchars($username, ENT_QUOTES) ?>" required maxlength="50">
+                </div>
+                <div class="pf-field">
+                    <label for="profileBirthDate">Date of birth</label>
+                    <input type="date" name="birth_date" id="profileBirthDate" value="<?= htmlspecialchars($user['birth_date'] ?? '', ENT_QUOTES) ?>">
+                </div>
+            </div>
+        </fieldset>
+
+        <?= profileRenderFormSections($user) ?>
+
+        <fieldset class="pf-section">
+            <legend>Social links</legend>
+            <div class="pf-grid">
+                <div class="pf-field pf-full">
+                    <label for="profileSocialX">X</label>
+                    <input type="url" name="social_x" id="profileSocialX" value="<?= htmlspecialchars($user['social_x'] ?? '', ENT_QUOTES) ?>" maxlength="255" placeholder="https://x.com/...">
+                </div>
+                <div class="pf-field pf-full">
+                    <label for="profileSocialInstagram">Instagram</label>
+                    <input type="url" name="social_instagram" id="profileSocialInstagram" value="<?= htmlspecialchars($user['social_instagram'] ?? '', ENT_QUOTES) ?>" maxlength="255" placeholder="https://instagram.com/...">
+                </div>
+                <div class="pf-field pf-full">
+                    <label for="profileSocialBluesky">Bluesky</label>
+                    <input type="url" name="social_bluesky" id="profileSocialBluesky" value="<?= htmlspecialchars($user['social_bluesky'] ?? '', ENT_QUOTES) ?>" maxlength="255" placeholder="https://bsky.app/...">
+                </div>
+            </div>
+        </fieldset>
+
         <div class="profile-visibility-setting">
             <div class="profile-visibility-info">
-                <label for="profileVisibilityToggle">
-                    Profile visibility
-                </label>
-                <small>
-                    Allow other users to view your public profile.
-                </small>
+                <label for="profileVisibilityToggle">Profile visibility</label>
+                <small>Allow other users to view your public profile.</small>
             </div>
-
             <label class="switch">
-                <input
-                    type="checkbox"
-                    id="profileVisibilityToggle"
-                    name="profile_visibility_toggle"
-                    value="1"
-                    <?= $profileVisibility === 'public' ? 'checked' : '' ?>
-                >
+                <input type="checkbox" id="profileVisibilityToggle" name="profile_visibility_toggle" value="1" <?= $profileVisibility === 'public' ? 'checked' : '' ?>>
                 <span class="slider round"></span>
             </label>
-
-            <input
-                type="hidden"
-                id="profileVisibilityValue"
-                name="profile_visibility"
-                value="<?= htmlspecialchars($profileVisibility, ENT_QUOTES, 'UTF-8') ?>"
-            >
+            <input type="hidden" id="profileVisibilityValue" name="profile_visibility" value="<?= htmlspecialchars($profileVisibility, ENT_QUOTES, 'UTF-8') ?>">
         </div>
+
         <div id="userDetailsError" class="alert alert-danger" style="display:none"></div>
-        <div class="dialog-actions"><button type="button" class="btn-modern" onclick="document.getElementById('userDetailsDialog').close()">Cancel</button><button type="submit" class="btn-modern">Save</button></div>
-                                            
+        <div class="dialog-actions">
+            <button type="button" class="btn-modern" onclick="document.getElementById('userDetailsDialog').close()">Cancel</button>
+            <button type="submit" class="btn-modern">Save</button>
+        </div>
     </form>
 </dialog>
 
@@ -1030,6 +1060,25 @@ window.remoteAccessConfig = <?= json_encode([
 .remote-shared-item, .remote-access-user { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px; border-radius:10px; background:rgba(127,127,127,.07); }
 .remote-access-pill { font-size:12px; font-weight:600; color:#4ade80; }
 .remote-access-user button { flex-shrink:0; }
+.profile-headline { margin:2px 0 4px; font-size:14px; opacity:.85; }
+
+.profile-edit-dialog { max-height:90vh; overflow-y:auto; }
+.pf-section { border:1px solid rgba(127,127,127,.25); border-radius:10px; padding:10px 12px 12px; margin:0 0 12px; }
+.pf-section legend { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; opacity:.7; padding:0 6px; }
+.pf-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.pf-field { display:flex; flex-direction:column; gap:4px; min-width:0; }
+.pf-full { grid-column:1 / -1; }
+.pf-field label { font-size:12px; opacity:.75; }
+.pf-field input, .pf-field select {
+    width:100%; box-sizing:border-box; padding:8px 10px; border-radius:8px;
+    border:1px solid rgba(127,127,127,.35); background:transparent; color:inherit; font:inherit;
+}
+.pf-field select option { color:#000; }
+@media (max-width:480px) { .pf-grid { grid-template-columns:1fr; } }
+.profile-chips { display:flex; flex-wrap:wrap; gap:8px; margin:8px 0 14px; }
+.profile-chip { display:inline-flex; flex-direction:column; padding:6px 12px; border-radius:12px;
+                background:rgba(127,127,127,.12); font-size:13px; font-weight:600; line-height:1.25; }
+.profile-chip small { font-size:10px; font-weight:500; opacity:.65; text-transform:uppercase; letter-spacing:.04em; }
 </style>
 <script>
 (function () {
