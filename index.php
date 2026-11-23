@@ -96,7 +96,7 @@ require_once __DIR__ . '/templates/header.php';
 
                 <div class="hero-community-status">
 
-                    <a href="lockees.php">
+                    <a href="community.php">
                         <span class="hero-community-count">
                             <?php echo $lockedCount; ?>
                         </span>

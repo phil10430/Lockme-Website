@@ -102,28 +102,48 @@ function community_relative_time(?string $date): string
 }
 
 // =========================================================
-// PUBLIC BOXES (visibility belongs to the user, not the box)
+// ALL PUBLIC PROFILES (one row per user x box; users without a box included)
 // =========================================================
 $stmt = $pdo->prepare("
-    SELECT ub.box_id, ub.user_id, ub.registered_at,
-           u.username, u.created_at AS member_since, ud.avatar_path, ud.birth_date,
+    SELECT u.id AS user_id, u.username, u.created_at AS member_since,
+           ub.box_id, ub.registered_at,
+           ud.avatar_path, ud.birth_date,
            ud.social_x, ud.social_instagram, ud.social_bluesky,
            " . profileFieldColumnsSql('ud') . "
-    FROM user_boxes ub
-    JOIN users u ON u.id = ub.user_id
+    FROM users u
     JOIN user_details ud ON ud.user_id = u.id
+    LEFT JOIN user_boxes ub ON ub.user_id = u.id
     WHERE ud.profile_visibility = 'public'
-    ORDER BY ub.registered_at DESC
+    ORDER BY ub.registered_at DESC, u.username ASC
 ");
 $stmt->execute();
-$publicBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$publicRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// One user may own multiple boxes. Count distinct public users.
-$publicUserCount = count(array_unique(array_column($publicBoxes, 'user_id')));
-$boxIds = array_column($publicBoxes, 'box_id');
+// Group by user
+$members = [];
+foreach ($publicRows as $row) {
+    $uid = (int) $row['user_id'];
+    if (!isset($members[$uid])) {
+        $members[$uid] = $row;
+        $members[$uid]['boxes'] = [];
+    }
+    if ($row['box_id'] !== null && $row['box_id'] !== '') {
+        $members[$uid]['boxes'][] = (string) $row['box_id'];
+    }
+}
+$publicUserCount = count($members);
 
-// Lock statistics per user (for badges)
-$userStats = profileStatsForPublicBoxes($pdo, $publicBoxes);
+$boxIds = [];
+$ownersByBox = [];
+foreach ($members as $m) {
+    foreach ($m['boxes'] as $bid) {
+        $boxIds[] = $bid;
+        $ownersByBox[$bid] = $m;
+    }
+}
+
+// Lock statistics per user (for badges). Users without a box are included.
+$userStats = profileStatsForPublicBoxes($pdo, $publicRows);
 
 // =========================================================
 // LOAD BOX HISTORY (max. 10 entries per box)
@@ -141,16 +161,15 @@ if (!empty($boxIds)) {
     $stmt->execute($boxIds);
 
     foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $history) {
-        $boxName = $history['box_id'];
+        $boxName = (string) $history['box_id'];
         if (!isset($historyByBox[$boxName])) $historyByBox[$boxName] = [];
         if (count($historyByBox[$boxName]) < 10) $historyByBox[$boxName][] = $history;
     }
 }
 
-// Latest status per box
 $latestStatus = [];
 foreach ($historyByBox as $boxId => $history) {
-    if (!empty($history)) $latestStatus[$boxId] = $history[0];
+    if (!empty($history)) $latestStatus[(string) $boxId] = $history[0];
 }
 
 // =========================================================
@@ -162,16 +181,14 @@ if (!empty($boxIds)) {
     $stmt = $pdo->prepare("SELECT box_id, keyholder, box_content FROM box_details WHERE box_id IN ($placeholders)");
     $stmt->execute($boxIds);
     foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $details) {
-        $boxDetails[$details['box_id']] = $details;
+        $boxDetails[(string) $details['box_id']] = $details;
     }
 }
 
 // =========================================================
-// KEYHOLDER AVATARS
-// keyholder is stored as username text; avatar is only used
-// if the keyholder's own profile is public.
+// KEYHOLDER AVATARS (only if the keyholder's own profile is public)
 // =========================================================
-$keyholderAvatars = []; // lowercase username => avatar_path
+$keyholderAvatars = [];
 $keyholderNames = [];
 foreach ($boxDetails as $details) {
     $kh = trim((string) ($details['keyholder'] ?? ''));
@@ -196,23 +213,25 @@ if (!empty($keyholderNames)) {
     }
 }
 
-// Associate each box with its owner's user-level profile.
-$ownersByBox = [];
-foreach ($publicBoxes as $box) {
-    $ownersByBox[$box['box_id']] = $box;
-}
-
 // =========================================================
-// PUBLIC PROFILES AND LOCKED COUNT
+// PRIMARY BOX PER MEMBER + LOCKED COUNT
+// Prefer a currently locked box, otherwise the most recently registered one.
 // =========================================================
-$publicProfiles = $publicBoxes;
 $currentlyLockedCount = 0;
-
-foreach ($publicProfiles as $profile) {
-    if (community_is_effectively_locked($latestStatus[$profile['box_id']] ?? null)) {
-        $currentlyLockedCount++;
+foreach ($members as $uid => &$m) {
+    $m['primary_box'] = null;
+    foreach ($m['boxes'] as $bid) {
+        if (community_is_effectively_locked($latestStatus[$bid] ?? null)) {
+            $m['primary_box'] = $bid;
+            $currentlyLockedCount++;
+            break;
+        }
+    }
+    if ($m['primary_box'] === null && !empty($m['boxes'])) {
+        $m['primary_box'] = $m['boxes'][0];
     }
 }
+unset($m);
 
 // =========================================================
 // RECENT ACTIVITY (latest event per box, three different boxes)
@@ -220,11 +239,9 @@ foreach ($publicProfiles as $profile) {
 $recentActivityByBox = [];
 
 foreach ($historyByBox as $boxId => $history) {
-    if (empty($boxDetails[$boxId])) continue;
-
     $owner = $ownersByBox[$boxId] ?? null;
-    $lockeeName = trim((string) ($owner['username'] ?? ''));
-    if ($lockeeName === '') $lockeeName = 'A Lockee';
+    if (!$owner) continue;
+    $lockeeName = trim((string) ($owner['username'] ?? '')) ?: 'A Lockee';
 
     foreach ($history as $index => $event) {
         $state = community_box_state($event);
@@ -248,7 +265,6 @@ foreach ($historyByBox as $boxId => $history) {
             }
         }
 
-        // History is newest first: the first valid event is the latest activity.
         $recentActivityByBox[$boxId] = $activity;
         break;
     }
@@ -259,7 +275,7 @@ usort($recentActivity, fn($a, $b) => strtotime($b['created_at']) <=> strtotime($
 $recentActivity = array_slice($recentActivity, 0, 3);
 
 ?>
-<link rel="stylesheet" href="/assets/css/lockees.css">
+<link rel="stylesheet" href="/assets/css/community.css">
 <link rel="stylesheet" href="/assets/css/profile_view.css">
 
 <div class="settings-wrapper">
@@ -267,7 +283,7 @@ $recentActivity = array_slice($recentActivity, 0, 3);
 
         <!-- COMMUNITY HEADER -->
         <div class="community-hero">
-            <h1>Lockees</h1>
+            <h1>Community</h1>
             <p>
                 <?= $publicUserCount ?> public profiles
                 &middot;
@@ -325,48 +341,84 @@ $recentActivity = array_slice($recentActivity, 0, 3);
             <?php endif; ?>
         </section>
 
-        <!-- PUBLIC PROFILE DIRECTORY -->
+        <!-- MEMBERS -->
         <section class="community-section">
             <div class="community-section-header">
-                <h2 class="community-section-title">Public Lockees</h2>
-                <span class="community-section-meta"><?= count($publicProfiles) ?> boxes · <?= $publicUserCount ?> users</span>
+                <h2 class="community-section-title">Members</h2>
+                <span class="community-section-meta" id="communityCount"><?= $publicUserCount ?> members</span>
             </div>
 
-            <?php if (empty($publicProfiles)): ?>
+            <!-- FILTER -->
+            <div class="community-filters" id="communityFilters">
+                <div class="community-filter-group" role="group" aria-label="Filter by role">
+                    <span class="community-filter-label">Role</span>
+                    <button type="button" class="community-filter-btn is-active" data-filter-group="role" data-filter-value="all">All</button>
+                    <button type="button" class="community-filter-btn" data-filter-group="role" data-filter-value="keyholder">Keyholders</button>
+                    <button type="button" class="community-filter-btn" data-filter-group="role" data-filter-value="lockee">Lockees</button>
+                </div>
+                <div class="community-filter-group" role="group" aria-label="Filter by status">
+                    <span class="community-filter-label">Status</span>
+                    <button type="button" class="community-filter-btn is-active" data-filter-group="status" data-filter-value="all">All</button>
+                    <button type="button" class="community-filter-btn" data-filter-group="status" data-filter-value="locked">Locked</button>
+                    <button type="button" class="community-filter-btn" data-filter-group="status" data-filter-value="open">Open</button>
+                </div>
+            </div>
+
+            <?php if (empty($members)): ?>
                 <div class="community-empty">No public profiles yet.</div>
             <?php else: ?>
-                <div class="community-lockee-grid">
-                    <?php foreach ($publicProfiles as $box): ?>
+                <div class="community-lockee-grid" id="communityGrid">
+                    <?php foreach ($members as $member): ?>
                         <?php
-                            $id = (string) $box['box_id'];
-                            $status = $latestStatus[$id] ?? null;
-                            $details = $boxDetails[$id] ?? null;
-                            if (!$details) continue;
+                            $id = (string) ($member['primary_box'] ?? '');
+                            $hasBox = $id !== '';
+                            $status = $hasBox ? ($latestStatus[$id] ?? null) : null;
+                            $details = $hasBox ? ($boxDetails[$id] ?? []) : [];
 
                             $state = community_box_state($status);
-                            $isLocked = community_is_effectively_locked($status);
-                            $statusLabel = $state === 'unknown' ? 'Unknown' : ($isLocked ? 'Locked' : 'Open');
-                            $statusClass = $statusLabel === 'Locked' ? 'is-locked' : ($statusLabel === 'Open' ? 'is-open' : 'is-unknown');
-                            $lockeeName = trim((string) ($box['username'] ?? '')) ?: 'Lockee';
-                            $avatarPath = (string) ($box['avatar_path'] ?? '');
+                            $isLocked = $hasBox && community_is_effectively_locked($status);
+
+                            if (!$hasBox) {
+                                $statusLabel = 'No box';
+                                $statusClass = 'is-unknown';
+                                $filterState = 'none';
+                            } elseif ($state === 'unknown') {
+                                $statusLabel = 'Unknown';
+                                $statusClass = 'is-unknown';
+                                $filterState = 'none';
+                            } elseif ($isLocked) {
+                                $statusLabel = 'Locked';
+                                $statusClass = 'is-locked';
+                                $filterState = 'locked';
+                            } else {
+                                $statusLabel = 'Open';
+                                $statusClass = 'is-open';
+                                $filterState = 'open';
+                            }
+
+                            $lockeeName = trim((string) ($member['username'] ?? '')) ?: 'Member';
+                            $avatarPath = (string) ($member['avatar_path'] ?? '');
                             $keyholderName = trim((string) ($details['keyholder'] ?? ''));
                             $keyholderAvatar = $keyholderName !== '' ? ($keyholderAvatars[strtolower($keyholderName)] ?? '') : '';
                             $boxContent = (string) ($details['box_content'] ?? '');
-                            $socialX = trim((string) ($box['social_x'] ?? ''));
-                            $socialInstagram = trim((string) ($box['social_instagram'] ?? ''));
-                            $socialBluesky = trim((string) ($box['social_bluesky'] ?? ''));
+                            $socialX = trim((string) ($member['social_x'] ?? ''));
+                            $socialInstagram = trim((string) ($member['social_instagram'] ?? ''));
+                            $socialBluesky = trim((string) ($member['social_bluesky'] ?? ''));
                             $duration = ($isLocked && !empty($status['created_at'])) ? community_locked_duration($status['created_at']) : '';
 
-                            $headline = trim((string) ($box['headline'] ?? ''));
-                            $roleLabel = profileOptionLabel('profile_role', $box['profile_role'] ?? null);
+                            $headline = trim((string) ($member['headline'] ?? ''));
+                            $role = (string) ($member['profile_role'] ?? '');
+                            $roleLabel = profileOptionLabel('profile_role', $role);
 
-                            $age = profileAge($box['birth_date'] ?? null);
-                            $facts = profileBuildFacts($box);
-                            $extraHtml = profileRenderExtras($box, $userStats[(int) $box['user_id']] ?? profileEmptyStats());
+                            $age = profileAge($member['birth_date'] ?? null);
+                            $facts = profileBuildFacts($member);
+                            $extraHtml = profileRenderExtras($member, $userStats[(int) $member['user_id']] ?? profileEmptyStats());
                         ?>
                         <button
                             type="button"
                             class="community-lockee-card"
+                            data-role="<?= htmlspecialchars($role, ENT_QUOTES, 'UTF-8') ?>"
+                            data-state="<?= htmlspecialchars($filterState, ENT_QUOTES, 'UTF-8') ?>"
                             data-profile-box="<?= htmlspecialchars($id, ENT_QUOTES, 'UTF-8') ?>"
                             data-profile-name="<?= htmlspecialchars($lockeeName, ENT_QUOTES, 'UTF-8') ?>"
                             data-profile-avatar="<?= htmlspecialchars($avatarPath, ENT_QUOTES, 'UTF-8') ?>"
@@ -415,6 +467,7 @@ $recentActivity = array_slice($recentActivity, 0, 3);
                         </button>
                     <?php endforeach; ?>
                 </div>
+                <div class="community-empty" id="communityNoMatch" hidden>No members match these filters.</div>
             <?php endif; ?>
         </section>
 
@@ -467,19 +520,64 @@ $recentActivity = array_slice($recentActivity, 0, 3);
 </dialog>
 
 <script>
-// Fills the new dialog elements (headline, facts, extras, keyholder avatar).
-// Independent of the existing dialog script, which keeps filling the other fields.
+// ---------- Filter (role + status) ----------
+(function () {
+    const grid = document.getElementById('communityGrid');
+    if (!grid) return;
+    const cards = Array.from(grid.querySelectorAll('.community-lockee-card'));
+    const buttons = document.querySelectorAll('.community-filter-btn');
+    const countEl = document.getElementById('communityCount');
+    const noMatch = document.getElementById('communityNoMatch');
+    const state = { role: 'all', status: 'all' };
+
+    function roleMatches(role) {
+        if (state.role === 'all') return true;
+        // "Switch" members show up under both Keyholders and Lockees
+        if (state.role === 'keyholder') return role === 'keyholder' || role === 'switch';
+        if (state.role === 'lockee')    return role === 'lockee' || role === 'switch';
+        return true;
+    }
+
+    function apply() {
+        let shown = 0;
+        cards.forEach(function (card) {
+            const ok = roleMatches(card.dataset.role || '') &&
+                       (state.status === 'all' || card.dataset.state === state.status);
+            card.hidden = !ok;
+            if (ok) shown++;
+        });
+        const filtered = state.role !== 'all' || state.status !== 'all';
+        countEl.textContent = filtered
+            ? shown + ' of ' + cards.length + ' members'
+            : cards.length + ' members';
+        noMatch.hidden = shown > 0;
+    }
+
+    buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const group = btn.dataset.filterGroup;
+            state[group] = btn.dataset.filterValue;
+            buttons.forEach(function (b) {
+                if (b.dataset.filterGroup === group) {
+                    b.classList.toggle('is-active', b === btn);
+                    b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+                }
+            });
+            apply();
+        });
+    });
+})();
+
+// ---------- Dialog extras (headline, facts, extras, keyholder avatar) ----------
 document.addEventListener('click', function (ev) {
     const card = ev.target.closest('.community-lockee-card');
     if (!card) return;
 
-    // Headline
     const headline = card.dataset.profileHeadline || '';
     const hEl = document.getElementById('profileDialogHeadline');
     hEl.textContent = headline;
     hEl.hidden = headline === '';
 
-    // Facts (age, location, role, looking for, ...)
     const box = document.getElementById('profileDialogFacts');
     box.textContent = '';
     let facts = [];
@@ -495,10 +593,9 @@ document.addEventListener('click', function (ev) {
     });
     box.hidden = facts.length === 0;
 
-    // About me, tags, stats, badges (HTML is built and escaped server-side)
+    // HTML is built and escaped server-side (profileRenderExtras)
     document.getElementById('profileDialogExtra').innerHTML = card.dataset.profileExtra || '';
 
-    // Keyholder: small avatar next to the name (only if available)
     const khImg = document.getElementById('profileDialogKeyholderAvatar');
     const khAvatar = card.dataset.profileKeyholderAvatar || '';
     if (khAvatar) {

@@ -831,3 +831,16 @@
 .community-keyholder-avatar { width:22px; height:22px; border-radius:50%; object-fit:cover; flex-shrink:0; }
 .community-keyholder-avatar[hidden] { display:none; }
 .community-lockee-age { font-weight:400; opacity:.75; }
+
+.community-filters { display:flex; flex-wrap:wrap; gap:12px 24px; margin:0 0 16px; }
+.community-filter-group { display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
+.community-filter-label { font-size:11px; font-weight:600; text-transform:uppercase;
+    letter-spacing:.04em; opacity:.6; margin-right:4px; }
+.community-filter-btn { padding:6px 14px; border-radius:16px; font-size:13px; font-weight:600;
+    cursor:pointer; background:transparent; color:inherit;
+    border:1px solid rgba(127,127,127,.35); }
+.community-filter-btn:hover { background:rgba(127,127,127,.12); }
+.community-filter-btn.is-active { background:rgba(74,222,128,.18); border-color:#4ade80; }
+
+/* needed so the filter can hide cards */
+.community-lockee-card[hidden], .community-empty[hidden] { display:none; }

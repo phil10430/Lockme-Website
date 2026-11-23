@@ -72,7 +72,7 @@
 
         <!-- CENTER -->
         <div class="top-center">
-            <a href="/lockees.php">LOCKEES</a>
+            <a href="/community.php">COMMUNITY</a>
             <a href="/faq.php">FAQ</a>
         </div>
 

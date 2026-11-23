@@ -134,7 +134,7 @@ function profileStatsForUser(PDO $pdo, int $userId): array
 }
 
 /**
- * Stats for many users at once (lockees.php).
+ * Stats for many users at once (community.php).
  * $publicBoxes rows need: user_id, box_id, username, member_since
  * Returns user_id => stats
  */
