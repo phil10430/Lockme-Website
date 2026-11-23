@@ -1,0 +1,114 @@
+/* =========================================================
+   SINGLE PUBLIC BOX (box_share.php)
+   ========================================================= */
+
+.box-status-page .settings-wrapper { min-height: 100vh; align-items: center; }
+.box-status-page .settings-container { max-width: 480px; }
+
+/* Card */
+.box-status-page .box-item {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 32px 24px;
+    gap: 8px;
+}
+.box-status-page .settings-card .box-item { background: none; border: none; padding: 0; }
+
+.box-status-page .box-item-main {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+    gap: 8px;
+}
+
+/* Avatar */
+.box-status-page .box-list-avatar,
+.box-status-page .box-list-avatar-placeholder {
+    width: 84px; height: 84px;
+    min-width: 84px; min-height: 84px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Name, headline, box id */
+.box-status-page .box-title-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+}
+.box-status-page .box-title-content { display: flex; justify-content: center; width: 100%; min-width: 0; }
+.box-status-page .lockee-title { color: #f4f4f5; font-size: 22px; font-weight: 700; line-height: 1.3; overflow-wrap: anywhere; }
+.box-status-page .lockee-age { font-weight: 400; opacity: .75; }
+.box-status-page .share-headline { margin: 0; font-size: 14px; color: #d4d4dc; opacity: .9; overflow-wrap: anywhere; }
+.box-status-page .box-id { color: #71717a; font-size: 12px; font-weight: 400; }
+
+/* Chips (age, location, role, ...) */
+.box-status-page .share-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 4px 0; }
+.box-status-page .share-chip {
+    display: inline-flex;
+    flex-direction: column;
+    padding: 6px 12px;
+    border-radius: 12px;
+    background: rgba(127, 127, 127, .12);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.25;
+}
+.box-status-page .share-chip small {
+    font-size: 10px;
+    font-weight: 500;
+    opacity: .65;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+/* Lock relation */
+.box-status-page .box-lock-relation {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 4px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+.box-status-page .box-lock-relation .lockee-name { display: inline; }
+.box-status-page .lockee-name,
+.box-status-page .keyholder-name { overflow-wrap: anywhere; }
+.box-status-page .relation-text { color: #71717a; }
+.box-status-page .keyholder-name { color: #d4d4dc; font-weight: 600; }
+
+.box-status-page .keyholder-wrap { display: inline-flex; align-items: center; gap: 6px; }
+.box-status-page .keyholder-avatar {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+/* Box content */
+.box-status-page .box-content-tag { display: flex; justify-content: center; margin-top: 8px; }
+
+/* Lock status */
+.box-status-page .box-lock-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    margin-top: 4px;
+    font-size: 14px;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .box-status-page .settings-container { max-width: 100%; }
+    .box-status-page .box-item { padding: 24px 16px; }
+    .box-status-page .lockee-title { font-size: 20px; }
+}

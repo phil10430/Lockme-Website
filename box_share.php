@@ -1,17 +1,24 @@
 <?php
 session_start();
 require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/profile_helpers.php';
+require_once __DIR__ . '/includes/profile_view.php';
 
 $bodyClass = 'box-status-page';
 $boxId = trim((string) ($_GET['box_id'] ?? ''));
 $box = null;
 $status = null;
+$keyholderAvatar = '';
+$age = null;
+$facts = [];
+$stats = profileEmptyStats();
 
 if (preg_match('/^\d+$/D', $boxId)) {
     // Visibility is user-wide. Private profiles must not expose box details.
     $stmt = $pdo->prepare("
-        SELECT ub.box_id, u.username, ud.avatar_path,
-               bd.keyholder, bd.box_content
+        SELECT ub.box_id, ub.user_id, u.username, ud.avatar_path, ud.birth_date,
+               bd.keyholder, bd.box_content,
+               " . profileFieldColumnsSql('ud') . "
         FROM user_boxes ub
         JOIN users u ON u.id = ub.user_id
         JOIN user_details ud ON ud.user_id = u.id
@@ -33,6 +40,27 @@ if (preg_match('/^\d+$/D', $boxId)) {
         ");
         $stmt->execute(['box_id' => $boxId]);
         $status = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+
+        // Keyholder avatar: only if the keyholder's own profile is public
+        $keyholderName = trim((string) ($box['keyholder'] ?? ''));
+        if ($keyholderName !== '') {
+            $stmt = $pdo->prepare("
+                SELECT ud.avatar_path
+                FROM users u
+                JOIN user_details ud ON ud.user_id = u.id
+                WHERE u.username = :username AND ud.profile_visibility = 'public'
+                LIMIT 1
+            ");
+            $stmt->execute(['username' => $keyholderName]);
+            $keyholderAvatar = (string) ($stmt->fetchColumn() ?: '');
+        }
+
+        // Age, location and all select fields (built from the schema)
+        $age   = profileAge($box['birth_date'] ?? null);
+        $facts = profileBuildFacts($box);
+
+        // Lock statistics and badges
+        $stats = profileStatsForUser($pdo, (int) $box['user_id']);
     }
 }
 
@@ -72,483 +100,8 @@ $stateKnown = $status && in_array(strtolower((string) $status['lock_status']),
 
 require_once __DIR__ . '/templates/header.php';
 ?>
-<style>
-
-
-
-/* =========================================================
-
-   SINGLE PUBLIC BOX
-
-   \========================================================= */
-
-
-
-.box-status-page .settings-wrapper {
-
-    min-height: 100vh;
-
-    align-items: center;
-
-}
-
-
-
-.box-status-page .settings-container {
-
-    max-width: 480px;
-
-}
-
-
-
-
-
-/* =========================================================
-
-   PUBLIC BOX STATUS CARD
-
-\========================================================= */
-
-
-
-.box-status-page .box-item {
-
-    flex-direction: column;
-
-    align-items: center;
-
-    text-align: center;
-
-    padding: 32px 24px;
-
-    gap: 8px;
-
-}
-
-
-
-.box-status-page .box-item-main {
-
-    width: 100%;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    min-width: 0;
-
-    gap: 8px;
-
-}
-
-
-
-/* AVATAR */
-
-
-
-.box-status-page .box-list-avatar,
-
-.box-status-page .box-list-avatar-placeholder {
-
-    width: 84px;
-
-    height: 84px;
-
-    min-width: 84px;
-
-    min-height: 84px;
-
-    border-radius: 50%;
-
-    object-fit: cover;
-
-}
-
-
-
-/* LOCKEE NAME */
-
-
-
-.box-status-page .box-title-row {
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    gap: 6px;
-
-    width: 100%;
-
-}
-
-
-
-.box-status-page .box-title-content {
-
-    display: flex;
-
-    justify-content: center;
-
-    width: 100%;
-
-    min-width: 0;
-
-}
-
-
-
-.box-status-page .lockee-title {
-
-    color: #f4f4f5;
-
-    font-size: 22px;
-
-    font-weight: 700;
-
-    line-height: 1.3;
-
-    overflow-wrap: anywhere;
-
-}
-
-
-
-/* SECONDARY BOX ID */
-
-
-
-.box-status-page .box-id {
-
-    color: #71717a;
-
-    font-size: 12px;
-
-    font-weight: 400;
-
-}
-
-
-
-/* LOCK RELATION */
-
-
-
-.box-status-page .box-lock-relation {
-
-    width: 100%;
-
-    display: flex;
-
-    align-items: baseline;
-
-    justify-content: center;
-
-    flex-wrap: wrap;
-
-    gap: 5px;
-
-    margin-top: 2px;
-
-    font-size: 13px;
-
-    line-height: 1.5;
-
-}
-
-
-
-.box-status-page .lockee-name {
-
-    display: none;
-
-}
-
-
-
-.box-status-page .relation-text {
-
-    color: #71717a;
-
-}
-
-
-
-.box-status-page .keyholder-name {
-
-    color: #d4d4dc;
-
-    font-weight: 600;
-
-    overflow-wrap: anywhere;
-
-}
-
-
-
-/* BOX CONTENT */
-
-
-
-.box-status-page .box-content-tag {
-
-    display: flex;
-
-    justify-content: center;
-
-    margin-top: 8px;
-
-}
-
-
-
-/* LOCK STATUS */
-
-
-
-.box-status-page .box-lock-status {
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    gap: 7px;
-
-    margin-top: 4px;
-
-    font-size: 14px;
-
-}
-
-
-
-/* REMOVE INNER CARD STYLING */
-
-
-
-.box-status-page .settings-card .box-item {
-
-    background: none;
-
-    border: none;
-
-    padding: 0;
-
-}
-
-
-
-/* MOBILE */
-
-
-
-@media (max-width: 480px) {
-
-    .box-status-page .settings-container {
-
-        max-width: 100%;
-
-    }
-
-
-
-    .box-status-page .box-item {
-
-        padding: 24px 16px;
-
-    }
-
-
-
-    .box-status-page .lockee-title {
-
-        font-size: 20px;
-
-    }
-
-
-
-    .box-status-page .box-lock-relation {
-
-        font-size: 13px;
-
-    }
-
-}
-
-
-
-
-
-/* =========================================================
-
-   LOCK RELATION
-
-   \========================================================= */
-
-
-
-.box-status-page .box-lock-relation {
-
-    width: 100%;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    flex-wrap: nowrap;
-
-    white-space: nowrap;
-
-    gap: 5px;
-
-    margin-top: 4px;
-
-}
-
-
-
-.box-status-page .lockee-name,
-
-.box-status-page .relation-text,
-
-.box-status-page .keyholder-name {
-
-    white-space: nowrap;
-
-}
-
-
-
-.box-status-page .lockee-name,
-
-.box-status-page .keyholder-name {
-
-    overflow: hidden;
-
-    text-overflow: ellipsis;
-
-}
-
-
-
-
-
-/* =========================================================
-
-   BOX CONTENT
-
-   \========================================================= */
-
-
-
-.box-status-page .box-content-tag {
-
-    justify-content: center;
-
-}
-
-
-
-
-
-/* =========================================================
-
-   LOCK STATUS
-
-   \========================================================= */
-
-
-
-.box-status-page .box-lock-status {
-
-    justify-content: center;
-
-    font-size: 14px;
-
-    margin-top: 4px;
-
-}
-
-
-
-
-
-/* =========================================================
-
-   REMOVE CARD STYLING FROM OUTER BOX
-
-   \========================================================= */
-
-
-
-.box-status-page .settings-card .box-item {
-
-    background: none;
-
-    border: none;
-
-    padding: 0;
-
-}
-
-
-
-
-
-/* =========================================================
-
-   MOBILE
-
-   \========================================================= */
-
-
-
-@media (max-width: 480px) {
-
-
-
-    .box-status-page .settings-container {
-
-        max-width: 100%;
-
-    }
-
-
-
-    .box-status-page .box-item {
-
-        padding: 24px 16px;
-
-    }
-
-
-
-    .box-status-page .box-lock-relation {
-
-        font-size: 14px;
-
-    }
-
-}
-
-
-
-</style>
-<style>
-.box-status-page .box-lock-relation .lockee-name { display: inline; }
-.box-status-page .box-lock-relation { flex-wrap: wrap; white-space: normal; }
-</style>
+<link rel="stylesheet" href="/assets/css/box_share.css">
+<link rel="stylesheet" href="/assets/css/profile_view.css">
 
 <div class="settings-wrapper">
     <div class="settings-container">
@@ -559,6 +112,7 @@ require_once __DIR__ . '/templates/header.php';
                 <div class="settings-card-body">
                     <div class="box-item">
                         <div class="box-item-main">
+
                             <div class="box-title-row">
                                 <?php if (!empty($box['avatar_path'])): ?>
                                     <img class="box-list-avatar"
@@ -569,16 +123,41 @@ require_once __DIR__ . '/templates/header.php';
                                 <?php endif; ?>
 
                                 <div class="box-title-content">
-                                    <span class="lockee-title"><?= htmlspecialchars((string) $box['username'], ENT_QUOTES, 'UTF-8') ?></span>
+                                    <span class="lockee-title"><?= htmlspecialchars((string) $box['username'], ENT_QUOTES, 'UTF-8') ?><?php if ($age !== null): ?><span class="lockee-age">, <?= (int) $age ?></span><?php endif; ?></span>
                                 </div>
+
+                                <?php if (!empty($box['headline'])): ?>
+                                    <p class="share-headline"><?= htmlspecialchars((string) $box['headline'], ENT_QUOTES, 'UTF-8') ?></p>
+                                <?php endif; ?>
+
                                 <span class="box-id">LockMeBox #<?= htmlspecialchars($boxId, ENT_QUOTES, 'UTF-8') ?></span>
                             </div>
+
+                            <?php if ($facts): ?>
+                                <div class="share-chips">
+                                    <?php foreach ($facts as $fact): ?>
+                                        <span class="share-chip">
+                                            <small><?= htmlspecialchars($fact['label'], ENT_QUOTES, 'UTF-8') ?></small>
+                                            <?= htmlspecialchars($fact['value'], ENT_QUOTES, 'UTF-8') ?>
+                                        </span>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
+
+                            <?= profileRenderExtras($box, $stats) ?>
 
                             <?php if ($isLocked && !empty($box['keyholder'])): ?>
                                 <div class="box-lock-relation">
                                     <span class="lockee-name"><?= htmlspecialchars((string) $box['username'], ENT_QUOTES, 'UTF-8') ?></span>
                                     <span class="relation-text">is locked by</span>
-                                    <span class="keyholder-name"><?= htmlspecialchars((string) $box['keyholder'], ENT_QUOTES, 'UTF-8') ?></span>
+                                    <span class="keyholder-wrap">
+                                        <?php if ($keyholderAvatar !== ''): ?>
+                                            <img class="keyholder-avatar"
+                                                 src="<?= htmlspecialchars($keyholderAvatar, ENT_QUOTES, 'UTF-8') ?>"
+                                                 alt="" loading="lazy">
+                                        <?php endif; ?>
+                                        <span class="keyholder-name"><?= htmlspecialchars((string) $box['keyholder'], ENT_QUOTES, 'UTF-8') ?></span>
+                                    </span>
                                 </div>
                             <?php endif; ?>
 
@@ -616,6 +195,7 @@ require_once __DIR__ . '/templates/header.php';
                                     <span>Status unknown</span>
                                 <?php endif; ?>
                             </div>
+
                         </div>
                     </div>
                 </div>

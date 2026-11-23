@@ -72,23 +72,9 @@ $registeredBoxes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <span id="profileVisibilityLabel"><?= $profileVisibility === 'public' ? 'Public' : 'Private' ?></span>
                 </span>
             </div>
-            <div class="settings-card-body">
-                <?php if (!empty($user['location'])): ?>
-                    <p class="settings-muted">📍 <?= htmlspecialchars($user['location']) ?></p>
-                <?php endif; ?>
-
-                <div class="profile-chips">
-                    <?php foreach (profileFieldDefs() as $key => $def):
-                        if ($def['type'] !== 'select') continue;
-                        $label = profileOptionLabel($key, $user[$key] ?? null);
-                        if ($label === '') continue; ?>
-                        <span class="profile-chip">
-                            <small><?= htmlspecialchars($def['label']) ?></small>
-                            <?= htmlspecialchars($label) ?>
-                        </span>
-                    <?php endforeach; ?>
-                </div>
-
+          <div class="settings-card-body">
+                <?= profileRenderChips(profileBuildFacts($user)) ?>
+                <?= profileRenderExtras($user, $myStats) ?>
                 <button type="button" class="btn-modern" onclick="document.getElementById('userDetailsDialog').showModal()">Edit Profile</button>
             </div>
         </div>
@@ -1079,7 +1065,19 @@ window.remoteAccessConfig = <?= json_encode([
 .profile-chip { display:inline-flex; flex-direction:column; padding:6px 12px; border-radius:12px;
                 background:rgba(127,127,127,.12); font-size:13px; font-weight:600; line-height:1.25; }
 .profile-chip small { font-size:10px; font-weight:500; opacity:.65; text-transform:uppercase; letter-spacing:.04em; }
+.pf-field textarea { width:100%; box-sizing:border-box; padding:8px 10px; border-radius:8px; resize:vertical;
+    border:1px solid rgba(127,127,127,.35); background:transparent; color:inherit; font:inherit; }
+.pf-label { font-size:12px; opacity:.75; }
+.pf-hint { font-size:11px; opacity:.6; }
+.pf-tags { display:flex; flex-wrap:wrap; gap:6px; }
+.pf-tag { position:relative; }
+.pf-tag input { position:absolute; opacity:0; pointer-events:none; }
+.pf-tag span { display:inline-block; padding:5px 11px; border-radius:14px; font-size:13px; cursor:pointer;
+    border:1px solid rgba(127,127,127,.35); }
+.pf-tag input:checked + span { background:rgba(74,222,128,.18); border-color:#4ade80; }
+.pf-tag input:focus-visible + span { outline:2px solid #4ade80; outline-offset:1px; }
 </style>
+<link rel="stylesheet" href="/assets/css/profile_view.css">
 <script>
 (function () {
     const dialog = document.getElementById('userDetailsDialog');

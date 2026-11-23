@@ -156,3 +156,14 @@ function profileLoadBoxData(PDO $pdo, int $userId): array
 
     return compact('registeredBoxes', 'remoteAccessByBox', 'sharedWithMe', 'boxHistory', 'boxDetails', 'boxActual');
 }
+
+function profileAge(?string $birthDate): ?int
+{
+    if (!$birthDate) return null;
+    try {
+        $age = (new DateTimeImmutable($birthDate))->diff(new DateTimeImmutable('today'))->y;
+        return ($age >= 18 && $age <= 120) ? $age : null;
+    } catch (Exception $e) {
+        return null;
+    }
+}

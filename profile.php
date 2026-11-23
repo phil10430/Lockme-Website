@@ -2,6 +2,7 @@
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/profile_helpers.php';
 require_once __DIR__ . '/includes/profile_fields.php';
+require_once __DIR__ . '/includes/profile_view.php';
 
 if (session_status() !== PHP_SESSION_ACTIVE) session_start();
 if (empty($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
@@ -282,3 +283,4 @@ $sharedWithMe      = $boxData['sharedWithMe'];
 $boxHistory        = $boxData['boxHistory'];
 $boxDetails        = $boxData['boxDetails'];
 $boxActual         = $boxData['boxActual'];
+$myStats = profileStatsForUser($pdo, $user_id);

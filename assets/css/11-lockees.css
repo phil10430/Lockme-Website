@@ -816,3 +816,18 @@
     width: 24px;
     height: 24px;
 }
+
+.community-lockee-headline { display:block; font-size:12px; opacity:.75; margin:2px 0 4px;
+    max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.community-lockee-role { display:inline-block; font-size:11px; font-weight:600; padding:2px 8px;
+    border-radius:10px; background:rgba(127,127,127,.15); margin-bottom:4px; }
+.community-profile-headline { text-align:center; font-size:14px; opacity:.85; margin:6px 0 10px; }
+.community-profile-chips { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:0 0 14px; }
+.community-profile-chip { display:inline-flex; flex-direction:column; padding:6px 12px; border-radius:12px;
+    background:rgba(127,127,127,.12); font-size:13px; font-weight:600; line-height:1.25; }
+.community-profile-chip small { font-size:10px; font-weight:500; opacity:.65; text-transform:uppercase; letter-spacing:.04em; }
+
+.community-keyholder { display:inline-flex; align-items:center; gap:8px; }
+.community-keyholder-avatar { width:22px; height:22px; border-radius:50%; object-fit:cover; flex-shrink:0; }
+.community-keyholder-avatar[hidden] { display:none; }
+.community-lockee-age { font-weight:400; opacity:.75; }
