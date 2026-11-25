@@ -370,7 +370,7 @@ $recentActivity = array_slice($recentActivity, 0, 3);
                 <div class="community-lockee-grid" id="communityGrid">
                     <?php foreach ($members as $member): ?>
                         <?php
-                            $id = (string) ($member['primary_box'] ?? '');
+                          $id = (string) ($member['primary_box'] ?? '');
                             $hasBox = $id !== '';
                             $status = $hasBox ? ($latestStatus[$id] ?? null) : null;
                             $details = $hasBox ? ($boxDetails[$id] ?? []) : [];
@@ -378,23 +378,16 @@ $recentActivity = array_slice($recentActivity, 0, 3);
                             $state = community_box_state($status);
                             $isLocked = $hasBox && community_is_effectively_locked($status);
 
-                            if (!$hasBox) {
-                                $statusLabel = 'No box';
-                                $statusClass = 'is-unknown';
+                            // data-state bleibt für den Filter erhalten
+                            if (!$hasBox || $state === 'unknown') {
                                 $filterState = 'none';
-                            } elseif ($state === 'unknown') {
-                                $statusLabel = 'Unknown';
-                                $statusClass = 'is-unknown';
-                                $filterState = 'none';
-                            } elseif ($isLocked) {
-                                $statusLabel = 'Locked';
-                                $statusClass = 'is-locked';
-                                $filterState = 'locked';
                             } else {
-                                $statusLabel = 'Open';
-                                $statusClass = 'is-open';
-                                $filterState = 'open';
+                                $filterState = $isLocked ? 'locked' : 'open';
                             }
+
+                            // sichtbarer Status nur bei Locked
+                            $statusLabel = $isLocked ? 'Locked' : '';
+                            $statusClass = $isLocked ? 'is-locked' : '';
 
                             $lockeeName = trim((string) ($member['username'] ?? '')) ?: 'Member';
                             $avatarPath = (string) ($member['avatar_path'] ?? '');
@@ -459,11 +452,12 @@ $recentActivity = array_slice($recentActivity, 0, 3);
                                 <span class="community-lockee-role"><?= htmlspecialchars($roleLabel, ENT_QUOTES, 'UTF-8') ?></span>
                             <?php endif; ?>
 
-                            <span class="community-profile-status <?= $statusClass ?>">
-                                <span class="community-status-dot" aria-hidden="true"></span>
-                                <?= htmlspecialchars($statusLabel, ENT_QUOTES, 'UTF-8') ?>
-                            </span>
-                            <span class="community-profile-hint">View profile</span>
+                            <?php if ($isLocked): ?>
+                                <span class="community-profile-status <?= $statusClass ?>">
+                                    <span class="community-status-dot" aria-hidden="true"></span>
+                                    <?= htmlspecialchars($statusLabel, ENT_QUOTES, 'UTF-8') ?>
+                                </span>
+                            <?php endif; ?>
                         </button>
                     <?php endforeach; ?>
                 </div>
@@ -605,6 +599,10 @@ document.addEventListener('click', function (ev) {
         khImg.removeAttribute('src');
         khImg.hidden = true;
     }
+
+       // Status-Badge nur bei Locked zeigen
+    document.getElementById('profileDialogStatus').hidden = !card.dataset.profileStatus;
+ 
 });
 </script>
 

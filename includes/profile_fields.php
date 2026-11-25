@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/profile_helpers.php';
-
+require_once __DIR__ . '/profile_countries.php';
 /**
  * Profile field schema.
  * To add a field: 1) add a DB column in user_details named like the key,
@@ -22,23 +22,17 @@ function profileFieldGroups(): array
                     'label' => 'Headline', 'type' => 'text', 'max' => 50,
                     'placeholder' => 'One line about you', 'full' => true,
                 ],
-                'pronouns' => [
-                    'label' => 'Pronouns', 'type' => 'select',
-                    'options' => [
-                        'he_him'   => 'he/him',
-                        'she_her'  => 'she/her',
-                        'they_them'=> 'they/them',
-                        'other'    => 'Other',
-                    ],
+              'country' => [
+                    'label' => 'Country', 'type' => 'select',
+                    'options' => profileCountries(),
                 ],
-                'location' => [
-                    'label' => 'Location', 'type' => 'text', 'max' => 100,
-                    'placeholder' => 'Country or region is enough',
+                'city' => [
+                    'label' => 'City', 'type' => 'text', 'max' => 100,
+                    'placeholder' => 'Optional',
                 ],
                 'about_me' => [
                     'label' => 'About me', 'type' => 'textarea', 'max' => 1000, 'rows' => 6,
                     'placeholder' => 'Tell the community about yourself …',
-                    'hint' => 'Visible on your public profile. Please do not post contact details here.',
                 ],
             ],
         ],
@@ -51,7 +45,6 @@ function profileFieldGroups(): array
                         'lockee'    => 'Lockee',
                         'keyholder' => 'Keyholder',
                         'switch'    => 'Switch',
-                        'searching' => 'Still Searching',
                     ],
                 ],
                 'looking_for' => [
@@ -79,14 +72,6 @@ function profileFieldGroups(): array
                         'no'         => 'No',
                     ],
                 ],
-                'contact_pref' => [
-                    'label' => 'Contact', 'type' => 'select',
-                    'options' => [
-                        'open'   => 'Open to messages',
-                        'social' => 'Via social links only',
-                        'none'   => 'Not looking for contact',
-                    ],
-                ],
             ],
         ],
         'experience' => [
@@ -98,7 +83,6 @@ function profileFieldGroups(): array
                         'beginner'     => 'Beginner',
                         'intermediate' => 'Intermediate',
                         'experienced'  => 'Experienced',
-                        'longterm'     => 'Long-term',
                     ],
                 ],
                 'interests' => [
@@ -111,7 +95,6 @@ function profileFieldGroups(): array
                         'keyholder_games' => 'Keyholder Games',
                         'humiliation'     => 'Humiliation',
                         'service'         => 'Service',
-                        'romance'         => 'Romance',
                         'online_only'     => 'Online only',
                     ],
                 ],
@@ -120,7 +103,7 @@ function profileFieldGroups(): array
                     'options' => [
                         'en' => 'English',    'de' => 'German',  'fr' => 'French',
                         'es' => 'Spanish',    'it' => 'Italian', 'pt' => 'Portuguese',
-                        'nl' => 'Dutch',      'pl' => 'Polish',  'ru' => 'Russian',
+                        'nl' => 'Dutch',      'pl' => 'Polish', 
                         'tr' => 'Turkish',    'other' => 'Other',
                     ],
                 ],
@@ -222,15 +205,22 @@ function profileOptionLabel(string $key, ?string $value): string
     return $def['type'] === 'select' ? ($def['options'][$value] ?? '') : $value;
 }
 
-/** Chips for public views: age, location and all single selects. */
+/** Chips for public views: age, location (city, country) and all other single selects. */
 function profileBuildFacts(array $row): array
 {
     $facts = [];
+
     $age = profileAge($row['birth_date'] ?? null);
     if ($age !== null) $facts[] = ['label' => 'Age', 'value' => (string)$age];
-    if (!empty($row['location'])) $facts[] = ['label' => 'Location', 'value' => (string)$row['location']];
+
+    $place = array_filter([
+        trim((string)($row['city'] ?? '')),
+        profileOptionLabel('country', $row['country'] ?? null),
+    ], fn($v) => $v !== '');
+    if ($place) $facts[] = ['label' => 'Location', 'value' => implode(', ', $place)];
+
     foreach (profileFieldDefs() as $key => $def) {
-        if ($def['type'] !== 'select') continue;
+        if ($def['type'] !== 'select' || $key === 'country') continue;
         $label = profileOptionLabel($key, $row[$key] ?? null);
         if ($label !== '') $facts[] = ['label' => $def['label'], 'value' => $label];
     }
