@@ -430,34 +430,33 @@ $recentActivity = array_slice($recentActivity, 0, 3);
                             aria-haspopup="dialog"
                             aria-label="View profile for <?= htmlspecialchars($lockeeName, ENT_QUOTES, 'UTF-8') ?>"
                         >
-                            <?php if ($avatarPath !== ''): ?>
-                                <img class="community-lockee-avatar" src="<?= htmlspecialchars($avatarPath, ENT_QUOTES, 'UTF-8') ?>" alt="" loading="lazy">
-                            <?php else: ?>
-                                <div class="community-lockee-avatar-placeholder" aria-hidden="true">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="8" r="4"></circle>
-                                        <path d="M4 21v-2a8 8 0 0 1 16 0v2"></path>
-                                    </svg>
-                                </div>
-                            <?php endif; ?>
+                         <?php if ($avatarPath !== ''): ?>
+                            <img class="community-tile-img" src="<?= htmlspecialchars($avatarPath, ENT_QUOTES, 'UTF-8') ?>" alt="" loading="lazy">
+                        <?php else: ?>
+                            <div class="community-tile-placeholder" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="8" r="4"></circle>
+                                    <path d="M4 21v-2a8 8 0 0 1 16 0v2"></path>
+                                </svg>
+                            </div>
+                        <?php endif; ?>
 
-                            <span class="community-lockee-name">
-                                <?= htmlspecialchars($lockeeName, ENT_QUOTES, 'UTF-8') ?><?php if ($age !== null): ?><span class="community-lockee-age">, <?= (int) $age ?></span><?php endif; ?>
+                        <?php if ($isLocked): ?>
+                            <span class="community-tile-badge">
+                                <span class="community-tile-dot" aria-hidden="true"></span>
+                                <?= htmlspecialchars($statusLabel, ENT_QUOTES, 'UTF-8') ?>
                             </span>
+                        <?php endif; ?>
 
+                        <span class="community-tile-info">
+                            <span class="community-tile-name"><?= htmlspecialchars($lockeeName, ENT_QUOTES, 'UTF-8') ?><?php if ($age !== null): ?><span class="community-tile-age">, <?= (int) $age ?></span><?php endif; ?></span>
                             <?php if ($headline !== ''): ?>
-                                <span class="community-lockee-headline"><?= htmlspecialchars($headline, ENT_QUOTES, 'UTF-8') ?></span>
+                                <span class="community-tile-headline"><?= htmlspecialchars($headline, ENT_QUOTES, 'UTF-8') ?></span>
                             <?php endif; ?>
                             <?php if ($roleLabel !== ''): ?>
-                                <span class="community-lockee-role"><?= htmlspecialchars($roleLabel, ENT_QUOTES, 'UTF-8') ?></span>
+                                <span class="community-tile-role"><?= htmlspecialchars($roleLabel, ENT_QUOTES, 'UTF-8') ?></span>
                             <?php endif; ?>
-
-                            <?php if ($isLocked): ?>
-                                <span class="community-profile-status <?= $statusClass ?>">
-                                    <span class="community-status-dot" aria-hidden="true"></span>
-                                    <?= htmlspecialchars($statusLabel, ENT_QUOTES, 'UTF-8') ?>
-                                </span>
-                            <?php endif; ?>
+                        </span>
                         </button>
                     <?php endforeach; ?>
                 </div>
