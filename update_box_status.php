@@ -216,15 +216,19 @@ try {
 // ============================================
 if ((int)$lockStatus === 1 && !$wasLocked) {
     try {
-        $stmt = $pdo->prepare("INSERT INTO box_details (box_id, keyholder)
-                               VALUES (:box_id, :app_user)
+        $stmt = $pdo->prepare("INSERT INTO box_details (box_id, keyholder, keyholder_user_id)
+                               VALUES (:box_id, :app_user, :app_uid)
                                ON DUPLICATE KEY UPDATE
-                                   keyholder = IF(pending_keyholder IS NOT NULL
-                                                  AND pending_keyholder_at > NOW() - INTERVAL 5 MINUTE,
-                                                  pending_keyholder, VALUES(keyholder)),
-                                   pending_keyholder = NULL,
-                                   pending_keyholder_at = NULL");
-        $stmt->execute([':box_id' => $boxName, ':app_user' => $appUsername]);
+                                 keyholder_user_id = IF(pending_keyholder_user_id IS NOT NULL
+                                                        AND pending_keyholder_at > NOW() - INTERVAL 5 MINUTE,
+                                                        pending_keyholder_user_id, VALUES(keyholder_user_id)),
+                                 keyholder         = IF(pending_keyholder IS NOT NULL
+                                                        AND pending_keyholder_at > NOW() - INTERVAL 5 MINUTE,
+                                                        pending_keyholder, VALUES(keyholder)),
+                                 pending_keyholder = NULL,
+                                 pending_keyholder_user_id = NULL,
+                                 pending_keyholder_at = NULL");
+        $stmt->execute([':box_id' => $boxName, ':app_user' => $appUsername, ':app_uid' => (int)$userId]);
     } catch (Throwable $e) {
         error_log('Keyholder update failed: ' . $e->getMessage());
     }

@@ -9,20 +9,24 @@ $boxId = trim((string) ($_GET['box_id'] ?? ''));
 $box = null;
 $status = null;
 $keyholderAvatar = '';
+$keyholderLink = '';
 $age = null;
 $facts = [];
-$stats = profileEmptyStats();
+$isPro = false;
 
 if (preg_match('/^\d+$/D', $boxId)) {
     // Visibility is user-wide. Private profiles must not expose box details.
     $stmt = $pdo->prepare("
-        SELECT ub.box_id, ub.user_id, u.username, ud.avatar_path, ud.birth_date,
-               bd.keyholder, bd.box_content,
+        SELECT ub.box_id, ub.user_id, u.username, u.pro_version,
+               ud.avatar_path, ud.birth_date,
+               COALESCE(ku.username, bd.keyholder) AS keyholder,
+               bd.keyholder_user_id, bd.box_content,
                " . profileFieldColumnsSql('ud') . "
         FROM user_boxes ub
         JOIN users u ON u.id = ub.user_id
         JOIN user_details ud ON ud.user_id = u.id
         LEFT JOIN box_details bd ON bd.box_id = ub.box_id
+        LEFT JOIN users ku ON ku.id = bd.keyholder_user_id
         WHERE ub.box_id = :box_id
           AND ud.profile_visibility = 'public'
         LIMIT 1
@@ -41,26 +45,46 @@ if (preg_match('/^\d+$/D', $boxId)) {
         $stmt->execute(['box_id' => $boxId]);
         $status = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 
-        // Keyholder avatar: only if the keyholder's own profile is public
+        // Keyholder avatar (and link): only if the keyholder's own profile is public.
+        // Lookup by user id, fall back to the name for old entries.
         $keyholderName = trim((string) ($box['keyholder'] ?? ''));
         if ($keyholderName !== '') {
-            $stmt = $pdo->prepare("
-                SELECT ud.avatar_path
-                FROM users u
-                JOIN user_details ud ON ud.user_id = u.id
-                WHERE u.username = :username AND ud.profile_visibility = 'public'
-                LIMIT 1
-            ");
-            $stmt->execute(['username' => $keyholderName]);
-            $keyholderAvatar = (string) ($stmt->fetchColumn() ?: '');
+            if (!empty($box['keyholder_user_id'])) {
+                $stmt = $pdo->prepare("
+                    SELECT u.id, ud.avatar_path
+                    FROM users u
+                    JOIN user_details ud ON ud.user_id = u.id
+                    WHERE u.id = :id AND ud.profile_visibility = 'public'
+                    LIMIT 1
+                ");
+                $stmt->execute(['id' => (int) $box['keyholder_user_id']]);
+            } else {
+                $stmt = $pdo->prepare("
+                    SELECT u.id, ud.avatar_path
+                    FROM users u
+                    JOIN user_details ud ON ud.user_id = u.id
+                    WHERE u.username = :username AND ud.profile_visibility = 'public'
+                    LIMIT 1
+                ");
+                $stmt->execute(['username' => $keyholderName]);
+            }
+            $kh = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($kh) {
+                $keyholderAvatar = (string) ($kh['avatar_path'] ?? '');
+
+                // Link to the keyholder's own box page, if he has one
+                $stmt = $pdo->prepare("SELECT box_id FROM user_boxes WHERE user_id = :id ORDER BY registered_at DESC LIMIT 1");
+                $stmt->execute(['id' => (int) $kh['id']]);
+                $khBox = $stmt->fetchColumn();
+                if ($khBox !== false && $khBox !== null) {
+                    $keyholderLink = 'box_share.php?box_id=' . rawurlencode((string) $khBox);
+                }
+            }
         }
 
-        // Age, location and all select fields (built from the schema)
         $age   = profileAge($box['birth_date'] ?? null);
         $facts = profileBuildFacts($box);
-
-        // Lock statistics and badges
-        $stats = profileStatsForUser($pdo, (int) $box['user_id']);
+        $isPro = (string) ($box['pro_version'] ?? '0') === '1';
     }
 }
 
@@ -123,7 +147,7 @@ require_once __DIR__ . '/templates/header.php';
                                 <?php endif; ?>
 
                                 <div class="box-title-content">
-                                    <span class="lockee-title"><?= htmlspecialchars((string) $box['username'], ENT_QUOTES, 'UTF-8') ?><?php if ($age !== null): ?><span class="lockee-age">, <?= (int) $age ?></span><?php endif; ?></span>
+                                    <span class="lockee-title"><?= htmlspecialchars((string) $box['username'], ENT_QUOTES, 'UTF-8') ?><?php if ($age !== null): ?><span class="lockee-age">, <?= (int) $age ?></span><?php endif; ?><?php if ($isPro): ?><span class="share-pro" title="Pro member">PRO</span><?php endif; ?></span>
                                 </div>
 
                                 <?php if (!empty($box['headline'])): ?>
@@ -144,20 +168,28 @@ require_once __DIR__ . '/templates/header.php';
                                 </div>
                             <?php endif; ?>
 
-                            <?= profileRenderExtras($box, $stats) ?>
+                            <?= profileRenderExtras($box, []) ?>
 
                             <?php if ($isLocked && !empty($box['keyholder'])): ?>
                                 <div class="box-lock-relation">
                                     <span class="lockee-name"><?= htmlspecialchars((string) $box['username'], ENT_QUOTES, 'UTF-8') ?></span>
                                     <span class="relation-text">is locked by</span>
-                                    <span class="keyholder-wrap">
+                                    <?php if ($keyholderLink !== ''): ?>
+                                        <a class="keyholder-wrap keyholder-link" href="<?= htmlspecialchars($keyholderLink, ENT_QUOTES, 'UTF-8') ?>">
+                                    <?php else: ?>
+                                        <span class="keyholder-wrap">
+                                    <?php endif; ?>
                                         <?php if ($keyholderAvatar !== ''): ?>
                                             <img class="keyholder-avatar"
                                                  src="<?= htmlspecialchars($keyholderAvatar, ENT_QUOTES, 'UTF-8') ?>"
                                                  alt="" loading="lazy">
                                         <?php endif; ?>
                                         <span class="keyholder-name"><?= htmlspecialchars((string) $box['keyholder'], ENT_QUOTES, 'UTF-8') ?></span>
-                                    </span>
+                                    <?php if ($keyholderLink !== ''): ?>
+                                        </a>
+                                    <?php else: ?>
+                                        </span>
+                                    <?php endif; ?>
                                 </div>
                             <?php endif; ?>
 

@@ -112,3 +112,20 @@
     .box-status-page .box-item { padding: 24px 16px; }
     .box-status-page .lockee-title { font-size: 20px; }
 }
+
+.box-status-page .share-pro {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 7px;
+    vertical-align: middle;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    color: #fbbf24;
+    background: rgba(251, 191, 36, .12);
+    border: 1px solid rgba(251, 191, 36, .4);
+}
+
+.box-status-page .keyholder-link { color: inherit; text-decoration: none; cursor: pointer; }
+.box-status-page .keyholder-link:hover .keyholder-name { text-decoration: underline; }

@@ -187,6 +187,7 @@ if (isset($_POST['saveUserDetails'])) {
             }
             $stmt = $pdo->prepare('UPDATE users SET username=?, username_changed_at=NOW() WHERE id=?');
             $stmt->execute([$newUsername, $user_id]);
+            $pdo->prepare('UPDATE box_details SET keyholder=? WHERE keyholder_user_id=?')->execute([$newUsername, $user_id]);
         }
 
         // Fixed columns + schema columns (column names come from the schema, never from the request)

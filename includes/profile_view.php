@@ -21,23 +21,6 @@ function profileRenderExtras(array $row, array $stats): string
         $h .= '</div></div>';
     }
 
-    $stats += profileEmptyStats();
-    if ($stats['count'] > 0) {
-        $h .= '<div class="pv-stats">'
-            . '<div class="pv-stat"><strong>' . $e(profileFormatDuration($stats['longest'])) . '</strong><small>Longest lock</small></div>'
-            . '<div class="pv-stat"><strong>' . $e(profileFormatDuration($stats['total']))   . '</strong><small>Total locked</small></div>'
-            . '<div class="pv-stat"><strong>' . (int)$stats['count']                          . '</strong><small>Locks</small></div>'
-            . '</div>';
-    }
-
-    $badges = profileEarnedBadges($stats);
-    if ($badges) {
-        $h .= '<div class="pv-badges">';
-        foreach ($badges as $b) {
-            $h .= '<span class="pv-badge" title="' . $e($b['desc']) . '">' . $b['icon'] . ' ' . $e($b['label']) . '</span>';
-        }
-        $h .= '</div>';
-    }
     return $h;
 }
 
