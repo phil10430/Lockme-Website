@@ -1,4 +1,3 @@
-
 /* =========================================================
    LANDING PAGE
 ========================================================= */
@@ -50,8 +49,7 @@
     border: 1px solid rgba(255, 255, 255, .08);
     border-radius: 20px;
 
-    box-shadow:
-        0 24px 70px rgba(0, 0, 0, .32);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, .32);
 
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -114,15 +112,17 @@
 
 /* =========================================================
    COMMUNITY STATUS
+   Reihenfolge (untereinander, mittig):
+   Avatare -> "x users are currently locked" -> "Be the next one."
 ========================================================= */
 
 .hero-community-status {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
+    text-align: center;
 
-    gap: 7px;
+    gap: 6px;
 
     margin-top: 28px;
 
@@ -139,9 +139,8 @@
     font-weight: 700;
 }
 
-.hero-community-status a {
-    margin-left: 5px;
-
+.hero-community-text,
+.hero-community-next {
     color: var(--primary-color);
 
     font-weight: 600;
@@ -149,8 +148,73 @@
     text-decoration: none;
 }
 
-.hero-community-status a:hover {
+.hero-community-text:hover,
+.hero-community-text:focus-visible,
+.hero-community-next:hover,
+.hero-community-next:focus-visible {
     text-decoration: underline;
+}
+
+
+/* =========================================================
+   HERO AVATARS (überlappende Reihe, mittig)
+========================================================= */
+
+.hero-avatars {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+
+    margin: 0 0 8px;
+    padding-left: 10px;   /* gleicht die Überlappung des ersten Avatars aus */
+}
+
+.hero-avatar {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 44px;
+    height: 44px;
+
+    margin-left: -10px;
+
+    border-radius: 50%;
+    overflow: hidden;
+
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+
+    background: #34343a;
+    border: 2px solid #18181b;   /* an Hintergrund des Heros anpassen */
+
+    transition: transform .2s ease;
+}
+
+.hero-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-avatar:hover,
+.hero-avatar:focus-visible {
+    transform: translateY(-3px);
+    z-index: 2;
+}
+
+.hero-avatar.is-locked {
+    border-color: #f87171;
+}
+
+.hero-avatar-more {
+    background: #2c2c33;
 }
 
 
@@ -314,6 +378,11 @@
         margin-top: 24px;
 
         font-size: 12px;
+    }
+
+    .hero-avatar {
+        width: 40px;
+        height: 40px;
     }
 
     .hero-buttons {

@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 require "login.php";
@@ -8,24 +7,48 @@ $bodyClass = (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true)
     ? ""
     : "landing-page";
 
-/* Count currently locked lockees */
-$lockedCount = 0;
+/* Landing page data: locked count + community preview */
+$lockedCount    = 0;
+$publicCount    = 0;
+$previewMembers = [];
 
 if ($bodyClass === "landing-page") {
     try {
-        $sql = "
+        $stmt = $pdo->prepare("
             SELECT COUNT(*)
             FROM box_data_actual
             WHERE lock_status = 1
-        ";
-
-        $stmt = $pdo->prepare($sql);
+        ");
         $stmt->execute();
-
         $lockedCount = (int) $stmt->fetchColumn();
-
     } catch (PDOException $e) {
         $lockedCount = 0;
+    }
+
+    try {
+        $publicCount = (int) $pdo->query(
+            "SELECT COUNT(*) FROM user_details WHERE profile_visibility = 'public'"
+        )->fetchColumn();
+
+        $stmt = $pdo->prepare("
+            SELECT u.id, u.username, ud.avatar_path, ud.headline,
+                   EXISTS (
+                       SELECT 1
+                       FROM user_boxes ub
+                       JOIN box_data_actual bda ON bda.box_id = ub.box_id
+                       WHERE ub.user_id = u.id AND bda.lock_status = 1
+                   ) AS is_locked
+            FROM users u
+            JOIN user_details ud ON ud.user_id = u.id
+            WHERE ud.profile_visibility = 'public'
+              AND ud.avatar_path IS NOT NULL AND ud.avatar_path <> ''
+            ORDER BY RAND()
+            LIMIT 6
+        ");
+        $stmt->execute();
+        $previewMembers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        $previewMembers = [];
     }
 }
 
@@ -92,27 +115,39 @@ require_once __DIR__ . '/templates/header.php';
                 Designed by kinksters, for kinksters.
             </p>
 
-            <?php if ($lockedCount > 0): ?>
-
+           <?php if ($lockedCount > 0 || $previewMembers): ?>
                 <div class="hero-community-status">
 
-                    <a href="community.php">
-                        <span class="hero-community-count">
-                            <?php echo $lockedCount; ?>
-                        </span>
-                        users are currently locked.
+                    <?php if ($previewMembers): ?>
+                        <div class="hero-avatars">
+                            <?php foreach ($previewMembers as $pm): ?>
+                                <a class="hero-avatar<?= (int) $pm['is_locked'] === 1 ? ' is-locked' : '' ?>"
+                                href="community.php?m=<?= (int) $pm['id'] ?>"
+                                title="<?= htmlspecialchars($pm['username'], ENT_QUOTES, 'UTF-8') ?>"
+                                aria-label="View profile of <?= htmlspecialchars($pm['username'], ENT_QUOTES, 'UTF-8') ?>">
+                                    <img src="<?= htmlspecialchars($pm['avatar_path'], ENT_QUOTES, 'UTF-8') ?>" alt="" loading="lazy">
+                                </a>
+                            <?php endforeach; ?>
+                            <?php if ($publicCount > count($previewMembers)): ?>
+                                <a class="hero-avatar hero-avatar-more" href="community.php"
+                                aria-label="Show all members">+<?= (int) ($publicCount - count($previewMembers)) ?></a>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
+
+                   <a class="hero-community-text" href="community.php">
+                        <?php if ($lockedCount > 0): ?>
+                            <span class="hero-community-count"><?= (int) $lockedCount ?></span>
+                            users are currently locked.
+                        <?php else: ?>
+                            Meet the community.
+                        <?php endif; ?>
                     </a>
 
-                    <span class="hero-community-next">
-                        Be the next one.
-                    </span>
+                    <a class="hero-community-next" href="register_page.php">Be the next one.</a>
 
                 </div>
-
             <?php endif; ?>
-
-
-
 
             <div class="hero-buttons">
 
@@ -133,6 +168,7 @@ require_once __DIR__ . '/templates/header.php';
         </div>
 
     </section>
+
 
 </div>
 
