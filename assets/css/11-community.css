@@ -234,7 +234,7 @@
     background: rgba(220, 38, 38, .85);
     backdrop-filter: blur(4px);
 }
-.community-tile-key { width: 13px; height: 13px; flex: 0 0 13px; margin-top: 1px; }
+.community-tile-lock { width: 13px; height: 13px; flex: 0 0 13px; margin-top: 1px; }
 .community-tile-badge-text {
     min-width: 0;
     overflow-wrap: anywhere;

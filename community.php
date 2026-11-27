@@ -493,11 +493,9 @@ $recentActivity = array_slice($recentActivity, 0, 3);
                                 <span class="community-tile-badges">
                                     <?php foreach ($lockedBadges as $content): ?>
                                         <span class="community-tile-badge" title="Locked<?= $content !== '' ? ': ' . htmlspecialchars($content, ENT_QUOTES, 'UTF-8') : '' ?>">
-                                            <svg class="community-tile-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                                <circle cx="7.5" cy="15.5" r="5.5"></circle>
-                                                <path d="m21 2-9.6 9.6"></path>
-                                                <path d="m15.5 7.5 3 3"></path>
-                                                <path d="m18.5 4.5 3 3"></path>
+                                            <svg class="community-tile-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                                <rect x="5" y="11" width="14" height="10" rx="2"></rect>
+                                                <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
                                             </svg>
                                             <?php if ($content !== ''): ?>
                                                 <span class="community-tile-badge-text"><?= htmlspecialchars($content, ENT_QUOTES, 'UTF-8') ?></span>
