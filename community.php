@@ -215,6 +215,16 @@ foreach ($members as $uid => &$m) {
 unset($m);
 
 // =========================================================
+// OPEN A PROFILE VIA LINK: ?m=<user_id> or ?box=<box_id>
+// =========================================================
+$openUid = null;
+if (isset($_GET['m']) && ctype_digit((string) $_GET['m']) && isset($members[(int) $_GET['m']])) {
+    $openUid = (int) $_GET['m'];
+} elseif (isset($_GET['box']) && preg_match('/^\d+$/D', (string) $_GET['box']) && isset($ownersByBox[(string) $_GET['box']])) {
+    $openUid = (int) $ownersByBox[(string) $_GET['box']]['user_id'];
+}
+
+// =========================================================
 // KEYHOLDER -> LOCKEES (who does a member currently hold locked?)
 // Only public members are listed. Self-locks are skipped.
 // =========================================================
@@ -275,8 +285,8 @@ foreach ($members as $uid => $m) {
 
     $dialogData[$uid] = [
         'uid'      => $uid,
-        'pro' => (string) ($m['pro_version'] ?? '0') === '1',
         'name'     => (string) $m['username'],
+        'pro'      => (string) ($m['pro_version'] ?? '0') === '1',
         'avatar'   => (string) ($m['avatar_path'] ?? ''),
         'age'      => profileAge($m['birth_date'] ?? null),
         'headline' => trim((string) ($m['headline'] ?? '')),
@@ -308,6 +318,7 @@ foreach ($historyByBox as $boxId => $history) {
 
         $activity = [
             'box_id'        => $boxId,
+            'uid'           => (int) $owner['user_id'],
             'name'          => $lockeeName,
             'avatar'        => $owner['avatar_path'] ?? '',
             'status'        => $state,
@@ -354,7 +365,6 @@ $recentActivity = array_slice($recentActivity, 0, 3);
         <section class="community-section">
             <div class="community-section-header">
                 <h2 class="community-section-title">Recent Activity</h2>
-                <span class="community-section-meta">Latest public activity</span>
             </div>
 
             <?php if (empty($recentActivity)): ?>
@@ -362,39 +372,40 @@ $recentActivity = array_slice($recentActivity, 0, 3);
             <?php else: ?>
                 <div class="community-activity">
                     <?php foreach ($recentActivity as $activity): ?>
-                        <div class="community-activity-item">
+                        <button type="button"
+                                class="community-activity-item js-open-member"
+                                data-uid="<?= (int) $activity['uid'] ?>"
+                                aria-label="View profile of <?= htmlspecialchars($activity['name'], ENT_QUOTES, 'UTF-8') ?>">
 
                             <?php if (!empty($activity['avatar'])): ?>
                                 <img class="community-activity-avatar"
-                                     src="<?= htmlspecialchars($activity['avatar']) ?>" alt="" loading="lazy">
+                                     src="<?= htmlspecialchars($activity['avatar'], ENT_QUOTES, 'UTF-8') ?>" alt="" loading="lazy">
                             <?php else: ?>
-                                <div class="community-activity-avatar-placeholder" aria-hidden="true">
+                                <span class="community-activity-avatar-placeholder" aria-hidden="true">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
                                         <circle cx="12" cy="8" r="4"></circle>
                                         <path d="M4 21v-2a8 8 0 0 1 16 0v2"></path>
                                     </svg>
-                                </div>
+                                </span>
                             <?php endif; ?>
 
                             <span class="community-activity-status <?= $activity['status'] === 'unlocked' ? 'open' : '' ?>" aria-hidden="true"></span>
 
-                            <div class="community-activity-content">
-                                <div class="community-activity-text">
-                                    <span class="community-activity-name"><?= htmlspecialchars($activity['name']) ?></span>
-                                    <?php if ($activity['status'] === 'locked'): ?>
-                                        <?php if (!empty($activity['duration'])): ?>
-                                            was locked for
-                                            <span class="community-activity-duration"><?= htmlspecialchars($activity['duration']) ?></span>
-                                        <?php else: ?>
-                                            was locked
-                                        <?php endif; ?>
+                            <span class="community-activity-text">
+                                <span class="community-activity-name"><?= htmlspecialchars($activity['name'], ENT_QUOTES, 'UTF-8') ?></span>
+                                <?php if ($activity['status'] === 'locked'): ?>
+                                    <?php if (!empty($activity['duration'])): ?>
+                                        was locked for <span class="community-activity-duration"><?= htmlspecialchars($activity['duration'], ENT_QUOTES, 'UTF-8') ?></span>
                                     <?php else: ?>
-                                        was unlocked
+                                        was locked
                                     <?php endif; ?>
-                                </div>
-                                <span class="community-activity-time"><?= htmlspecialchars($activity['relative_time']) ?></span>
-                            </div>
-                        </div>
+                                <?php else: ?>
+                                    was unlocked
+                                <?php endif; ?>
+                            </span>
+
+                            <span class="community-activity-time"><?= htmlspecialchars($activity['relative_time'], ENT_QUOTES, 'UTF-8') ?></span>
+                        </button>
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
@@ -442,6 +453,14 @@ $recentActivity = array_slice($recentActivity, 0, 3);
                                 $filterState = $isLocked ? 'locked' : 'open';
                             }
 
+                            // One badge per currently locked box (with box content)
+                            $lockedBadges = [];
+                            foreach ($member['boxes'] as $bid) {
+                                if (community_is_effectively_locked($latestStatus[$bid] ?? null)) {
+                                    $lockedBadges[] = trim((string) ($boxDetails[$bid]['box_content'] ?? ''));
+                                }
+                            }
+
                             $lockeeName = trim((string) ($member['username'] ?? '')) ?: 'Member';
                             $avatarPath = (string) ($member['avatar_path'] ?? '');
                             $headline = trim((string) ($member['headline'] ?? ''));
@@ -452,7 +471,7 @@ $recentActivity = array_slice($recentActivity, 0, 3);
                         ?>
                         <button
                             type="button"
-                            class="community-tile"
+                            class="community-tile js-open-member"
                             data-uid="<?= (int) $uid ?>"
                             data-role="<?= htmlspecialchars($role, ENT_QUOTES, 'UTF-8') ?>"
                             data-state="<?= htmlspecialchars($filterState, ENT_QUOTES, 'UTF-8') ?>"
@@ -470,14 +489,27 @@ $recentActivity = array_slice($recentActivity, 0, 3);
                                 </div>
                             <?php endif; ?>
 
-                            <?php if ($isLocked): ?>
-                                <?php if ($isPro): ?>
-                                    <span class="community-tile-pro" title="Pro member">PRO</span>
-                                <?php endif; ?>
-                                <span class="community-tile-badge">
-                                    <span class="community-tile-dot" aria-hidden="true"></span>
-                                    Locked
+                            <?php if ($lockedBadges): ?>
+                                <span class="community-tile-badges">
+                                    <?php foreach ($lockedBadges as $content): ?>
+                                        <span class="community-tile-badge" title="Locked<?= $content !== '' ? ': ' . htmlspecialchars($content, ENT_QUOTES, 'UTF-8') : '' ?>">
+                                            <svg class="community-tile-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                                <circle cx="7.5" cy="15.5" r="5.5"></circle>
+                                                <path d="m21 2-9.6 9.6"></path>
+                                                <path d="m15.5 7.5 3 3"></path>
+                                                <path d="m18.5 4.5 3 3"></path>
+                                            </svg>
+                                            <?php if ($content !== ''): ?>
+                                                <span class="community-tile-badge-text"><?= htmlspecialchars($content, ENT_QUOTES, 'UTF-8') ?></span>
+                                            <?php else: ?>
+                                                <span class="visually-hidden">Locked</span>
+                                            <?php endif; ?>
+                                        </span>
+                                    <?php endforeach; ?>
                                 </span>
+                            <?php endif; ?>
+                            <?php if ($isPro): ?>
+                                <span class="community-tile-pro" title="Pro member">PRO</span>
                             <?php endif; ?>
 
                             <span class="community-tile-info">
@@ -671,6 +703,7 @@ const COMMUNITY_MEMBERS = <?= json_encode($dialogData, JSON_HEX_TAG | JSON_HEX_A
             pro.title = 'Pro member';
             nameEl.appendChild(pro);
         }
+
         const hl = document.getElementById('mdHeadline');
         hl.textContent = m.headline || '';
         hl.hidden = !m.headline;
@@ -748,6 +781,9 @@ const COMMUNITY_MEMBERS = <?= json_encode($dialogData, JSON_HEX_TAG | JSON_HEX_A
 
         document.getElementById('mdBack').hidden = stack.length === 0;
         dlg.scrollTop = 0;
+
+        // Address bar always holds a shareable link to the open profile
+        history.replaceState(null, '', '?m=' + m.uid);
     }
 
     function openMember(uid, fromDialog) {
@@ -759,9 +795,10 @@ const COMMUNITY_MEMBERS = <?= json_encode($dialogData, JSON_HEX_TAG | JSON_HEX_A
         if (!dlg.open) dlg.showModal();
     }
 
+    // Tiles and recent-activity rows
     document.addEventListener('click', function (ev) {
-        const tile = ev.target.closest('.community-tile');
-        if (tile) openMember(parseInt(tile.dataset.uid, 10), false);
+        const trigger = ev.target.closest('.js-open-member');
+        if (trigger) openMember(parseInt(trigger.dataset.uid, 10), false);
     });
 
     document.getElementById('mdClose').addEventListener('click', function () { dlg.close(); });
@@ -771,7 +808,15 @@ const COMMUNITY_MEMBERS = <?= json_encode($dialogData, JSON_HEX_TAG | JSON_HEX_A
     });
     // click on the backdrop closes the dialog
     dlg.addEventListener('click', function (ev) { if (ev.target === dlg) dlg.close(); });
-    dlg.addEventListener('close', function () { stack.length = 0; current = null; });
+    dlg.addEventListener('close', function () {
+        stack.length = 0;
+        current = null;
+        history.replaceState(null, '', location.pathname);
+    });
+
+    // Opened via link (?m=<user_id> or ?box=<box_id>)
+    const OPEN_UID = <?= json_encode($openUid) ?>;
+    if (OPEN_UID) openMember(OPEN_UID, false);
 })();
 </script>
 
